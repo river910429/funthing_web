@@ -1,0 +1,135 @@
+/* * {
+    font-family: Microsoft JhengHei;
+    outline: 1px solid #f00;
+} */
+
+body, html{
+    width: 100%;
+    height: 100%;
+    margin: 0;
+}
+
+#parent {
+    position: relative;   
+    margin: 0;
+}
+
+#background_img{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 100;
+    background-size: contain;
+}
+
+#back_img {
+    height: 13%;
+    position: absolute;
+    cursor: pointer;
+    z-index: 200;
+}
+/* 
+#login_box{
+    position: absolute;
+    height: 70%;
+    left: 28.5%;
+    top: 16%;
+    z-index: 100;
+} */
+
+/* #login_form{
+    position: absolute;
+    top: 41.5%;
+    left: 28.5%;
+    width: 50vw;
+    z-index: 300;
+}
+
+#account_box{
+    position: relative;
+    width: 58%;
+    left: 21%;
+    height: 30px;
+}
+
+#pwd_box{
+    position: relative;
+    width: 58%;
+    left: 21%;
+    height: 30px;
+}
+
+#submit_btn{
+    position: relative;
+    width: 40%;
+    left: 25%;
+    cursor: pointer;
+} */
+
+
+#login_box{
+    position: absolute;
+    height: 100%;
+    /* height: 35vw; */
+    width: 100%;
+    /* left: 28.5%; */
+    /* top: 16%; */
+    z-index: 100;
+}
+
+#login_div{
+    position: absolute;
+    height: 70%;
+    width: 45%;
+    left: 28.5%;
+    top: 16%;
+    z-index: 300;
+}
+
+#login_form{
+    position: absolute;
+    /* top: 100%; */
+    /* left: %; */
+    top:32%;
+    /* height: 20vh; */
+    width: 100%;
+    z-index: 300;
+}
+
+#account_box{
+    position: relative;
+    width: 58%;
+    left: 23%;
+    height: 5vh;              /* 比原本高一點 */
+    font-size: 24px;          /* 字變大，視覺上比例協調 */
+    padding: 0 12px;          /* 左右內邊距 */
+    box-sizing: border-box;   /* 確保 padding 不會把框撐爆 */
+    line-height: 7vh;         /* 讓文字垂直置中 */
+
+}
+
+#pwd_box{
+    position: relative;
+    width: 58%;
+    /* top:1vh; */
+    left: 23%;
+    height: 5vh;
+    margin-top: 20px; 
+    font-size: 24px;  
+}
+
+#login_msg{
+    position: relative;
+    margin-top: 0px;
+    width: 58%;
+    left: 34%;
+    color: #F86565;
+}
+
+#submit_btn{
+    position: relative;
+    width: 40%;
+    left: 25%;
+    cursor: pointer;
+    bottom: 0;
+}

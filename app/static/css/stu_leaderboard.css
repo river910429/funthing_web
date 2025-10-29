@@ -1,0 +1,203 @@
+/* *{
+    outline: 1px solid #f00;
+} */
+
+body, html{
+    width: 100%;
+    height: 100%;
+    margin: 0;
+}
+
+#parent {
+    position: relative;
+    margin: 0;
+}
+
+#background_img{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 100;
+    background-size: contain;
+}
+
+#nav_bar_w_word{
+    position: absolute;
+    height: 18%;
+    width: 100%;
+    z-index: 300;
+}
+
+#nav_bar{
+    position: absolute;
+    height: 13%;
+    width: 100%;
+    z-index: 300;
+}
+
+#back_btn{
+    position: absolute;
+    height: 6%;
+    left: 2%;
+    top: 3.5%;
+    z-index: 400;
+    cursor: pointer;
+}
+
+#home_btn{
+    position: absolute;
+    height: 6%;
+    left: 7%;
+    top: 3.5%;
+    z-index: 400;
+    cursor: pointer;
+}
+
+#field_background{
+    position: absolute;
+    top: 13%;
+    height: 87%;
+    width: 27.5vw;
+    z-index: 300;
+}
+
+#input_id {
+    position: absolute;
+    background-image: var(--input-bg-url) no-repeat left top;
+    width: 20vw;
+    height: 10vh;
+    left: 3.75%;
+    top: 40%;
+    z-index: 400;
+}
+
+#submit_btn {
+    position: absolute;
+    width: 20vw;
+    left: 4.9%;
+    top: 56%;
+    z-index: 400;
+    cursor: pointer;
+}
+
+#field{
+    position: absolute;
+    top: 20%;
+    left: 34.5%;
+    width: 63.5vw;
+    z-index: 300;
+}
+
+#school_btn{
+    position: absolute;
+    height: 19vw;
+    left: 5.2%;
+    top: 20%;
+    z-index: 400;
+    cursor: pointer;
+}
+
+#class_btn{
+    position: absolute;
+    height: 19vw;
+    left: 5.2%;
+    top: 60%;
+    z-index: 400;
+    cursor: pointer;
+}
+
+#leaderboard_table{
+    text-align: center;
+    width: 100%;
+    font-family: Microsoft JhengHei;
+    font-weight: bold;
+    font-size: 1.5vw;
+    position: absolute;
+    table-layout:fixed;
+    z-index: 400;
+    border-collapse: collapse;
+}
+
+.tr, td {
+    border: 0.5px solid #AAAAAA;
+}
+
+#scroll_area{
+    /* outline: 1px solid #0F0; */
+    overflow:auto;
+    top: 28%;
+    left: 34.6%;
+    width: 59vw;
+    height: 62vh;
+    position: absolute;
+    z-index: 400;
+}
+
+#profile{
+    position: absolute;
+    height: 6%;
+    right: 2%;
+    top: 3.5%;
+    z-index: 400;
+    cursor: pointer;
+}
+#profile button{
+    padding: 0px;
+    border: 0px;
+    background-color: #F4DA63;
+}
+#profile button img{
+    height: 100%;
+    padding: 0px;
+    object-fit: contain;
+}
+
+.dropdown-menu {
+    position: absolute;
+    z-index: 1000;
+    min-width: 0px !important;
+    padding: 0px !important;
+    margin: 0 !important;
+    font-size: 0rem !important;
+    border: 0px solidrgba(0,0,0,0) !important;
+    border-radius: 0px !important;
+    transform: translate(-10.3vw, 9vh) !important;
+}
+#dropdown-equ{
+    height: 8.5vh;
+    width: 15vw;
+}
+#dropdown-equ{
+    background-image: url(../4GAME_ALL/ALL/1x/ALL_PERSONAL_EQUIPMENT_NORMAL.png);
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+}
+#dropdown-equ:hover{
+    background-image: url(../4GAME_ALL/ALL/1x/ALL_PERSONAL_EQUIPMENT_ACTIVE.png);
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+}
+#dropdown-equ:active{
+    background-image: url(../4GAME_ALL/ALL/1x/ALL_PERSONAL_EQUIPMENT_FOCUS.png);
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+}
+#dropdown-leave{
+    height: 8.5vh;
+    width: 15vw;
+}
+#dropdown-leave{
+    background-image: url(../4GAME_ALL/ALL/1x/ALL_LOG_OUT_GAME_NORMAL.png);
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+}
+#dropdown-leave:hover{
+    background-image: url(../4GAME_ALL/ALL/1x/ALL_LOG_OUT_GAME_ACTIVE.png);
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+}
+#dropdown-leave:active{
+    background-image: url(../4GAME_ALL/ALL/1x/ALL_LOG_OUT_FOCUS.png);
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+}

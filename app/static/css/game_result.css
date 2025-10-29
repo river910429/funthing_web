@@ -1,0 +1,333 @@
+
+* {
+    font-family: Microsoft JhengHei;
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+#parent {
+    position: relative;
+    margin: 0;
+}
+
+body {
+    height: 100vh;
+    display: flex;
+}
+
+#background_img {
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+    z-index: 300;
+    background-size: contain;
+}
+#home_btn{
+    position: absolute;
+    height: 6%;
+    left: 7%;
+    top: 3.5%;
+    z-index: 400;
+    cursor: pointer;
+}
+
+#nav_bar{
+    position: absolute;
+    height: 13%;
+    width: 100%;
+    z-index: 350;
+}
+
+
+#score_form{
+    background-image: url("../4GAME_ALL/ALL/1x/ALL_ANSWER.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    left: 30vw;
+    top: 20vh;
+    width: 61vw;
+    height: 78vh;
+    position: absolute;
+    /* overflow: auto; */
+    z-index: 350;
+}
+
+#score_table{
+    /* top:12%; */
+    width: 100%;
+    /* height: 45vh; */
+    text-align: center;
+    font-family: Microsoft JhengHei;
+    font-weight: bold;
+    font-size: 1.5vw;
+    /* table-layout:fixed; */
+    position: absolute;
+    table-layout:fixed;
+    z-index: 400;
+
+}
+
+#scroll_area{
+    position: absolute;
+    /* overflow-x: hidden; */
+    overflow:auto;
+    margin-top:12%;
+    
+    width: 100%;
+    height: 47vh;
+    /* max-height: 45vh; */
+    position: absolute;
+    z-index: 400;
+}
+
+/* #pigeon_with_board{ */
+    /* background-image: var(--pigeon_with_board-url); */
+    /* background-size: contain; */
+    /* background-repeat: no-repeat; */
+    /* left: 3vw;
+    top: 57vh;
+    width: 25vw;
+    height: 40vh;
+    position: absolute;
+    z-index: 400;
+    transform: scaleX(-1);
+} */
+#muntjac_with_board{
+    left: 3vw;
+    top: 52vh;
+    width: 25vw;
+    height: 48vh;
+    position: absolute;
+    z-index: 400;
+    transform: scaleX(-1);
+}
+
+  
+#score_board{
+    /* background-image: var(--score_board-url); */
+    background-size: contain;
+    background-repeat: no-repeat;
+    left:5vw;
+    top:24vh;
+    width:20vw;
+    height: 35vh;
+    position:absolute;
+    z-index: 400;
+}
+
+#btn_play_game_again{
+    cursor: pointer;
+    /* background-image: var(--btn_play_game_again-url); */
+    /* background-repeat: no-repeat; */
+    /* background-size: contain; */
+    position: absolute;
+    margin-top: 50%;
+    margin-left: 3vw;
+    width: 17vw;
+    height: 10vh;
+    z-index: 400;
+}
+
+#btn_register_score{
+    cursor: pointer;
+    /* background-image: var(--btn_register_score-url); */
+    /* background-repeat: no-repeat; */
+    /* background-size: contain; */
+    position: absolute;
+    margin-top: 50%;
+    margin-left: 21vw;
+    width: 17vw;
+    height: 10vh;
+    z-index: 400;
+}
+
+#btn_exit_game{
+    cursor: pointer;
+    /* background-image: var(--btn_exit_game-url); */
+    /* background-repeat: no-repeat; */
+    /* background-size: contain; */
+    position: absolute;
+    margin-top: 50%;
+    margin-left: 39vw;
+    width: 17vw;
+    height: 10vh;
+    z-index: 400;
+}
+
+.result_page_audio{
+    cursor: pointer;
+    margin-top: 1vh;
+    width: 3vw;
+    height: 5vh;
+    /* vertical-align: middle; */
+}
+
+.span{
+    width: 5vw;
+    height: 10vh;
+    top:30%;
+    left:10vw;
+    z-index: 403;
+}
+
+#score{
+    text-align: center;
+    font-family: Microsoft JhengHei;
+    font-size: 5vw;
+    width: 5vw;
+    height: 10vh;
+    top:32%;
+    left:12vw;
+    z-index: 403;
+    position: absolute;
+    /* height: 3; */
+}
+
+.upgrade_dialog{
+    position: absolute;
+    width: 40vw;
+    height: 50vh;
+    left: 30vw;
+    top:25vh;
+    z-index:999;
+}
+
+#upgrade_text{
+    position: absolute;
+    width: 40vw;
+    height: 50vh;
+    left: 30vw;
+    top:25vh;
+    padding-left: 13vw;
+    padding-top: 26vh;
+    font-family: Microsoft JhengHei;
+    /* font-weight: bold; */
+    font-size: 1.5vw;
+    z-index:999;
+}
+
+#upgrade_continue_btn{
+    cursor: pointer;
+    position: absolute;
+    width: 16%;
+    height: 8%;
+    left: 43%;
+    top: 64%;
+    /* z-index: 400; */
+    z-index:999;
+    /* padding-left: 15vw;
+    padding-top: 30vh; */
+    /* font-family: Microsoft JhengHei; */
+    /* font-weight: bold; */
+    /* font-size: 1.5vw; */
+}
+
+#wear_btn{
+    cursor: pointer;
+    position: absolute;
+    width: 6%;
+    height: 11%;
+    left: 42%;
+    top:62%;
+    z-index: 999;
+}
+
+#not_wear_btn{
+    cursor: pointer;
+    position: absolute;
+    width: 6%;
+    height: 11%;
+    right: 42%;
+    top:62%;
+    z-index: 999;
+}
+
+
+#back_arrow{
+    position: absolute;
+    height: 6%;
+    left: 2%;
+    top: 3.5%;
+    z-index: 400;
+    cursor: pointer;
+}
+
+#gray_layer{
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 300;
+}
+
+
+#profile{
+    position: absolute;
+    height: 6%;
+    right: 2%;
+    top: 3.5%;
+    z-index: 400;
+    cursor: pointer;
+}
+#profile button{
+    padding: 0px;
+    border: 0px;
+    background-color: #F4DA63;
+}
+#profile button img{
+    height: 100%;
+    padding: 0px;
+    object-fit: contain;
+}
+
+.dropdown-menu {
+    position: absolute;
+    z-index: 1000;
+    min-width: 0px !important;
+    padding: 0px !important;
+    margin: 0 !important;
+    font-size: 0rem !important;
+    border: 0px solidrgba(0,0,0,0) !important;
+    border-radius: 0px !important;
+    transform: translate(-10.3vw, 9vh) !important;
+}
+#dropdown-equ{
+    height: 8.5vh;
+    width: 15vw;
+}
+#dropdown-equ{
+    background-image: url(../4GAME_ALL/ALL/1x/ALL_PERSONAL_EQUIPMENT_NORMAL.png);
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+}
+#dropdown-equ:hover{
+    background-image: url(../4GAME_ALL/ALL/1x/ALL_PERSONAL_EQUIPMENT_ACTIVE.png);
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+}
+#dropdown-equ:active{
+    background-image: url(../4GAME_ALL/ALL/1x/ALL_PERSONAL_EQUIPMENT_FOCUS.png);
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+}
+#dropdown-leave{
+    height: 8.5vh;
+    width: 15vw;
+}
+#dropdown-leave{
+    background-image: url(../4GAME_ALL/ALL/1x/ALL_LOG_OUT_GAME_NORMAL.png);
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+}
+#dropdown-leave:hover{
+    background-image: url(../4GAME_ALL/ALL/1x/ALL_LOG_OUT_GAME_ACTIVE.png);
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+}
+#dropdown-leave:active{
+    background-image: url(../4GAME_ALL/ALL/1x/ALL_LOG_OUT_FOCUS.png);
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+}

@@ -1,0 +1,204 @@
+body, html{
+    width: 100%;
+    height: 100%;
+    margin: 0;
+}
+
+#parent {
+    position: relative;
+    margin: 0;
+}
+
+#background_img{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 100;
+    background-size: contain;
+}
+
+#nav_bar_w_word{
+    position: absolute;
+    height: 18%;
+    width: 100%;
+    z-index: 300;
+}
+
+#nav_bar{
+    position: absolute;
+    height: 13%;
+    width: 100%;
+    z-index: 300;
+}
+
+#back_btn{
+    position: absolute;
+    height: 6%;
+    left: 2%;
+    top: 3.5%;
+    z-index: 400;
+    cursor: pointer;
+}
+
+#home_btn{
+    position: absolute;
+    height: 6%;
+    left: 7%;
+    top: 3.5%;
+    z-index: 400;
+    cursor: pointer;
+}
+
+#profile{
+    position: absolute;
+    height: 6%;
+    right: 2%;
+    top: 3.5%;
+    z-index: 400;
+    cursor: pointer;
+}
+#profile button{
+    padding: 0px;
+    border: 0px;
+    background-color: #F4DA63;
+}
+#profile button img{
+    height: 100%;
+    padding: 0px;
+    object-fit: contain;
+}
+
+.dropdown-menu {
+    position: absolute;
+    z-index: 1000;
+    min-width: 0px !important;
+    padding: 0px !important;
+    margin: 0 !important;
+    font-size: 0rem !important;
+    border: 0px solidrgba(0,0,0,0) !important;
+    border-radius: 0px !important;
+    transform: translate(-10.3vw, 9vh) !important;
+}
+#dropdown-equ{
+    height: 8.5vh;
+    width: 15vw;
+}
+#dropdown-equ{
+    background-image: url(../4GAME_ALL/ALL/1x/ALL_PERSONAL_EQUIPMENT_NORMAL.png);
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+}
+#dropdown-equ:hover{
+    background-image: url(../4GAME_ALL/ALL/1x/ALL_PERSONAL_EQUIPMENT_ACTIVE.png);
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+}
+#dropdown-equ:active{
+    background-image: url(../4GAME_ALL/ALL/1x/ALL_PERSONAL_EQUIPMENT_FOCUS.png);
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+}
+#dropdown-leave{
+    height: 8.5vh;
+    width: 15vw;
+}
+#dropdown-leave{
+    background-image: url(../4GAME_ALL/ALL/1x/ALL_LOG_OUT_GAME_NORMAL.png);
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+}
+#dropdown-leave:hover{
+    background-image: url(../4GAME_ALL/ALL/1x/ALL_LOG_OUT_GAME_ACTIVE.png);
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+}
+#dropdown-leave:active{
+    background-image: url(../4GAME_ALL/ALL/1x/ALL_LOG_OUT_FOCUS.png);
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+}
+
+#confirm_btn{
+    position: absolute;
+    width: 18.5%;
+    left: 59.2%;
+    top: 80%;
+    z-index: 400;
+    cursor: pointer;
+}
+
+#cancel_btn{
+    position: absolute;
+    width: 18.5%;
+    left: 24%;
+    top: 80%;
+    z-index: 400;
+    cursor: pointer;
+}
+
+/* #semester{
+    position: absolute;
+    width: 17.2%;
+    height: 8.3%;
+    left: 29.7%;
+    top: 41.6%;
+    z-index: 400;
+    cursor: pointer;
+} */
+
+#lesson{
+    position: absolute;
+    width: 17.2%;
+    height: 8.3%;
+    left: 41.3%;
+    top: 41.6%;
+    z-index: 400;
+    cursor: pointer;
+}
+
+.opt_holder{
+    color: #C2C2C2; /* Fallback for older browsers */
+    font-size: 16pt;
+    font-family: Microsoft JhengHei;
+}
+
+.options{
+    color: #000; /* Fallback for older browsers */
+    font-size: 16pt;
+    font-family: Microsoft JhengHei;
+}
+
+#words_form{
+    background-image: var(--score_form-url);
+    background-size: cover;
+    background-repeat: no-repeat;
+    left: 20vw;
+    right:20vw;
+    top: 30vh;
+    width: 60vw;
+    height: 60vh;
+    position: absolute;
+    /* overflow: auto; */
+    z-index: 400;
+}
+
+.swal-footer {
+    text-align: center;
+}
+.swal-button {
+    width: 196px;
+    height: 53px;
+    background-color: #FFFFFF;
+    background-image: url("../4GAME_ALL/ALL/1x/ALL_COMPLETE_B.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+.swal-button:focus {
+    box-shadow: none !important;
+}
+.swal-button:active {
+    background-color: #FFFFFF !important;
+}
+.swal-button-container :hover {
+    background-color: #FFFFFF !important;
+}

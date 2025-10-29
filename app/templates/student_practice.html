@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link href="{{ url_for('static', filename='css/stu_practice.css')}}" rel="stylesheet" , type="text/css">
+    <script type="text/javascript" src="/static/js/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/stu_practice.js')}}"></script>
+</head>
+
+<body>
+    <img id="background_img" src="{{ url_for('static', filename='Font/1x/ALL_BG_GRID.png')}}">
+    <div class="parent">
+        <img id="back_btn" onclick="back()"
+            src="{{ url_for('static', filename='4GAME_ALL/ALL/1x/ALL_ARROW_BACK.png')}}">
+        <img id="home_btn" onclick="home()" src="{{ url_for('static', filename='4GAME_ALL/ALL/1x/ALL_HOME.png')}}">
+        
+        <div class="btn-group" id="profile">
+            <button type="button" id="dropdownMenuReference"
+                    data-bs-toggle="dropdown" aria-expanded="false" data-bs-reference="parent">
+                <img src="/static/4GAME_ALL/ALL/1x/ALL_ACCOUNT.png">
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuReference">
+                <li><button id="dropdown-equ" onclick="document.location.href='/stu/equipment'"></li>
+                <li><button id="dropdown-leave" onclick="exit()"></li>
+            </ul>
+        </div>
+
+        <img id="nav_bar_w_word"
+            src="{{ url_for('static', filename='Font/1x/ALL_NAVIGATION_BAR_PRACTICE_WORKSHOP_WORD.png')}}">
+
+        <img id="catch_egg" onclick="game_catch()"
+            src="{{ url_for('static', filename='Font/1x/ALL_BUTTON_ANIMAL_CATCH.png')}}">
+        <img id="map" onclick="game_map()" src="{{ url_for('static', filename='Font/1x/ALL_BUTTON_MAP.png')}}">
+        <img id="fruit_cutter" onclick="game_fruit()"
+            src="{{ url_for('static', filename='Font/1x/ALL_BUTTON_CUT_FRUIT.png')}}">
+        <img id="flipping_card" onclick="game_card()"
+            src="{{ url_for('static', filename='Font/1x/ALL_BUTTON_CARD_GAME.png')}}">
+        <img id="tmp_1" src="{{ url_for('static', filename='Font/1x/ALL_BUTTON_COMING_SOON_GRAY.png')}}">
+        <img id="tmp_2" src="{{ url_for('static', filename='Font/1x/ALL_BUTTON_COMING_SOON_GRAY.png')}}">
+
+    </div>
+
+    <div class="modal fade" id="LogoutModal" data-bs-backdrop="static" 
+        data-bs-keyboard="false" tabindex="-1" 
+        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="d-flex flex-column align-items-center">
+                            <img src="/static/Font/1x/ALL_IF_LOGOUT_B.png" style="width: 100%">
+                            <!-- <div>title</div> -->
+                            <div class="d-flex justify-content-between w-100">
+                                <div class="alertbtn alertbtn-succ" data-bs-dismiss="modal">
+                                    取消
+                                </div>
+                                <div class="alertbtn alertbtn-warn" id="mlogout">
+                                    登出
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="TimeOutModal" data-bs-backdrop="static" 
+        data-bs-keyboard="false" tabindex="-1" 
+        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="d-flex flex-column align-items-center">
+                            <img src="/static/4GAME_ALL/ALL/1x/ALL_IF_TIMEOUT_B.png" style="width: 100%">
+                            <!-- <div>title</div> -->
+                            <div class="d-flex justify-content-center w-100">
+                                <div class="alertbtn alertbtn-warn" id="logout">
+                                    重新登入
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- my alert -->
+    <link rel="stylesheet" type="text/css" href="/static/css/myalert.css">
+    <!-- Core theme CSS (includes Bootstrap 5.0.2) -->
+    <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-5.0.2.min.css">
+    <!-- Bootstrap core JS 5.0.2 -->
+    <script src="/static/js/bootstrap-5.0.2.min.js"></script>
+    <script>
+        lastmovetime = new Date();
+        document.addEventListener('mousemove', function() {
+            lastmovetime = new Date();
+        });
+        setInterval(check, 1000 * 10);
+        function check() {
+            console.log(new Date() - lastmovetime);
+            if ((new Date() - lastmovetime) > 1000 * 60 * 5) {
+                var TimeOutModal = new bootstrap.Modal($('#TimeOutModal'));
+                if (! $('#TimeOutModal').hasClass('show')) {
+                    TimeOutModal.show();
+                    setTimeout(() => {
+                        document.location.href="/branch";
+                    }, 1000*10)
+                }
+            }
+        }
+        $("#logout").click(function() {
+            document.location.href="/branch";
+        });
+
+        function exit() {
+            var LogoutModal = new bootstrap.Modal($('#LogoutModal'));
+            if (! $('#LogoutModal').hasClass('show')) LogoutModal.show();
+        }
+        $("#mlogout").click(function() {
+            document.location.href="/branch";
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,204 @@
+body, html{
+    width: 100%;
+    height: 100%;
+    margin: 0;
+}
+
+#parent {
+    position: relative;
+    margin: 0;
+}
+
+#background_img{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    /* z-index: 100; */
+    background-size: contain;
+}
+
+#nav_bar_w_word{
+    position: absolute;
+    height: 18%;
+    width: 100%;
+    z-index: 300;
+}
+
+#nav_bar{
+    position: absolute;
+    height: 13%;
+    width: 100%;
+    z-index: 300;
+}
+
+#back_btn{
+    position: absolute;
+    height: 6%;
+    left: 2%;
+    top: 3.5%;
+    z-index: 400;
+    cursor: pointer;
+}
+
+#home_btn{
+    position: absolute;
+    height: 6%;
+    left: 7%;
+    top: 3.5%;
+    z-index: 400;
+    cursor: pointer;
+}
+
+#profile{
+    position: absolute;
+    height: 6%;
+    right: 2%;
+    top: 3.5%;
+    z-index: 400;
+    cursor: pointer;
+}
+#profile button{
+    padding: 0px;
+    border: 0px;
+    background-color: #F4DA63;
+}
+#profile button img{
+    height: 100%;
+    padding: 0px;
+    object-fit: contain;
+}
+
+.dropdown-menu {
+    position: absolute;
+    z-index: 1000;
+    min-width: 0px !important;
+    padding: 0px !important;
+    margin: 0 !important;
+    font-size: 0rem !important;
+    border: 0px solidrgba(0,0,0,0) !important;
+    border-radius: 0px !important;
+    transform: translate(-10.3vw, 9vh) !important;
+}
+#dropdown-equ{
+    height: 8.5vh;
+    width: 15vw;
+}
+#dropdown-equ{
+    background-image: url(../4GAME_ALL/ALL/1x/ALL_PERSONAL_EQUIPMENT_NORMAL.png);
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+}
+#dropdown-equ:hover{
+    background-image: url(../4GAME_ALL/ALL/1x/ALL_PERSONAL_EQUIPMENT_ACTIVE.png);
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+}
+#dropdown-equ:active{
+    background-image: url(../4GAME_ALL/ALL/1x/ALL_PERSONAL_EQUIPMENT_FOCUS.png);
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+}
+#dropdown-leave{
+    height: 8.5vh;
+    width: 15vw;
+}
+#dropdown-leave{
+    background-image: url(../4GAME_ALL/ALL/1x/ALL_LOG_OUT_GAME_NORMAL.png);
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+}
+#dropdown-leave:hover{
+    background-image: url(../4GAME_ALL/ALL/1x/ALL_LOG_OUT_GAME_ACTIVE.png);
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+}
+#dropdown-leave:active{
+    background-image: url(../4GAME_ALL/ALL/1x/ALL_LOG_OUT_FOCUS.png);
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+}
+
+#poster{
+    position: absolute;
+    height: 68%;
+    left: 13%;
+    top: 20%;
+    z-index: 300;
+}
+
+.dots{
+    position: absolute;
+    height: 2%;
+    top: 90%;
+    z-index: 300;
+    cursor: pointer;
+}
+
+#dots_1{
+    left: 22%;
+}
+#dots_2{
+    left: 24%;
+}
+#dots_3{
+    left: 26%;
+}
+#dots_4{
+    left: 28%;
+}
+#dots_5{
+    left: 30%;
+}
+#dots_6{
+    left: 32%;
+}
+
+#app {
+    position: absolute;
+    top: 20%;
+    right: 9%;
+    height: 73vh;
+    width: 42vw;
+    /* outline: 2px solid  blue; */
+}
+
+.lessons-list {
+    height: 85%;
+    overflow-y: scroll;
+    /* outline: 2px solid  blue; */
+}
+
+.lessons{
+    height: 10%;
+    font-size: 28px;
+    font-weight:bold;
+    color: #4D4D4D;
+    background-color: #F4DA63;
+    border-radius: 12px;
+    cursor: pointer;
+    margin-top: 2% !important;
+    margin-bottom: 4%;
+    box-shadow: 7px 5px 8px rgba(0, 0, 0, 0.4);
+}
+
+.lessons-click{
+    height: 10%;
+    font-size: 28px;
+    font-weight:bold;
+    color: white;
+    background-color: #FE6265;
+    /* outline: 3px solid #FE6265; */
+    border-radius: 12px;
+    cursor: pointer;
+    margin-top: 2% !important;
+    margin-bottom: 4%;
+    box-shadow: 7px 5px 8px rgba(0, 0, 0, 0.4);
+}
+
+#confirm {
+    cursor: pointer;
+    position: inherit;
+    width: 45%;
+    bottom: -5%;
+    right: 1.5%;
+}

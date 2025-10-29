@@ -1,0 +1,290 @@
+* {
+    font-family: Microsoft JhengHei;
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+#parent {
+    position: relative;
+    margin: 0;
+}
+
+body {
+    height: 100vh;
+    display: flex;
+}
+
+#background_img {
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+    z-index: 0;
+    background-size: contain;
+}
+
+#game_nav_bar {
+    width: 100vw;
+    height: 13vh;
+    position: absolute;
+    z-index: 200;
+}
+
+#game_time_icon {
+    position: absolute;
+    top: 3.5%;
+    left: 27vw;
+    height: 6vh;
+    z-index: 300;
+}
+
+#game_time_bg {
+    position: absolute;
+    top: 1.5%;
+    left: 32vw;
+    width: 38vw;
+    height: 10vh;
+    z-index: 250;
+}
+
+#max_width{
+    width: 36.8%;
+}
+
+.p_bar{
+    position: absolute;
+    /* border: 2px solid blanchedalmond; */
+}
+
+#game_time_bar{
+    position: absolute;
+    top: 2.5%;
+    left: 32.5vw;
+    height: 8%;
+    width: 3%;
+    display: block;
+    background: #ff9100;
+    border-radius: 40px;
+    transition: width 8s ease;
+    z-index: 300;
+    /* border: 2px solid rebeccapurple; */
+}
+
+#home_btn{
+    position: absolute;
+    height: 6%;
+    left: 2%;
+    top: 3.5%;
+    z-index: 400;
+    cursor: pointer;
+}
+
+#pause_btn{
+    position: absolute;
+    height: 6%;
+    right: 13%;
+    top: 3.5%;
+    z-index: 400;
+}
+
+#game_result_btn{
+    position: absolute;
+    height: 6%;
+    right: 7.5%;
+    top: 3.5%;
+    z-index: 400;
+}
+
+#profile{
+    position: absolute;
+    height: 6%;
+    right: 2%;
+    top: 3.5%;
+    z-index: 400;
+    cursor: pointer;
+}
+#listen_btn{
+    position: absolute;
+    height: 10%;
+    right: 2%;
+    top: 77%;
+    z-index: 400;
+    cursor: pointer;
+}
+
+#game_tutorial{
+    position: absolute;
+    z-index: 600;
+    top: 20vh;
+    left: 30%;
+    width: 40vw;
+    height: 70vh;
+}
+
+#gray_layer{
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 500;
+}
+
+#btn_enter_game{
+    cursor: pointer;
+    position: absolute;
+    width: 17vw;
+    height: 10vh;
+    top:78vh;
+    right:32%;
+    z-index: 650;
+    /* border: none; */
+}
+
+#btn_not_enter_game{
+    cursor: pointer;
+    position: absolute;
+    width: 17vw;
+    height: 10vh;
+    top:78vh;
+    left:32%;
+    z-index: 650;
+}
+
+
+.egg-container {
+    position: relative;
+    width: 100vw;
+    height: 100vh; /* 或你需要的高度 */
+    overflow: hidden; /* 防止超出 */
+    border: 2px solid red;
+}
+
+
+.egg {
+    position: absolute;
+    top: -15%; /* 從這裡開始掉落，保留你原本的動畫用法 */
+    width: 32vw;
+    height: 40vh;
+    background-image: url(../4GAME_ALL/ANIMAL_CATCH/1x/ANIMAL_CATCH_WHITE_EGG.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    z-index: 10;
+    visibility: hidden;
+  
+    /* ✅ 為了讓裡面的 .subject 可以絕對定位於蛋內部 */
+    position: absolute;   /* 保留這個 */
+    overflow: visible;
+  }
+  
+
+#egg1 {
+    /* left: 50.5px; */
+    left: 2.25vw;
+}
+
+#egg2 {
+    /* left: 290.5px; */
+    left: 0vw;
+}
+
+#egg3 {
+    /* left: 530.5px; */
+    left: 13vw;
+}
+
+#egg4 {
+    /* left: 770.5px; */
+    left: 29vw;
+}
+
+#egg5 {
+    /* left: 1010.5px; */
+    left: 45vw;
+}
+
+#egg6 {
+    /* left: 1250.5px; */
+    left: 59vw;
+}
+
+#egg7 {
+    /* left: 1490.5px; */
+    left: 75vw;
+
+}
+
+#egg8 {
+    /* left: 1730.5px; */
+    left: 72.25vw;
+    border: 1px dashed black;
+
+}
+
+#floor {
+    position: absolute;
+    height: 4vh;
+    width: 100%;
+    /* background-color: #292929; */
+    bottom: 0;
+    /* z-index: 10; */
+}
+
+#pigeon {
+    background-image: url(../4GAME_ALL/ANIMAL_CATCH/1x/ANIMAL_CATCH_PIGEON.png);
+    /* height: 304px;
+    width: 238px; */
+    height: 30vh;
+    width: 10vw;
+    background-size: contain;
+    background-repeat: no-repeat;
+    z-index: 1000;
+    transition-duration: 0.05s;
+    transition-timing-function: linear; 
+}
+
+.pigeon-init {
+    position: absolute;
+    bottom: 5px;
+    left: 39vw;
+}
+
+#subject_adder_t{
+    position: absolute;
+    text-align: right;
+    width: 8vw;
+    height: 8vh;
+    margin-top: 1.58vh;
+    margin-left: 12.8vw;
+    font-family: Microsoft JhengHei;
+    font-size: 3vw;
+    z-index: 400;
+}
+#subject_adder{
+    position: absolute;
+    text-align: right;
+    width: 8vw;
+    height: 8vh;
+    margin-top: 2vh;
+    margin-left: 12.8vw;
+    font-family: Microsoft JhengHei;
+    font-size: 3vw;
+    z-index: 400;
+}
+
+.subject {
+    position: absolute;
+    top: 50%;         /* 往下移一半 */
+    left: 47%;        /* 往右移一半 */
+    transform: translate(-50%, -50%); /* 再往回拉自己一半大小 → 正中央 */
+    width: 90%;       /* 不要超過蛋的寬度 */
+    text-align: center;
+    font-size: 1.2vw;
+    font-weight: bold;
+    line-height: 1.3;
+    border-radius: 8px;
+    word-wrap: break-word;
+    pointer-events: none; /* 防止擋住點擊蛋 */
+  }
+  

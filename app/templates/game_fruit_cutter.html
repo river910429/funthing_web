@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <link href="{{ url_for('static', filename='css/game_fruit_cutter.css')}}" rel="stylesheet", type="text/css">
+        <link rel="shortcut icon" href="#" />
+        <script type="text/javascript" src="{{ url_for('static', filename='js/record-live-audio.js') }}"></script>
+    </head>
+
+    <script type="text/javascript">
+        window.onload = function () {
+            fruity_record_init();
+        }
+        var subjects = {{ course|tojson }};
+        var subjects_CH = subjects.gameneed;
+    </script>
+
+    <body>
+        <div class="parent", id="holder">
+            <img id="background_img" src="{{ url_for('static', filename='4GAME_ALL/CUT_FRUIT/1x/CUT_ FRUIT_BG_WORD.png')}}">
+            <img id="game_nav_bar" src="{{ url_for('static', filename = '4GAME_ALL/ALL/1x/ALL_NAVIGATION_BAR.png')}}">
+            <p id = "subject_adder">1/8</p>
+            <img id="game_time_icon" src="{{ url_for('static', filename = '4GAME_ALL/ALL/1x/ALL_TIME.png')}}">
+            <img id="game_time_bg" src="{{ url_for('static', filename = '4GAME_ALL/ALL/1x/ALL_TIME_WHITE_LINE.png')}}">
+
+            <img id="profile" onclick="leave_game()" src="{{ url_for('static', filename = '4GAME_ALL/ALL/1x/ALL_LEAVE_GAME.png')}}">
+            <img class="btn" id="listen_btn" onclick = "listen_again()" src="{{ url_for('static', filename = '4GAME_ALL/ALL/1x/ALL_VOLUME_GAME_PAGE.png')}}">
+            <div id="p_bar">
+                <span id="game_time_bar"></span>
+            </div>
+            <img id="record_btn" class="fruit" src="{{ url_for('static', filename = '4GAME_ALL/CUT_FRUIT/1x/CUT_ FRUIT_WATERMELON.png')}}">
+
+        </div>
+        <script type="text/javascript" src="{{ url_for('static', filename='js/jquery-3.6.0.min.js')}}"></script>
+        <script type="text/javascript" src="{{ url_for('static', filename='js/game_fruit_cutter.js')}}"></script>
+    </body>
+
+</html>

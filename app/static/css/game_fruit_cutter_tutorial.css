@@ -1,0 +1,187 @@
+* {
+    font-family: Microsoft JhengHei;
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+#parent {
+    position: relative;
+    margin: 0;
+}
+
+body {
+    height: 100vh;
+    display: flex;
+}
+
+#background_img {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    background-size: contain;
+}
+
+#game_nav_bar {
+    width: 100vw;
+    height: 13vh;
+    position: absolute;
+}
+
+#game_time_icon {
+    position: absolute;
+    top: 3.5%;
+    left: 27vw;
+    height: 6vh;
+}
+
+#game_time_bg {
+    position: absolute;
+    top: 1.5%;
+    left: 32vw;
+    width: 38vw;
+    height: 10vh;
+}
+
+.p_bar{
+    position: absolute;
+    /* border: 2px solid blanchedalmond; */
+}
+
+#game_time_bar{
+    position: absolute;
+    top: 2.5%;
+    left: 32.5vw;
+    height: 8%;
+    width: 3%;
+    display: block;
+    background: #ff9100;
+    border-radius: 40px;
+    transition: width 15s ease;
+    z-index: 300;
+    /* border: 2px solid rebeccapurple; */
+}
+
+#home_btn{
+    position: absolute;
+    height: 6%;
+    left: 2%;
+    top: 3.5%;
+    z-index: 400;
+    cursor: pointer;
+}
+
+#pause_btn{
+    position: absolute;
+    height: 6%;
+    right: 13%;
+    top: 3.5%;
+    z-index: 400;
+}
+
+#game_result_btn{
+    position: absolute;
+    height: 6%;
+    right: 7.5%;
+    top: 3.5%;
+    z-index: 400;
+}
+
+#profile{
+    position: absolute;
+    height: 6%;
+    right: 2%;
+    top: 3.5%;
+    z-index: 400;
+}
+
+.fruit {
+    position: absolute;
+    height: 20vh;
+    visibility: hidden;
+    z-index: 500;
+}
+
+.paused {
+    -webkit-animation-play-state:paused;
+    -moz-animation-play-state:paused;
+    -o-animation-play-state:paused; 
+    animation-play-state:paused;
+}
+
+#fruit_text {
+    position: absolute;
+    font: bold 24px "Helvetica Neue", Helvetica, Arial, sans-serif;
+    height: 20vh;
+    visibility: hidden;
+    text-align: center;
+    padding: 20vh 10vh;
+    z-index: 500;
+}
+
+#text_container {
+    position: absolute;
+    visibility: hidden;
+    z-index: 500;
+}
+
+#listen_btn{
+    position: absolute;
+    height: 10%;
+    right: 2%;
+    top: 77%;
+    z-index: 500;
+}
+
+#subject_adder{
+    position: absolute;
+    text-align: right;
+    width: 8vw;
+    height: 8vh;
+    margin-top: 1.58vh;
+    margin-left: 11vw;
+    font-family: Microsoft JhengHei;
+    font-size: 3vw;
+    z-index: 400;
+}
+
+#game_tutorial{
+    position: absolute;
+    z-index: 600;
+    top: 20vh;
+    left: 30%;
+    width: 40vw;
+    height: 70vh;
+    
+}
+
+#gray_layer{
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 500;
+}
+
+#btn_enter_game{
+    cursor: pointer;
+    position: absolute;
+    width: 17vw;
+    height: 10vh;
+    top:78vh;
+    right:32%;
+    z-index: 650;
+    /* border: none; */
+}
+
+#btn_not_enter_game{
+    cursor: pointer;
+    position: absolute;
+    width: 17vw;
+    height: 10vh;
+    top:78vh;
+    left:32%;
+    z-index: 650;
+}

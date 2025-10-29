@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link href="{{ url_for('static', filename='css/ta_leaderboard.css')}}" rel="stylesheet", type="text/css">
+    <script type="text/javascript" src="/static/js/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/ta_leaderboard.js')}}"></script>
+    
+</head>
+
+<body>
+    <img id="background_img" src="{{ url_for('static', filename='Font/1x/ALL_BG_GRID.png')}}">
+    <div class="parent">
+        <img id="back_btn" onclick="home()" src="{{ url_for('static', filename='4GAME_ALL/ALL/1x/ALL_ARROW_BACK.png')}}">
+        <img id="home_btn" onclick="home()" src="{{ url_for('static', filename='4GAME_ALL/ALL/1x/ALL_HOME.png')}}">
+        <div class="btn-group" id="profile">
+            <button type="button" id="dropdownMenuReference"
+                    data-bs-toggle="dropdown" aria-expanded="false" data-bs-reference="parent">
+                <img src="/static/4GAME_ALL/ALL/1x/ALL_ACCOUNT.png">
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuReference">
+                <li><button id="dropdown-leave" onclick="exit()"></li>
+            </ul>
+        </div>
+
+        <img id="nav_bar" src="{{ url_for('static', filename='Font/1x/ALL_NAVIGATION_BAR_LEADERBOARD_INQUIRE.png')}}">
+        <img id="field_background" src="{{ url_for('static', filename='Font/1x/ALL_FIELD_BOX.png')}}">
+        <img id="field" src="{{ url_for('static', filename='Font/1x/ALL_FIELD_B.png')}}">
+        <p id="error_msg"></p>
+        <form action="{{ url_for('leaderboard_ta_query') }}" method="POST" autocomplete="off">
+            <input type="text" id="input_id" name="input_id" placeholder="例：302班 -> 302" style="font-size: 18px;"/><br><br>
+            <input type="image" id="submit_btn" src="{{ url_for('static', filename='Font/1x/ALL_INQUIRE.png')}}" alt="Submit Form" />
+        </form>
+        <img id="export_btn" src="{{ url_for('static', filename='4GAME_ALL/ALL/1x/ALL_EXPORT_RESULTS_B.png')}}" >
+        <div id = "scroll_area">
+            <table id = "leaderboard_table">
+                <td class="d-none">排名</td>
+                <td class="d-none">學號</td>
+                <td class="d-none">暱稱</td>
+                <td class="d-none">等級</td>
+                <td class="d-none">積分</td>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="modal fade" id="LogoutModal" data-bs-backdrop="static" 
+        data-bs-keyboard="false" tabindex="-1" 
+        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="d-flex flex-column align-items-center">
+                            <img src="/static/Font/1x/ALL_IF_LOGOUT_B.png" style="width: 100%">
+                            <!-- <div>title</div> -->
+                            <div class="d-flex justify-content-between w-100">
+                                <div class="alertbtn alertbtn-succ" data-bs-dismiss="modal">
+                                    取消
+                                </div>
+                                <div class="alertbtn alertbtn-warn" id="mlogout">
+                                    登出
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="SetSuccessModal" data-bs-backdrop="static" 
+        data-bs-keyboard="false" tabindex="-1" 
+        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="d-flex flex-column align-items-center">
+                            <img src="/static/4GAME_ALL/ALL/1x/ALL_EXPORT SUCCESSFULLY_B.png" style="width: 100%">
+                            <!-- <div>title</div> -->
+                            <div class="d-flex justify-content-center w-100">
+                                <div class="alertbtn alertbtn-normal" data-bs-dismiss="modal">
+                                    完成
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- my alert -->
+    <link rel="stylesheet" type="text/css" href="/static/css/myalert.css">
+    <!-- Core theme CSS (includes Bootstrap 5.0.2) -->
+    <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-5.0.2.min.css">
+    <!-- Bootstrap core JS 5.0.2 -->
+    <script src="/static/js/bootstrap-5.0.2.min.js"></script>
+</body>
+
+</html>
+
+<script src="/static/js/jquery.table2excel.min.js"></script>
+<script type="text/javascript">
+
+    var content = {{ data | tojson }};
+    var target = {{ target_idx | tojson }};
+    $("#error_msg").text("{{error_msg}}");
+
+    console.log(content);
+    if(content != []) {
+        for (var idx = 0; idx < content.length; idx ++) {
+            if (target == content[idx][1]) {
+                $("#leaderboard_table tbody")[0].innerHTML += "<tr>" +
+                    "<td style='background-color:yellow'>" + content[idx][0] + "</td>" +
+                    "<td style='background-color:yellow'>" + content[idx][1] + "</td>" +
+                    "<td style='background-color:yellow'>" + content[idx][2] + "</td>" +
+                    "<td style='background-color:yellow'>" + content[idx][3] + "</td>" +
+                    "<td style='background-color:yellow'>" + content[idx][4] + "</td></tr>";
+            }
+            else {
+                $("#leaderboard_table tbody")[0].innerHTML += "<tr>" +
+                    "<td>" + content[idx][0] + "</td>" +
+                    "<td>" + content[idx][1] + "</td>" +
+                    "<td>" + content[idx][2] + "</td>" +
+                    "<td>" + content[idx][3] + "</td>" +
+                    "<td>" + content[idx][4] + "</td></tr>";
+            }
+        }
+    }
+    $("#export_btn").click(function() {
+        $("#leaderboard_table").table2excel({
+            filename: "成績匯出.xls"
+        });
+
+        $("#export_btn").attr("src", "static/4GAME_ALL/ALL/1x/ALL_EXPORT_RESULTS_C.png");
+
+        var SetSuccessModal = new bootstrap.Modal($('#SetSuccessModal'));
+        if (! $('#SetSuccessModal').hasClass('show')) SetSuccessModal.show();
+    });
+
+    function exit() {
+        var LogoutModal = new bootstrap.Modal($('#LogoutModal'));
+        if (! $('#LogoutModal').hasClass('show')) LogoutModal.show();
+    }
+    $("#mlogout").click(function() {
+        document.location.href="/branch";
+    });
+    // $("#tohome").click(function() {
+    //     var SetSuccessModal = new bootstrap.Modal($('#SetSuccessModal'));
+    //     if ($('#SetSuccessModal').hasClass('show')) SetSuccessModal.();
+    // });
+</script>

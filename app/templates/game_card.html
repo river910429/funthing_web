@@ -1,0 +1,270 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <link rel="shortcut icon" href="#" />
+    <title>4x4 Card Game</title>
+
+    <style>
+      * {
+        font-family: Microsoft JhengHei, "Segoe UI", Arial, sans-serif;
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        height: 100vh;
+        display: flex;
+      }
+
+      /* �쥻�P�ɦ� #parent �P .parent�F��� HTML �Ϊ��O .parent */
+      .parent {
+        position: relative;
+        width: 100vw;
+        height: 100vh;
+        background-image: url("/static/4GAME_ALL/CARD_GAME4X4/1x/CARD_GAME_BG_WORD.png");
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center;
+        overflow: hidden;
+      }
+
+      #game_nav_bar {
+        width: 100vw;
+        height: 13vh;
+        position: absolute;
+      }
+
+      #game_time_icon {
+        position: absolute;
+        top: 3.5%;
+        left: 27vw;
+        height: 6vh;
+      }
+
+      #game_time_bg {
+        position: absolute;
+        top: 1.5%;
+        left: 32vw;
+        width: 38vw;
+        height: 10vh;
+      }
+
+      /* �ץ��G�쥻�O .p_bar�A�� HTML �g id="p_bar" */
+      #p_bar {
+        position: absolute;
+      }
+
+      #game_time_bar {
+        position: absolute;
+        top: 2.5%;
+        left: 32.5vw;
+        height: 8%;
+        width: 3%;
+        display: block;
+        background: #ff9100;
+        border-radius: 40px;
+        transition: width 90s ease;
+        z-index: 300;
+        /* border: 2px solid rebeccapurple; */
+      }
+
+      .card_board {
+        position: absolute;
+        top: 20%;
+        left: 20%;
+        width: 60vw;
+        height: 70vh;
+        margin: auto;
+        display: flex;
+        flex-wrap: wrap;
+        perspective: 1000px;
+      }
+
+      .card {
+        width: calc(25% - 12px);
+        height: calc(25% - 12px);
+        position: relative;
+        margin: 6px;
+        background-color: transparent;
+        transform: scale(1.5) rotateY(0deg);
+        transform-style: preserve-3d;
+        transition: transform 0.5s;
+      }
+
+      .card:active {
+        transform: scale(1.2) rotateY(0deg);
+        transition: transform 0.2s;
+      }
+
+      .card.flip {
+        transform: scale(1.5) rotateY(180deg);
+      }
+
+      .front_face,
+      .back_face {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        border-radius: 12px;
+        backface-visibility: hidden;
+        -webkit-backface-visibility: hidden; /* Safari */
+      }
+
+      .front_face {
+        transform: rotateY(180deg);
+      }
+
+      .question {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) rotateY(180deg);
+        width: 90%;
+        text-align: center;
+        font-size: 14px;
+        font-weight: bold;
+        line-height: 1.2;
+        z-index: 500;
+        pointer-events: none;
+      }
+
+      #home_btn {
+        position: absolute;
+        height: 6%;
+        left: 2%;
+        top: 3.5%;
+        z-index: 400;
+        cursor: pointer;
+      }
+
+      #pause_btn {
+        position: absolute;
+        height: 6%;
+        right: 13%;
+        top: 3.5%;
+        z-index: 400;
+      }
+
+      #game_result_btn {
+        position: absolute;
+        height: 6%;
+        right: 7.5%;
+        top: 3.5%;
+        z-index: 400;
+      }
+
+      #profile {
+        position: absolute;
+        height: 6%;
+        right: 2%;
+        top: 3.5%;
+        z-index: 400;
+        cursor: pointer;
+      }
+
+      #listen_btn {
+        position: absolute;
+        height: 10%;
+        right: 2%;
+        top: 77%;
+        z-index: 400;
+        cursor: pointer;
+      }
+
+      #subject_adder {
+        position: absolute;
+        text-align: right;
+        width: 8vw;
+        height: 8vh;
+        margin-top: 2vh;
+        margin-left: 11vw;
+        font-family: Microsoft JhengHei, "Segoe UI", Arial, sans-serif;
+        font-size: 3vw;
+        z-index: 400;
+      }
+
+      #count_down {
+        position: absolute;
+        width: 100%;
+        top: 13%;
+        z-index: 400;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="parent">
+      <img
+        id="game_nav_bar"
+        src="{{ url_for('static', filename = '4GAME_ALL/ALL/1x/ALL_NAVIGATION_BAR.png')}}"
+      />
+      <p id="subject_adder">0/8</p>
+      <img
+        id="game_time_icon"
+        src="{{ url_for('static', filename = '4GAME_ALL/ALL/1x/ALL_TIME.png')}}"
+      />
+      <img
+        id="game_time_bg"
+        src="{{ url_for('static', filename = '4GAME_ALL/ALL/1x/ALL_TIME_WHITE_LINE.png')}}"
+      />
+
+      <img
+        id="profile"
+        onclick="leave_game()"
+        src="{{ url_for('static', filename = '4GAME_ALL/ALL/1x/ALL_LEAVE_GAME.png')}}"
+      />
+      <img
+        id="listen_btn"
+        onclick="listen_again()"
+        src="{{ url_for('static', filename = '4GAME_ALL/ALL/1x/ALL_VOLUME_GAME_PAGE.png')}}"
+      />
+
+      <div id="p_bar">
+        <span id="game_time_bar"></span>
+      </div>
+
+      <img
+        id="count_down"
+        src="/static/4GAME_ALL/CARD_GAME4X4/1x/CARD_GAME_10.png"
+      />
+
+      <div class="card_board">
+        <!-- 16 cards -->
+        {% for i in range(16) %}
+        <div class="card">
+          <img
+            class="front_face"
+            src="{{ url_for('static', filename='4GAME_ALL/CARD_GAME4X4/1x/CARD_GAME_4X4_FRONT.png')}}"
+          />
+          <img
+            class="back_face"
+            src="{{ url_for('static', filename='4GAME_ALL/CARD_GAME4X4/1x/CARD_GAME_4X4_BACK.png')}}"
+          />
+          <p hidden class="question"></p>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <script
+      type="text/javascript"
+      src="{{ url_for('static', filename='js/jquery-3.6.0.min.js')}}"
+    ></script>
+    <script
+      type="text/javascript"
+      src="{{ url_for('static', filename='js/game_card.js')}}"
+    ></script>
+
+    <script type="text/javascript">
+      var subjects = {{ course|tojson }};
+      var subjects_CH = subjects.gameneed;
+    </script>
+  </body>
+</html>

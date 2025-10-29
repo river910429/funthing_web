@@ -1,0 +1,227 @@
+body {
+    background-color: white;
+    background-image: url("../Font/1x/ALL_BG_GRID.png");
+    background-size: contain;
+}
+.outline {
+    outline: 2px dashed blue;
+}
+* {
+    font-family: Microsoft JhengHei;
+    font-weight: bold !important;
+    font-family: Microsoft JhengHei;
+}
+.bg-dgray {
+    background-color: #666666;
+}
+.bg-mgray {
+    background-color: #B3B3B3;
+}
+.bg-lgray {
+    background-color: #E6E6E6;
+}
+.bg-teal{
+    background-color: #02B7B4 !important;
+}
+.bg-orange{
+    background-color: #FBA501 !important;
+}
+.bg-red{
+    background-color: #FE6265 !important;
+}
+
+/* navbar */
+#my-navbar {
+    height: 13vh;
+    background-color: #F4DA63;
+}
+#my-navbar img {
+    height: 6vh;
+    object-fit: contain;
+}
+#back_btn{
+    position: absolute;
+    height: 6%;
+    left: 2%;
+    top: 27%;
+    z-index: 400;
+    cursor: pointer;
+}
+#home_btn{
+    position: absolute;
+    height: 6%;
+    left: 7%;
+    top: 27%;
+    z-index: 400;
+    cursor: pointer;
+}
+#profile{
+    position: absolute;
+    height: 6%;
+    right: 2%;
+    top: 27%;
+    z-index: 400;
+    cursor: pointer;
+}
+#profile button{
+    padding: 0px;
+    border: 0px;
+    background-color: #F4DA63;
+}
+/* #profile button img{
+    height: 100%;
+    padding: 0px;
+    object-fit: contain;
+} */
+
+.dropdown-menu {
+    position: absolute;
+    z-index: 1000;
+    min-width: 0px !important;
+    padding: 0px !important;
+    margin: 0 !important;
+    font-size: 0rem !important;
+    border: 0px solidrgba(0,0,0,0) !important;
+    border-radius: 0px !important;
+    transform: translate(-10.3vw, 9vh) !important;
+}
+#dropdown-equ{
+    height: 8.5vh;
+    width: 15vw;
+}
+#dropdown-equ{
+    background-image: url(../4GAME_ALL/ALL/1x/ALL_PERSONAL_EQUIPMENT_NORMAL.png);
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+}
+#dropdown-equ:hover{
+    background-image: url(../4GAME_ALL/ALL/1x/ALL_PERSONAL_EQUIPMENT_ACTIVE.png);
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+}
+#dropdown-equ:active{
+    background-image: url(../4GAME_ALL/ALL/1x/ALL_PERSONAL_EQUIPMENT_FOCUS.png);
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+}
+#dropdown-leave{
+    height: 8.5vh;
+    width: 15vw;
+}
+#dropdown-leave{
+    background-image: url(../4GAME_ALL/ALL/1x/ALL_LOG_OUT_GAME_NORMAL.png);
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+}
+#dropdown-leave:hover{
+    background-image: url(../4GAME_ALL/ALL/1x/ALL_LOG_OUT_GAME_ACTIVE.png);
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+}
+#dropdown-leave:active{
+    background-image: url(../4GAME_ALL/ALL/1x/ALL_LOG_OUT_FOCUS.png);
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+}
+
+/* layout */
+.body {
+    height: 87vh;
+    width: 100vw;   
+}
+.main {
+    height: 70%;
+    width: 90%;
+}
+#submit_btn {
+    position: absolute;
+    width: 20vw;
+    left: 62%;
+    bottom: 3%;
+    z-index: 400;
+    cursor: pointer;
+}
+#cancel_btn {
+    position: absolute;
+    width: 20vw;
+    left: 20%;
+    bottom: 3%;
+    z-index: 400;
+    cursor: pointer;
+}
+
+/* main */
+.search-bar {
+    min-height: 13%;
+    background-color: #F4DA63;
+    border-radius: 30px 30px 0px 0px;
+}
+
+.mythead{
+    margin-bottom: 0px;
+}
+.mythead tr{
+    margin-right: 25px;
+}
+
+.data-list {
+    overflow-y: scroll;
+    overflow-x: hidden;
+    background-color: #E6E6E6;
+    padding: 0px;
+}
+.table {
+    border-color: #B3B3B3;
+}
+tr {
+    height: 7.1vh;
+}
+
+
+.mythinput {
+    padding: 0px !important;
+}
+.mythinput input{
+    width: 100%;
+    min-height: 7.1vh;
+    border: 1px solid #B3B3B3;
+}
+
+.add-bar {
+    outline: 5px solid #FE6265;
+    background-color: #E6E6E6;
+}
+.add-bar tr{
+    margin-right: 25px;
+}
+.add-bar td{
+    outline: 1px solid #B3B3B3;
+}
+
+::-webkit-scrollbar {
+    height: 10px;
+    width: 25px;
+}
+::-webkit-scrollbar-track {
+    height: 10px;
+    width: 25px;
+    background: white;
+    border: 5px solid white;
+}
+::-webkit-scrollbar-thumb {
+    height: 1em;
+    width: 1em;
+    background-color: #B3B3B3;
+    border-radius: 10px;
+    border: 5px solid white;
+}
+
+.swal-footer {
+    text-align: center;
+}
+.swal-button--confirm {
+    background-color: #FE6265;
+}
+.swal-button--confirm:not([disabled]):hover {
+    background-color: #FE6265;
+}

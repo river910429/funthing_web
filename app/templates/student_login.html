@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link href="{{ url_for('static', filename='css/login_page_stu.css')}}" rel="stylesheet", type="text/css">
+        <script type="text/javascript" src="{{ url_for('static', filename='js/entrance.js')}}"></script>
+    </head>
+
+    <body>
+        <div class="parent">
+            <img id="back_img" src="{{ url_for('static', filename='Font/1x/ALL_NAV_BAR_BACK.png')}}">
+            <!-- <img id="background_img" src="{{ url_for('static', filename='Font/1x/ALL_BG_LOG_IN_STUDENT.png')}}"> -->
+            <img id="background_img" src="{{ url_for('static', filename='Font/1x/ALL_LOG_IN_STUDENT.png')}}">
+            
+            <div id = "login_div">
+                <!-- <img id="login_box" src="{{ url_for('static', filename='Font/1x/ALL_LOG_IN_STUDENT.png')}}"> -->
+
+                <div id="login_form">
+                    <input type="text" id="account_box" name="account" placeholder="例：302班16號 -> 30216"/><br><br>
+                    <input type="password" id="pwd_box" name="pwd"/><br><br>
+                    <p id="login_msg">&nbsp</p>
+                    <input type="image" id="submit_btn" src="{{ url_for('static', filename='4GAME_ALL/ALL/1x/ALL_CONFIRM_B.png')}}" alt="Submit Form" />
+                
+                    <!-- 註冊功能 -->
+                    <p style="text-align:center; margin-top:10px;">
+                        <a href="/register/stu"
+                           style="color:#0055ff; text-decoration:none; font-size:16px;">
+                          沒有帳號？點此註冊
+                        </a>
+                    </p>
+                </div>
+            </div>
+            
+              
+        </div>
+    </body>
+
+    <script src="/static/js/jquery-3.6.0.min.js"></script>
+    <script>
+        $("#back_img").click(function() {
+            window.location.href = "/branch";
+        });
+
+        $(document).on('keypress',function(e) {
+            if(e.which == 13) v();
+        });
+        $("#submit_btn").click(function() {
+            v();
+        });
+        function v(){
+            $.ajax({
+                method: "POST",
+                url: "/verifying",
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    account: $("#account_box").val(),
+                    pwd: $("#pwd_box").val(),
+                }),
+                dataType: "json",
+            })
+            .done(function(result) {
+                console.log(result);
+                if (result["status"] == "success")
+                    window.location.href = result["url"]
+                else
+                    $("#login_msg").text("*帳號密碼錯誤*");
+            })
+            .fail(function() {
+                // alert('失敗');
+            })
+            .always(function() {
+                // alert('結束');
+            });
+        }
+    </script>
+
+</html>

@@ -1,0 +1,305 @@
+* {
+    font-family: Microsoft JhengHei;
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+#parent {
+    position: relative;
+    margin: 0;
+}
+
+body {
+    height: 100vh;
+    display: flex;
+}
+
+#background_img {
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+    z-index: 0;
+    background-size: contain;
+}
+
+#game_nav_bar {
+    width: 100vw;
+    height: 13vh;
+    position: absolute;
+}
+
+#game_time_icon {
+    position: absolute;
+    top: 3.5%;
+    left: 27vw;
+    height: 6vh;
+}
+
+#game_time_bg {
+    position: absolute;
+    top: 1.5%;
+    left: 32vw;
+    width: 38vw;
+    height: 10vh;
+}
+
+.p_bar{
+    position: absolute;
+    /* border: 2px solid blanchedalmond; */
+}
+
+#game_time_bar{
+    position: absolute;
+    top: 2.5%;
+    left: 32.5vw;
+    height: 8%;
+    width: 3%;
+    display: block;
+    background: #ff9100;
+    border-radius: 40px;
+    transition: width 120s ease;
+    z-index: 300;
+    /* border: 2px solid rebeccapurple; */
+}
+
+#subject_adder{
+    position: absolute;
+    text-align: right;
+    width: 8vw;
+    height: 8vh;
+    margin-top: 2vh;
+    margin-left: 11vw;
+    font-family: Microsoft JhengHei;
+    font-size: 3vw;
+    z-index: 400;
+}
+
+#home_btn{
+    position: absolute;
+    height: 6%;
+    left: 2%;
+    top: 3.5%;
+    z-index: 400;
+    cursor: pointer;
+}
+
+#pause_btn{
+    position: absolute;
+    height: 6%;
+    right: 13%;
+    top: 3.5%;
+    z-index: 400;
+}
+
+#game_result_btn{
+    position: absolute;
+    height: 6%;
+    right: 7.5%;
+    top: 3.5%;
+    z-index: 400;
+}
+
+#profile{
+    position: absolute;
+    height: 6%;
+    right: 2%;
+    top: 3.5%;
+    z-index: 400;
+    cursor: pointer;
+}
+
+#listen_btn{
+    position: absolute;
+    height: 10%;
+    right: 2%;
+    top: 77%;
+    z-index: 400;
+    cursor: pointer;
+}
+
+#game_tutorial{
+    position: absolute;
+    z-index: 600;
+    top: 20vh;
+    left: 30%;
+    width: 40vw;
+    height: 70vh;
+}
+
+#gray_layer{
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 500;
+}
+
+#btn_enter_game{
+    cursor: pointer;
+    position: absolute;
+    width: 17vw;
+    height: 10vh;
+    top:78vh;
+    right:32%;
+    z-index: 650;
+    /* border: none; */
+}
+
+#btn_not_enter_game{
+    cursor: pointer;
+    position: absolute;
+    width: 17vw;
+    height: 10vh;
+    top:78vh;
+    left:32%;
+    z-index: 650;
+}
+
+#kaohsiung{
+    /* z-index: 500; */
+    width: 8.75vw;
+    height: 16.6vh;
+    top:27vh;
+    right: 28%;
+    /* top:58.2vh;
+    left:41.7% */
+}
+
+#subject_1{
+    position: absolute;
+    z-index: 550;
+    width: 10vw;
+    height: 10vh;
+    top: 31vh;
+    right: 19%;
+}
+
+#newtaipei{
+    /* z-index: 500; */
+    width: 8.43vw;
+    height: 14.4vh;
+    top:50vh;
+    right: 30%;
+
+    /* top:17.2vh;
+    left: 55.1%; */
+}
+
+#subject_2{
+    position: absolute;
+    z-index: 550;
+    width: 10vw;
+    height: 10vh;
+    top: 52vh;
+    right: 20%;
+}
+
+#taichung{
+    /* z-index: 500; */
+    width: 13vw;
+    height: 10.6vh;
+    top:75vh;
+    right: 32%;
+
+    /* top:36.3vh;
+    left: 41.8%; */
+}
+
+#subject_3{
+    position: absolute;
+    z-index: 550;
+    width: 10vw;
+    height: 10vh;
+    top: 75vh;
+    right: 22%;
+}
+
+#tainan{
+    /* z-index: 500; */
+    width: 7.7vw;
+    height: 13.3vh;
+    top:27vh;
+    left: 32%;
+
+    /* top:60.3vh;
+    left: 37%; */
+}
+
+#subject_4{
+    position: absolute;
+    z-index: 550;
+    width: 10vw;
+    height: 10vh;
+    top: 28vh;
+    left: 22%;
+}
+
+#taipei{
+    /* z-index: 500; */
+    transform: scale(3);   /* 放大 1.2 倍，可以自行調整 */
+    transform-origin: center; /* 以圖片中心點縮放 */
+    width: 3vw;
+    height: 6.1vh;
+    top:50vh;
+    left: 32%;
+
+    /* top:19vh;
+    left: 57.8%; */
+}
+
+
+#subject_5{
+    position: absolute;
+    z-index: 550;
+    width: 10vw;
+    height: 10vh;
+    top: 49vh;
+    left: 22%;
+}
+
+#taoyuan{
+    /* z-index: 500; */
+    width: 6.6vw;
+    height: 13vh;
+    top:70vh;
+    left: 27%;
+
+    /* top:20.6vh;
+    left: 50.5%; */
+}
+
+#subject_6{
+    position: absolute;
+    z-index: 550;
+    width: 10vw;
+    height: 10vh;
+    top: 72vh;
+    left: 17%;
+}
+
+#record_btn{
+    position: absolute;
+    /* z-index:500; */
+    width: 15vw;
+    height: 21vh;
+    bottom: 12vh;
+    right: 5vw;
+    cursor: pointer;
+}
+
+.subject{
+    z-index: 490;
+    font: bold 24px "Helvetica Neue", Helvetica, Arial, sans-serif;
+    text-align: center;
+}
+
+
+.puzzle{    
+    position: absolute;
+    user-select: none;
+    -moz-user-select: none; 
+    -webkit-user-select: none;
+    -ms-user-select: none;
+}

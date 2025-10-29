@@ -1,0 +1,109 @@
+#background_ent_img{
+    position: relative;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    background-size: contain;
+}
+
+#background_img{
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background-size: contain;
+}
+
+#game_background{
+    position: relative;
+    background-size: cover;
+    height: 100%;
+    background-image: var(--background-url);
+}
+
+body, html{
+    width: 100%;
+    height: 100%;
+    margin: 0;
+}
+
+#navigation_bar{
+    width: 100%;
+    height: 13%;
+    background-size: cover;
+    position: absolute;
+    background-image: url("/static/4GAME_ALL/ALL/1x/ALL_NAVIGATION_BAR.png");
+}
+
+#gray_layer{
+    position: relative;
+    height: 100%;
+    top: 0;
+    left: 0;
+    opacity: 0.8;
+    background-image: var(--graybackground-url);
+    background-size: cover;
+}
+
+#time_bar_icon{
+    background-image: var(--time_bar_icon-url);
+    position: absolute;
+    top:25%;
+    margin-left: 30%;
+    width: 71px;
+    height: 72px;
+}
+
+#time_bar_background{
+    background-image: var(--time_bar_background-url);
+    position: absolute;
+    top:20%;
+    margin-left: 35%;
+    width: 622px;
+    height: 78px;
+}
+
+#time_bar{
+    background-image: var(--time_bar-url);
+    position: absolute;
+    top:10%;
+    margin-left: 2%;
+    width: 593px;
+    height: 58px;
+}
+
+#game_stop_btn{
+    background-image: var(--game_stop_btn-url);
+    position: absolute;
+    top:27%;
+    margin-left: 80%;
+    width: 69px;
+    height: 53px;
+}
+
+#game_result_btn{
+    background-image: var(--game_result_btn-url);
+    position: absolute;
+    top:17%;
+    margin-left: 87%;
+    width: 71px;
+    height: 79px;
+}
+
+#game_stu_info{
+    background-image: var(--game_stu_info-url);
+    position: absolute;
+    top:23%;
+    margin-left: 94%;
+    width: 64px;
+    height: 64px;
+}
+
+#game_tutorial{
+    background-image: var(--game_tutorial-url);
+    position: absolute;
+    top:20%;
+    left: 25%;
+    /* margin-left: 94%; */
+    width: 914px;
+    height: 720px;
+}

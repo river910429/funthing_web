@@ -1,0 +1,201 @@
+body {
+    background-color: white;
+}
+img {
+    object-fit: contain;
+}
+.outline {
+    outline: 2px dashed blue;
+}
+* {
+    font-family: Microsoft JhengHei;
+    font-weight: bold !important;
+    font-family: Microsoft JhengHei;
+}
+
+/* navbar */
+#my-navbar {
+    height: 13vh;
+    background-color: #F4DA63;
+}
+#my-navbar img {
+    height: 6vh;
+    object-fit: contain;
+}
+#back_btn{
+    position: absolute;
+    height: 6%;
+    left: 2%;
+    top: 27%;
+    z-index: 400;
+    cursor: pointer;
+}
+#home_btn{
+    position: absolute;
+    height: 6%;
+    left: 7%;
+    top: 27%;
+    z-index: 400;
+    cursor: pointer;
+}
+#profile{
+    position: absolute;
+    height: 6%;
+    right: 2%;
+    top: 27%;
+    z-index: 400;
+}
+#profile button{
+    padding: 0px;
+    border: 0px;
+    background-color: #F4DA63;
+}
+/* #profile button img{
+    height: 100%;
+    padding: 0px;
+    object-fit: contain;
+} */
+
+.dropdown-menu {
+    position: absolute;
+    z-index: 1000;
+    min-width: 0px !important;
+    padding: 0px !important;
+    margin: 0 !important;
+    font-size: 0rem !important;
+    border: 0px solidrgba(0,0,0,0) !important;
+    border-radius: 0px !important;
+    transform: translate(-10.3vw, 9vh) !important;
+}
+#dropdown-equ{
+    height: 8.5vh;
+    width: 15vw;
+}
+#dropdown-equ{
+    background-image: url(../4GAME_ALL/ALL/1x/ALL_PERSONAL_EQUIPMENT_NORMAL.png);
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+}
+#dropdown-equ:hover{
+    background-image: url(../4GAME_ALL/ALL/1x/ALL_PERSONAL_EQUIPMENT_ACTIVE.png);
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+}
+#dropdown-equ:active{
+    background-image: url(../4GAME_ALL/ALL/1x/ALL_PERSONAL_EQUIPMENT_FOCUS.png);
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+}
+#dropdown-leave{
+    height: 8.5vh;
+    width: 15vw;
+}
+#dropdown-leave{
+    background-image: url(../4GAME_ALL/ALL/1x/ALL_LOG_OUT_GAME_NORMAL.png);
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+}
+#dropdown-leave:hover{
+    background-image: url(../4GAME_ALL/ALL/1x/ALL_LOG_OUT_GAME_ACTIVE.png);
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+}
+#dropdown-leave:active{
+    background-image: url(../4GAME_ALL/ALL/1x/ALL_LOG_OUT_FOCUS.png);
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+}
+
+/* layout */
+.body {
+    height: 87vh;
+    width: 100vw;
+    background: url("../Font/1x/ALL_BACKGROUND_STAGE.png");
+	background-size:100% 100%;
+	background-repeat:no-repeat;
+}
+.main {
+    height: 90%;
+    width: 100%;
+}
+
+/* main */
+.button-left {
+    display: inline-block;
+    position: relative;
+    width: 15%;
+    height: 15%;
+    left: -5%;
+    z-index: 100;
+    cursor: pointer;
+}
+.button-right {
+    display: inline-block;
+    position: relative;
+    width: 15%;
+    height: 15%;
+    right: -5%;
+    z-index: 100;
+    cursor: pointer;
+}
+.equip-box {
+    height: 95%;
+    width: 80%;
+    background-color: #F4DA63;
+    border-radius: 30px 30px 30px 30px;
+    z-index: 1;
+}
+.equip {
+    height: 90%;
+    width: 90%;
+    z-index: 1;
+}
+.equip img {
+    height: 90%;
+    width: 90%;
+    cursor: pointer;
+}
+.score-box {
+    height: 15%;
+    width: 100%;
+    background: url("../4GAME_ALL/ALL/1x/ALL_CURRENT_POINTS.png");
+	background-size:100% 100%;
+	background-repeat:no-repeat;
+}
+
+/* swal */
+.swal-footer {
+    text-align: center;
+}
+.swal-button {
+    width: 196px;
+    height: 53px;
+    background-color: #FFFFFF;
+    background-image: url("../4GAME_ALL/ALL/1x/ALL_COMPLETE_C.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+.swal-button:focus {
+    box-shadow: none !important;
+}
+.swal-button:active {
+    background-color: #FFFFFF !important;
+}
+.swal-button-container :hover {
+    background-color: #FFFFFF !important;
+}
+
+.dot {
+    position: absolute;
+    height: 2%;
+    top: 43%;
+    z-index: 300;
+}
+#dot2{
+    position: relative;
+    left: -39.5%;
+}
+#dot1{
+    position: relative;
+    left: -44.5%;
+}

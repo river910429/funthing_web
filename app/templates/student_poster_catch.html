@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link href="{{ url_for('static', filename='css/stu_practice_poster.css')}}" rel="stylesheet" , type="text/css">
+    <!-- Core theme CSS (includes Bootstrap 5.0.2) -->
+    <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-5.0.2.min.css">
+    <script type="text/javascript" src="{{ url_for('static', filename='js/stu_practice_poster.js')}}"></script>
+</head>
+
+<body>
+    <img id="background_img" src="{{ url_for('static', filename='Font/1x/ALL_BG_GRID.png')}}">
+    <div class="parent">
+        <img id="back_btn" onclick="back()"
+            src="{{ url_for('static', filename='4GAME_ALL/ALL/1x/ALL_ARROW_BACK.png')}}">
+        <img id="home_btn" onclick="home()" src="{{ url_for('static', filename='4GAME_ALL/ALL/1x/ALL_HOME.png')}}">
+        
+        <div class="btn-group" id="profile">
+            <button type="button" id="dropdownMenuReference"
+                    data-bs-toggle="dropdown" aria-expanded="false" data-bs-reference="parent">
+                <img src="/static/4GAME_ALL/ALL/1x/ALL_ACCOUNT.png">
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuReference">
+                <li><button id="dropdown-equ" onclick="document.location.href='/stu/equipment'"></li>
+                <li><button id="dropdown-leave" onclick="exit()"></li>
+            </ul>
+        </div>
+        
+        <img id="nav_bar_w_word"
+            src="{{ url_for('static', filename='Font/1x/ALL_NAVIGATION_BAR_PRACTICE_WORKSHOP_WORD.png')}}">
+
+        <img id="poster" src="{{ url_for('static', filename='Font/1x/ALL_POSTER_ANIMAL_CATCH.png')}}">
+        <img class="dots" id="dots_1" src="{{ url_for('static', filename='Font/1x/ALL_DOT_BLACK.png')}}">
+        <img class="dots" id="dots_2" onclick="poster_map()"
+            src="{{ url_for('static', filename='Font/1x/ALL_DOT_GRAY.png')}}">
+        <img class="dots" id="dots_3" onclick="poster_fruit()"
+            src="{{ url_for('static', filename='Font/1x/ALL_DOT_GRAY.png')}}">
+        <img class="dots" id="dots_4" onclick="poster_card()"
+            src="{{ url_for('static', filename='Font/1x/ALL_DOT_GRAY.png')}}">
+        <img class="dots" id="dots_5" src="{{ url_for('static', filename='Font/1x/ALL_DOT_GRAY.png')}}">
+        <img class="dots" id="dots_6" src="{{ url_for('static', filename='Font/1x/ALL_DOT_GRAY.png')}}">
+
+        <div id="app">
+            <div class="container lessons-list">
+                <div class="row text-center justify-content-between">
+                    <template v-for="(item, i) in course_data">
+                        <div class="col-5 mx-3" v-bind:class="item.css" v-on:click="clickcourse(i, item.id)"> %% item.name %% </div>
+                    </template>
+                </div>
+            </div>
+            <img id="confirm" v-on:click="confirm" src="{{ url_for('static', filename='Font/1x/ALL_START_PRACTICE.png')}}">
+        </div>
+    </div>
+
+    <div class="modal fade" id="LogoutModal" data-bs-backdrop="static" 
+        data-bs-keyboard="false" tabindex="-1" 
+        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="d-flex flex-column align-items-center">
+                            <img src="/static/Font/1x/ALL_IF_LOGOUT_B.png" style="width: 100%">
+                            <!-- <div>title</div> -->
+                            <div class="d-flex justify-content-between w-100">
+                                <div class="alertbtn alertbtn-succ" data-bs-dismiss="modal">
+                                    取消
+                                </div>
+                                <div class="alertbtn alertbtn-warn" id="mlogout">
+                                    登出
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="TimeOutModal" data-bs-backdrop="static" 
+        data-bs-keyboard="false" tabindex="-1" 
+        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="d-flex flex-column align-items-center">
+                            <img src="/static/4GAME_ALL/ALL/1x/ALL_IF_TIMEOUT_B.png" style="width: 100%">
+                            <!-- <div>title</div> -->
+                            <div class="d-flex justify-content-center w-100">
+                                <div class="alertbtn alertbtn-warn" id="logout">
+                                    重新登入
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- my alert -->
+    <script type="text/javascript" src="/static/js/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/static/css/myalert.css">
+    <script>
+        lastmovetime = new Date();
+        document.addEventListener('mousemove', function() {
+            lastmovetime = new Date();
+        });
+        setInterval(check, 1000 * 10);
+        function check() {
+            console.log(new Date() - lastmovetime);
+            if ((new Date() - lastmovetime) > 1000 * 60 * 5) {
+                var TimeOutModal = new bootstrap.Modal($('#TimeOutModal'));
+                if (! $('#TimeOutModal').hasClass('show')) {
+                    TimeOutModal.show();
+                    setTimeout(() => {
+                        document.location.href="/branch";
+                    }, 1000*10)
+                }
+            }
+        }
+        $("#logout").click(function() {
+            document.location.href="/branch";
+        });
+
+        function exit() {
+            var LogoutModal = new bootstrap.Modal($('#LogoutModal'));
+            if (! $('#LogoutModal').hasClass('show')) LogoutModal.show();
+        }
+        $("#mlogout").click(function() {
+            document.location.href="/branch";
+        });
+    </script>
+
+    <!-- Bootstrap core JS 5.0.2 -->
+    <script src="/static/js/bootstrap-5.0.2.min.js"></script>
+    <!-- Vue.js 2.6.14 -->
+    <script src="/static/js/vue-2.6.14.min.js"></script>
+    <!-- axios 0.26.1-->
+    <script src="/static/js/axios-0.26.1.min.js"></script>
+    <!-- local js -->
+    <script>
+        let app = new Vue({
+            el: "#app",
+            delimiters: ["%%","%%"],
+            data() {
+                return {
+                    course_id: 0,
+                    select_course: 0,
+                    course_data: [
+                    ]
+                }
+            },
+            created() {
+               this.search();
+            },
+            methods: {
+                search() {
+                    axios
+                        .post('/template/course/search',
+                            {
+                                'game_name': "game2",
+                            },
+                            {
+                                'Content-Type': 'application/json'
+                            })
+                        .then((response) => {
+                            console.log(response.data);
+                            if (response.data.status == "success") {
+                                response = response.data.results;
+                                for(var i = 0; i < response.length; i++) {
+                                    if (i == 0) response[i].css = "lessons-click";
+                                    else response[i].css = "lessons";
+                                }
+                                this.course_data = response;
+                                this.select_course = 0;
+                                console.log(this.course_data);
+                                this.clickcourse(0, this.course_data[0].id);
+                            }
+                        })
+                        .catch((error) => {
+                            // alert(error)
+                        })
+                        .finally();
+                },
+                clickcourse(index, course_id) {
+                    console.log("pre, cur:", this.select_course, index);
+                    this.course_data[this.select_course].css = "lessons";
+                    this.course_data[index].css = "lessons-click";
+                    this.select_course = index;
+                    this.course_id = course_id;
+                    console.log(course_id);
+                },
+                confirm() {
+                    window.location.href = `/game/catch_egg_tutorial?course_id=${this.course_id}`
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>

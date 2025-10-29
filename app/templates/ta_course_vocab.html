@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ta_course_vocab</title>
+    <!-- Core theme CSS (includes Bootstrap 5.0.2) -->
+    <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-5.0.2.min.css">
+    <!-- my alert -->
+    <link rel="stylesheet" type="text/css" href="/static/css/myalert.css">
+    <!-- local style -->
+    <link rel="stylesheet" type="text/css" href="/static/css/ta_course_vocab.css">
+</head>
+
+<body>
+    {% raw %}
+    <div id="app">
+
+        <!-- nav-bar -->
+        <nav id="my-navbar" class="navbar navbar-light navbar-expand-lg justify-content-center">
+            <div class="container-fluid d-flex justify-content-center">
+                <a href="/ta/course">
+                    <img id="back_btn" src="/static/4GAME_ALL/ALL/1x/ALL_ARROW_BACK.png">
+                </a>
+                <a href="/home/ta">
+                    <img id="home_btn" src="/static/4GAME_ALL/ALL/1x/ALL_HOME.png">
+                </a>
+                <div class="fs-1">匯入語詞教材</div>
+
+                <div class="btn-group" id="profile">
+                    <button type="button" id="dropdownMenuReference"
+                            data-bs-toggle="dropdown" aria-expanded="false" data-bs-reference="parent">
+                        <img src="/static/4GAME_ALL/ALL/1x/ALL_ACCOUNT.png">
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuReference">
+                        <li><button id="dropdown-leave" onclick="exit()"></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <div class="body d-flex flex-column align-items-center">
+            <div class="main d-flex flex-column mt-5">
+
+                <!-- search-bar -->
+                <div class="search-bar d-flex align-items-center justify-content-center">
+                    <div class="px-3 d-none d-lg-block">
+                        <div class="fs-3">中文語詞</div>
+                    </div>
+                    <div class="px-3">
+                        <input type="text" class="form-control" v-model="search_word">
+                    </div>
+                    <div class="px-3">
+                        <button type="button" class="btn bg-teal text-white" v-on:click="search()">查詢</button>
+                    </div>
+                </div>
+
+                <!-- table-thead -->
+                <table class="table mythead align-middle text-center fs-5">
+                    <tbody class="bg-dgray text-white">
+                        <tr>
+                            <td class="col-1">編號</td>
+                            <td class="col-2">中文</td>
+                            <td class="col-2">台語</td>
+                            <td class="col-1">→</td>
+                            <td class="col-3">台羅拼音</td>
+                            <td class="col-1">單字試聽</td>
+                            <td class="col-2"></td>
+                            <td style="min-width: 25px;"></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <!-- table-data -->
+                <div class="flex-fill data-list" ref="data_scroll">
+                    <table class="table table-bordered align-middle text-center fs-5">
+                        <tbody>
+                            <template v-for="(item, i) in data_list">
+                                <tr>
+                                    <template v-if="tr_index == -2">
+                                        <td class="col-1">{{item.number + 1}}</td>
+                                        <td class="col-2 mytdinput">
+                                            <input v-bind:value="item.CHword" disabled>
+                                        </td>
+                                        <td class="col-2 mytdinput">
+                                            <input v-bind:value="item.TWword" disabled>
+                                        </td>
+                                        <td class="col-1">
+                                            <button type="button" class="btn text-white p-0">
+                                                <img src="/static/4GAME_ALL/ALL/1x/translate_disable.png">
+                                            </button>
+                                        </td>
+                                        <td class="col-3 mytdinput">
+                                            <input v-bind:value="item.TLPA" disabled>
+                                        </td>
+                                        <td class="col-1">
+                                            <button type="button" class="btn text-white p-0">
+                                                <img src="/static/4GAME_ALL/ALL/1x/tryplay_disable.png">
+                                            </button>
+                                        </td>
+                                        <td class="col-2">
+                                            <button type="button" class="btn bg-teal text-white"
+                                                v-on:click="fixWord(i)">編輯</button>
+                                            <button type="button" class="btn bg-red text-white"
+                                                v-on:click="remove(i)">移除</button>
+                                        </td>
+                                    </template>
+                                    <template v-else-if="tr_index == i">
+                                        <td class="col-1">{{item.number + 1}}</td>
+                                        <td class="col-2 mytdinput">
+                                            <input v-model="item.CHword">
+                                        </td>
+                                        <td class="col-2 mytdinput">
+                                            <input v-model="item.TWword">
+                                        </td>
+                                        <td class="col-1 bg-white">
+                                            <button type="button" class="btn p-0" v-on:click="translate(i)">
+                                                <img src="/static/4GAME_ALL/ALL/1x/translate.png">
+                                            </button>
+                                        </td>
+                                        <td class="col-3 mytdinput">
+                                            <input v-model="item.TLPA">
+                                        </td>
+                                        <td class="col-1 bg-white">
+                                            <button type="button" class="btn p-0" v-on:click="trylisten(i)">
+                                                <img src="/static/4GAME_ALL/ALL/1x/tryplay.png">
+                                            </button>
+                                        </td>
+                                        <td class="col-2">
+                                            <button type="button" class="btn bg-teal text-white"
+                                                v-on:click="fixWordCfm(i)">確認</button>
+                                            <button type="button" class="btn bg-red text-white"
+                                                v-on:click="cancel(i)">取消</button>
+                                        </td>
+                                    </template>
+                                    <template v-else>
+                                        <td class="col-1">{{item.number + 1}}</td>
+                                        <td class="col-2 mytdinput">
+                                            <input v-bind:value="item.CHword" disabled>
+                                        </td>
+                                        <td class="col-2 mytdinput">
+                                            <input v-bind:value="item.TWword" disabled>
+                                        </td>
+                                        <td class="col-1">
+                                            <button type="button" class="btn text-white p-0">
+                                                <img src="/static/4GAME_ALL/ALL/1x/translate_disable.png">
+                                            </button>
+                                        </td>
+                                        <td class="col-3 mytdinput">
+                                            <input v-bind:value="item.TLPA" disabled>
+                                        </td>
+                                        <td class="col-1">
+                                            <button type="button" class="btn text-white p-0">
+                                                <img src="/static/4GAME_ALL/ALL/1x/tryplay_disable.png">
+                                            </button>
+                                        </td>
+                                        <td class="col-2">
+                                            <button type="button" class="btn bg-mgray text-white">編輯</button>
+                                            <button type="button" class="btn bg-mgray text-white">移除</button>
+                                        </td>
+                                    </template>
+                                </tr>
+                            </template>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- add-bar -->
+                <table class="add-bar align-middle text-center fs-5">
+                    <thead>
+                        <tr>
+                            <template v-if="tr_index == -2">
+                                <td class="col-1 bg-red text-white">新增</td>
+                                <td class="col-2 mytdinput">
+                                    <input v-bind:value="insert_CHword" disabled>
+                                </td>
+                                <td class="col-2 mytdinput">
+                                    <input v-bind:value="insert_TWword" disabled>
+                                </td>
+                                <td class="col-1">
+                                    <button type="button" class="btn text-white p-0">
+                                        <img src="/static/4GAME_ALL/ALL/1x/translate_disable.png">
+                                    </button>
+                                </td>
+                                <td class="col-3 mytdinput">
+                                    <input v-bind:value="insert_TLPA" disabled>
+                                </td>
+                                <td class="col-1">
+                                    <button type="button" class="btn text-white p-0">
+                                        <img src="/static/4GAME_ALL/ALL/1x/tryplay_disable.png">
+                                    </button>
+                                </td>
+                                <td class="col-2">
+                                    <button type="button" class="btn bg-teal text-white"
+                                        v-on:click="newWord()">新增語詞</button>
+                                </td>
+                                <td style="min-width: 25px;"></td>
+                            </template>
+                            <template v-else-if="tr_index == -1">
+                                <td class="col-1 bg-red text-white">新增</td>
+                                <td class="col-2 mytdinput">
+                                    <input v-model="insert_CHword">
+                                </td>
+                                <td class="col-2 mytdinput">
+                                    <input v-model="insert_TWword">
+                                </td>
+                                <td class="col-1 bg-white">
+                                    <button type="button" class="btn text-white p-0" v-on:click="translate()">
+                                        <img src="/static/4GAME_ALL/ALL/1x/translate.png">
+                                    </button>
+                                </td>
+                                <td class="col-3 mytdinput">
+                                    <input v-model="insert_TLPA">
+                                </td>
+                                <td class="col-1 bg-white">
+                                    <button type="button" class="btn text-white p-0" v-on:click="trylisten()">
+                                        <img src="/static/4GAME_ALL/ALL/1x/tryplay.png">
+                                    </button>
+                                </td>
+                                <td class="col-2">
+                                    <button type="button" class="btn bg-teal text-white"
+                                        v-on:click="newWordCfm()">確認新增</button>
+                                    <button type="button" class="btn bg-red text-white"
+                                        v-on:click="cancel()">取消</button>
+                                </td>
+                                <td style="min-width: 25px;"></td>
+                            </template>
+                            <template v-else>
+                                <td class="col-1 bg-red text-white">新增</td>
+                                <td class="col-2 mytdinput">
+                                    <input v-bind:value="insert_CHword" disabled>
+                                </td>
+                                <td class="col-2 mytdinput">
+                                    <input v-bind:value="insert_TWword" disabled>
+                                </td>
+                                <td class="col-1">
+                                    <button type="button" class="btn text-white p-0">
+                                        <img src="/static/4GAME_ALL/ALL/1x/translate_disable.png">
+                                    </button>
+                                </td>
+                                <td class="col-3 mytdinput">
+                                    <input v-bind:value="insert_TLPA" disabled>
+                                </td>
+                                <td class="col-1">
+                                    <button type="button" class="btn text-white p-0">
+                                        <img src="/static/4GAME_ALL/ALL/1x/tryplay_disable.png">
+                                    </button>
+                                </td>
+                                <td class="col-2">
+                                    <button type="button" class="btn bg-mgray text-white">新增語詞</button>
+                                </td>
+                                <td style="min-width: 25px;"></td>
+                            </template>
+                        </tr>
+                    </thead>
+                </table>
+
+            </div>
+        </div>
+        
+        <img id="cancel_btn" src="/static/4GAME_ALL/ALL/1x/ALL_ROLLBACK_B.png" v-on:click="rollback()">
+        <img id="submit_btn" src="/static/4GAME_ALL/ALL/1x/ALL_STORE_B.png" v-on:click="commit()">
+    
+    <div class="modal fade" id="LogoutModal" data-bs-backdrop="static" 
+        data-bs-keyboard="false" tabindex="-1" 
+        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="d-flex flex-column align-items-center">
+                            <img src="/static/Font/1x/ALL_IF_LOGOUT_B.png" style="width: 100%">
+                            <!-- <div>title</div> -->
+                            <div class="d-flex justify-content-between w-100">
+                                <div class="alertbtn alertbtn-succ" data-bs-dismiss="modal">
+                                    取消
+                                </div>
+                                <div class="alertbtn alertbtn-warn" id="mlogout">
+                                    登出
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="WaitModal" data-bs-backdrop="static" 
+        data-bs-keyboard="false" tabindex="-1" 
+        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="d-flex flex-column align-items-center">
+                            <img class="rotate my-3" src="/static/4GAME_ALL/ALL/1x/loading.png">
+                            <div>建立中</div>
+                            <!-- <div class="d-flex justify-content-center w-100">
+                                <div class="alertbtn alertbtn-normal" data-bs-dismiss="modal">
+                                    完成
+                                </div>
+                            </div> -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="SetSuccessModal" data-bs-backdrop="static" 
+        data-bs-keyboard="false" tabindex="-1" 
+        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="d-flex flex-column align-items-center">
+                            <img src="/static/4GAME_ALL/ALL/1x/ALL_SET SUCCESSFULLY_B.png" style="width: 100%">
+                            <!-- <div>title</div> -->
+                            <div class="d-flex justify-content-center w-100">
+                                <div class="alertbtn alertbtn-normal" v-on:click="reloadpage">
+                                    完成
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="SetDeleteModal" data-bs-backdrop="static" 
+        data-bs-keyboard="false" tabindex="-1" 
+        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="d-flex flex-column align-items-center">
+                            <img src="/static/4GAME_ALL/ALL/1x/ALL_SET_DELETE_B.png" style="width: 100%">
+                            <!-- <div>title</div> -->
+                            <div class="d-flex justify-content-between w-100">
+                                <div class="alertbtn alertbtn-succ" data-bs-dismiss="modal">
+                                    取消
+                                </div>
+                                <div class="alertbtn alertbtn-warn" data-bs-dismiss="modal" v-on:click="removeCfm">
+                                    刪除
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    </div>
+
+    <script type="text/javascript" src="/static/js/jquery-3.6.0.min.js"></script>
+    <!-- Bootstrap core JS 5.0.2 -->
+    <script src="/static/js/bootstrap-5.0.2.min.js"></script>
+    <!-- Vue.js 2.6.14 -->
+    <script src="/static/js/vue-2.6.14.min.js"></script>
+    <!-- axios 0.26.1-->
+    <script src="/static/js/axios-0.26.1.min.js"></script>
+    <!-- sweetalert 2.1.2-->
+    <script src="/static/js/sweetalert-2.1.2.min.js"></script>
+    <!-- local js -->
+    <script>
+        let app = new Vue({
+            el: "#app",
+            data: {
+                course_id: -1,
+                course_name: "",
+                course_list: [],
+
+                search_word: "",
+                insert_CHword: "",
+                insert_TWword: "",
+                insert_TLPA: "",
+                tr_index: -2,
+                data_list: [],
+
+                deltmpindex: 0
+            },
+            created() {
+                this.course_id = window.location.href.split("=")[1];
+                console.log(this.course_id);
+                axios
+                    .post('/ta/course/search',
+                        {
+                            'search_name': "",
+                        },
+                        {
+                            'Content-Type': 'application/json'
+                        })
+                    .then((response) => {
+                        console.log(response);
+                        this.course_list = response.data.results;
+                        for (var i = 0; i < this.course_list.length; i++) {
+                            console.log(this.course_list[i]["id"], this.course_id);
+                            if (this.course_list[i]["id"] == this.course_id) {
+                                this.course_name = this.course_list[i]["name"];
+                                break;
+                            }
+                        }
+                    })
+                    .catch((error) => {
+                        // alert(error)
+                    })
+                    .finally();
+                this.search();
+            },
+            methods: {
+                commit() {
+                    var WaitModal = new bootstrap.Modal($('#WaitModal'));
+                    if (! $('#WaitModal').hasClass('show')) WaitModal.show();
+                    axios
+                        .post('/ta/course/vocab/commit',
+                            {
+                                'words': this.data_list,
+                            },
+                            {
+                                'Content-Type': 'application/json'
+                            })
+                        .then((response) => {
+                            console.log(response);
+                            var SetSuccessModal = new bootstrap.Modal($('#SetSuccessModal'));
+                            if (! $('#SetSuccessModal').hasClass('show')) SetSuccessModal.show();
+                        })
+                        .catch((error) => {
+                            // alert(error)
+                        })
+                        .finally();
+                },
+                rollback() {
+                    window.location.href = `/ta/course/vocab?q=${this.course_id}`;
+                },
+                reloadpage() {
+                    window.location.href = `/ta/course/vocab?q=${this.course_id}`;
+                },
+
+                scrollToTop() {
+                    this.$refs.data_scroll.scrollTo(0,0);
+                },
+                search() {
+                    console.log(this.course_id);
+                    axios
+                        .post('/ta/course/vocab/search',
+                            {
+                                'course_id': this.course_id,
+                                'search_word': this.search_word,
+                            },
+                            {
+                                'Content-Type': 'application/json'
+                            })
+                        .then((response) => {
+                            console.log(response);
+                            this.data_list = response.data.results;
+                        })
+                        .catch((error) => {
+                            // alert(error)
+                        })
+                        .finally();
+                },
+
+                cancel(index = -1) {
+                    console.log("cancel select:", index);
+                    this.search();
+                    this.insert_CHword = this.insert_TWword = this.insert_TLPA = "";
+                    this.tr_index = -2;
+                },
+                translate(index = -1) {
+                    console.log("translate select:", index);
+                    var translate_temp = "";
+                    if (index == -1) translate_temp = this.insert_TWword;
+                    else translate_temp = this.data_list[index]["TWword"];
+                    console.log(translate_temp);
+                    axios
+                        .post('/ta/course/vocab/translate',
+                            {
+                                'TW': translate_temp,
+                            },
+                            {
+                                'Content-Type': 'application/json'
+                            })
+                        .then((response) => {
+                            console.log(response);
+                            if (index == -1) this.insert_TLPA = response.data.tlpa;
+                            else this.data_list[index]["TLPA"] = response.data.tlpa;
+                        })
+                        .catch((error) => {
+                            // alert(error)
+                        })
+                        .finally();
+                },
+                async trylisten(i = -1) {
+                    const tlpa = (i === -1 ? this.insert_TLPA : this.data_list[i]?.TLPA || "").trim();
+                    const nameHint = (i === -1 ? this.insert_TWword : this.data_list[i]?.TWword || "").trim() || "audio";
+                    if (!tlpa) return alert("沒有 TLPA 可合成");
+
+                    try {
+                        const { data } = await axios.post(
+                        "/ta/course/vocab/trylisten",
+                        { TLPA: tlpa, name_hint: nameHint },
+                        { headers: { "Content-Type": "application/json" } }
+                        );
+
+                        const name = data?.name;
+                        if (!name) return alert("合成回傳沒有檔名");
+
+                        const url = `/static/audio/${(name)}.wav`;
+                        console.log("實際播放 URL:", url);
+
+                        (this._audio ||= new Audio()).src = url;
+
+                        await this._audio.play();
+                        console.log("playing:", url);
+                    } catch (err) {
+                        console.error("trylisten failed:", err);
+                        alert("試聽失敗，請稍後再試");
+                    }
+                    },
+                fixWord(index) {
+                    console.log("fixWord select:", index);
+                    this.tr_index = index;
+                },
+                fixWordCfm(index) {
+                    console.log("fixWordCfm select:", index);
+                    console.log(this.course_id);
+                    console.log(this.data_list[index]["id"]);
+                    console.log(this.data_list[index]["CHword"]);
+                    console.log(this.data_list[index]["TWword"]);
+                    console.log(this.data_list[index]["TLPA"]);
+                    axios
+                        .post('/ta/course/vocab/update',
+                            {
+                                'course_id': this.course_id,
+                                'word_id': this.data_list[index]["id"],
+                                'update_CHword': this.data_list[index]["CHword"],
+                                'update_TWword': this.data_list[index]["TWword"],
+                                'update_TLPA': this.data_list[index]["TLPA"],
+                            },
+                            {
+                                'Content-Type': 'application/json'
+                            })
+                        .then((response) => {
+                            console.log(response);
+                            this.data_list = response.data.results;
+                        })
+                        .catch((error) => {
+                            // alert(error)
+                        })
+                        .finally();
+                    this.tr_index = -2;
+                },
+                newWord(index = -1) {
+                    console.log("newWord select:", index);
+                    this.tr_index = index;
+                },
+                newWordCfm(index = -1) {
+                    console.log("newWordCfm select:", index);
+                    console.log(this.course_id);
+                    console.log(this.insert_CHword);
+                    console.log(this.insert_TWword);
+                    console.log(this.insert_TLPA);
+                    axios
+                        .post('/ta/course/vocab/insert',
+                            {
+                                'course_id': this.course_id,
+                                'insert_CHword': this.insert_CHword,
+                                'insert_TWword': this.insert_TWword,
+                                'insert_TLPA': this.insert_TLPA,
+                            },
+                            {
+                                'Content-Type': 'application/json'
+                            })
+                        .then((response) => {
+                            console.log(response);
+                            this.data_list = response.data.results;
+                            this.insert_CHword = this.insert_TWword = this.insert_TLPA = "";
+                            this.scrollToTop();
+                        })
+                        .catch((error) => {
+                            // alert(error)
+                        })
+                        .finally(); 
+                    this.tr_index = -2;
+                },
+                remove(index) {
+                    console.log("remove select:", index);
+                    console.log(this.data_list[index]["id"]);
+                    console.log(this.data_list[index]["CHword"]);
+                    this.deltmpindex = index;
+                    var SetDeleteModal = new bootstrap.Modal($('#SetDeleteModal'));
+                    if (! $('#SetDeleteModal').hasClass('show')) SetDeleteModal.show();
+                    this.tr_index = -2;
+                },
+                removeCfm() {
+                    axios
+                        .post('/ta/course/vocab/delete',
+                            {
+                                'course_id': this.course_id,
+                                'delete_id': this.data_list[this.deltmpindex]["id"],
+                            },
+                            {
+                                'Content-Type': 'application/json'
+                            })
+                        .then((response) => {
+                            console.log(response);
+                            this.data_list = response.data.results;
+                        })
+                        .catch((error) => {
+                            // alert(error)
+                        })
+                        .finally();
+                },
+            },
+        })
+
+        function exit() {
+            var LogoutModal = new bootstrap.Modal($('#LogoutModal'));
+            if (! $('#LogoutModal').hasClass('show')) LogoutModal.show();
+        }
+        $("#mlogout").click(function() {
+            document.location.href="/branch";
+        });
+    </script>
+
+    {% endraw %}
+</body>
+
+</html>

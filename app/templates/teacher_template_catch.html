@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+        <link href="{{ url_for('static', filename='css/template_selection.css')}}" rel="stylesheet", type="text/css">
+        <!-- Core theme CSS (includes Bootstrap 5.0.2) -->
+        <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-5.0.2.min.css">
+        <script type="text/javascript" src="/static/js/jquery-3.6.0.min.js"></script>
+        <script type="text/javascript" src="{{ url_for('static', filename='js/ta_template.js')}}"></script>
+</head>
+<body>
+        <img id="background_img" src="{{ url_for('static', filename='Font/1x/ALL_BG_GRID.png')}}">
+        <div class="parent">
+            <img id="back_btn" onclick="back()" src="{{ url_for('static', filename='4GAME_ALL/ALL/1x/ALL_ARROW_BACK.png')}}">
+            <img id="home_btn" onclick="home()" src="{{ url_for('static', filename='4GAME_ALL/ALL/1x/ALL_HOME.png')}}">
+            
+            <div class="btn-group" id="profile">
+                <button type="button" id="dropdownMenuReference"
+                        data-bs-toggle="dropdown" aria-expanded="false" data-bs-reference="parent">
+                    <img src="/static/4GAME_ALL/ALL/1x/ALL_ACCOUNT.png">
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuReference">
+                    <li><button id="dropdown-leave" onclick="exit()"></li>
+                </ul>
+            </div>
+
+            <img id="nav_bar" src="{{ url_for('static', filename='Font/1x/ALL_NAVIGATION_BAR_ANIMAL_CATCH.png')}}">
+            
+            <select id="lesson" class="form-select" aria-label="Default select example">
+                <option selected>請選擇單元</option>
+            </select>
+
+            <img id="confirm_btn" src="{{ url_for('static', filename='4GAME_ALL/ALL/1x/ALL_CONFIRM_B.png')}}">
+            <img id="cancel_btn" onclick="back()" src="{{ url_for('static', filename='4GAME_ALL/ALL/1x/ALL_RETURN_B.png')}}">                        
+        </div>
+
+    <div class="modal fade" id="LogoutModal" data-bs-backdrop="static" 
+        data-bs-keyboard="false" tabindex="-1" 
+        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="d-flex flex-column align-items-center">
+                            <img src="/static/Font/1x/ALL_IF_LOGOUT_B.png" style="width: 100%">
+                            <!-- <div>title</div> -->
+                            <div class="d-flex justify-content-between w-100">
+                                <div class="alertbtn alertbtn-succ" data-bs-dismiss="modal">
+                                    取消
+                                </div>
+                                <div class="alertbtn alertbtn-warn" id="mlogout">
+                                    登出
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="SetSuccessModal" data-bs-backdrop="static" 
+        data-bs-keyboard="false" tabindex="-1" 
+        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="d-flex flex-column align-items-center">
+                            <img src="/static/4GAME_ALL/ALL/1x/ALL_SET SUCCESSFULLY_B.png" style="width: 100%">
+                            <!-- <div>title</div> -->
+                            <div class="d-flex justify-content-center w-100">
+                                <div class="alertbtn alertbtn-normal" data-bs-dismiss="modal">
+                                    完成
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- my alert -->
+    <link rel="stylesheet" type="text/css" href="/static/css/myalert.css">
+    <!-- Bootstrap core JS 5.0.2 -->
+    <script src="/static/js/bootstrap-5.0.2.min.js"></script>
+</body>
+</html>
+
+<script>
+    $(document).ready(function(){
+        $.ajax({
+            method: "POST",
+            url: "/template/course/search",
+            contentType: 'application/json',
+            data: JSON.stringify({
+                "game_name": "game2"
+            }),
+            dataType: "json",
+        })
+        .done(function(result) {
+            console.log(result);
+            if (result["status"] == "success") {
+                result = result["results"];
+                for (var i = 0; i < result.length; i++) {
+                    var myopt_html = `<option value="${result[i]["id"]}">${result[i]["name"]}</option>`;
+                    $("#lesson").append(myopt_html);
+                }
+            }
+        });
+    });
+
+    $("#confirm_btn").click(function() {
+        var course_id = $( "#lesson option:selected" ).val();
+        console.log(course_id);
+
+        $.ajax({
+            method: "POST",
+            url: "/template/course/update",
+            contentType: 'application/json',
+            data: JSON.stringify({
+                "game_name": "game2",
+                "course_id": course_id
+            }),
+            dataType: "json",
+        })
+        .done(function(result) {
+            console.log(result);
+            if (result["status"] == "success") {
+                var SetSuccessModal = new bootstrap.Modal($('#SetSuccessModal'));
+                if (! $('#SetSuccessModal').hasClass('show')) SetSuccessModal.show();
+            }
+        });
+    });
+
+    function exit() {
+            var LogoutModal = new bootstrap.Modal($('#LogoutModal'));
+            if (! $('#LogoutModal').hasClass('show')) LogoutModal.show();
+        }
+        $("#mlogout").click(function() {
+            document.location.href="/branch";
+        });
+</script>

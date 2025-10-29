@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link href="{{ url_for('static', filename='css/login_page_name.css')}}" rel="stylesheet", type="text/css">
+    </head>
+
+    <body>
+        <div class="parent">
+            <img id="background_img" src="{{ url_for('static', filename='Font/1x/ALL_BG_LOG_IN_STUDENT.png')}}">
+            <div id = "login_div">
+                <img id="login_box" src="{{ url_for('static', filename='Font/1x/ALL_SET_NAME_B.png')}}">
+
+                <div id="login_form">
+                    <input type="text" id="account_box" placeholder="例：台南王小名" style="font-size: 18px;"/><br><br>
+                    <p id="login_msg">*注意：暱稱只能設定一遍，不可更改*</p>
+                    <input type="image" id="submit_btn" src="{{ url_for('static', filename='4GAME_ALL/ALL/1x/ALL_CONFIRM_B.png')}}" alt="Submit Form" />
+                </div>
+            </div>
+        </div>
+    </body>
+
+    <script src="/static/js/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).on('keypress',function(e) {
+            if(e.which == 13) v();
+        });
+        $("#submit_btn").click(function() {
+            v();
+        });
+        function v(){
+            $.ajax({
+                method: "POST",
+                url: "/login/name",
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    name: $("#account_box").val(),
+                }),
+                dataType: "json",
+            })
+            .done(function(result) {
+                console.log(result);
+                if (result["status"] == "success")
+                    window.location.href = result["url"]
+            })
+            .fail(function() {
+                // alert('失敗');
+            })
+            .always(function() {
+                // alert('結束');
+            });
+        }
+    </script>
+
+</html>

@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8"/>
+    <title>學生註冊</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <style>
+      /* === 背景設定 === */
+      body {
+        margin: 0;
+        padding: 0;
+        height: 100vh;
+        width: 100vw;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: url("{{ url_for('static', filename='Font/1x/ALL_BG_LOG_IN_STUDENT.png') }}") 
+                    no-repeat center center fixed;
+        background-size: cover;
+        font-family: system-ui, -apple-system, "Noto Sans TC", Arial;
+      }
+
+      /* === 卡片（表單容器） === */
+      .card {
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 16px;
+        padding: 30px 40px;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+        max-width: 520px;
+        width: 90%;
+      }
+
+      h2 {
+        text-align: center;
+        margin-bottom: 20px;
+        color: #333;
+      }
+
+      form {
+        display: grid;
+        gap: 14px;
+      }
+
+      label { font-weight: 600; color: #222; }
+
+      select, input {
+        padding: 8px;
+        width: 100%;
+        box-sizing: border-box;
+        border: 1px solid #aaa;
+        border-radius: 6px;
+      }
+
+      .row {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+      }
+
+      .preview {
+        color: #444;
+        font-size: 18px;
+        text-align: center;
+        margin: 10px 0;
+      }
+
+      button {
+        padding: 10px 14px;
+        cursor: pointer;
+        background-color: #1976d2;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        transition: 0.2s;
+      }
+
+      button:hover {
+        background-color: #125ca1;
+      }
+
+      /* 響應式 */
+      @media (max-width: 500px) {
+        .row { grid-template-columns: 1fr; }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="card">
+      <h2>學生註冊</h2>
+      <form id="form">
+        <div class="row">
+          <div>
+            <label>年級</label>
+            <select id="grade" required>
+              <option value="">請選擇</option>
+              <option value="1">一年</option>
+              <option value="2">二年</option>
+              <option value="3">三年</option>
+              <option value="4">四年</option>
+              <option value="5">五年</option>
+              <option value="6">六年</option>
+            </select>
+          </div>
+
+          <div>
+            <label>班別</label>
+            <select id="clazz" required></select>
+          </div>
+
+          <div>
+            <label>座號</label>
+            <select id="seat_no" required></select>
+          </div>
+        </div>
+
+        <div class="preview">您的帳號：<span id="account_preview">—</span></div>
+
+        <div>
+          <label>密碼</label>
+          <input id="pwd" type="password" required />
+        </div>
+
+        <div>
+          <label>姓名</label>
+          <input id="name" />
+        </div>
+
+        <button type="submit">註冊</button>
+      </form>
+    </div>
+
+    <script>
+      const grade   = document.getElementById('grade');
+      const clazz   = document.getElementById('clazz');
+      const seat    = document.getElementById('seat_no');
+      const preview = document.getElementById('account_preview');
+
+      function fillClazz(max=15) {
+        clazz.innerHTML = '<option value="">請選擇</option>';
+        for (let i=1;i<=max;i++){
+          const v = String(i).padStart(2,'0');
+          const opt = document.createElement('option');
+          opt.value = v;
+          opt.textContent = v + ' 班';
+          clazz.appendChild(opt);
+        }
+      }
+
+      function fillSeat(max=40){
+        seat.innerHTML = '<option value="">請選擇</option>';
+        for (let i=1;i<=max;i++){
+          const opt = document.createElement('option');
+          opt.value = String(i);
+          opt.textContent = i + ' 號';
+          seat.appendChild(opt);
+        }
+      }
+
+      function updatePreview(){
+        const g = grade.value?.trim();
+        const c = clazz.value?.trim();
+        const s = seat.value?.trim();
+        if (g && /^\d$/.test(g) && c && /^\d{2}$/.test(c) && s && /^\d+$/.test(s)) {
+          const account = g + c + String(parseInt(s,10)).padStart(2,'0');
+          preview.textContent = account;
+        } else {
+          preview.textContent = '—';
+        }
+      }
+
+      grade.addEventListener('change', updatePreview);
+      clazz.addEventListener('change', updatePreview);
+      seat.addEventListener('change', updatePreview);
+
+      fillClazz(15);
+      fillSeat(40);
+
+      document.getElementById('form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const g = grade.value.trim();
+        const c = clazz.value.trim();
+        const s = seat.value.trim();
+        const pwd = document.getElementById('pwd').value;
+        const name = document.getElementById('name').value.trim();
+
+        if (!g || !c || !s) { alert('請選擇年級、班別與座號'); return; }
+
+        const res = await fetch('/register/stu', {
+          method: 'POST',
+          headers: {'Content-Type':'application/json'},
+          body: JSON.stringify({
+            grade: g,
+            clazz: c,
+            seat_no: s,
+            pwd, name
+          })
+        });
+        const j = await res.json();
+        if (j.status === 'success') {
+          location.href = j.url;
+        } else {
+          alert(j.message || '註冊失敗');
+        }
+      });
+    </script>
+  </body>
+</html>

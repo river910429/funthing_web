@@ -1,0 +1,180 @@
+
+======================================== 登入 ========================================
+
+mysql> describe Password;
+(登入) 根據 account 核對 pwd
++---------+--------------+------+-----+---------+----------------+
+| Field   | Type         | Null | Key | Default | Extra          |
++---------+--------------+------+-----+---------+----------------+
+| id      | int          | NO   | PRI | NULL    | auto_increment |
+| pwd     | varchar(255) | NO   |     | NULL    |                |
+| account | varchar(255) | NO   |     | NULL    |                |
++---------+--------------+------+-----+---------+----------------+
++----+--------+------------+
+| id | pwd    | account    |
++----+--------+------------+
+|  1 | 123    | 30100      |
+| .. | ...    | ...        |
+| 33 | 30306  | 30306      |
++----+--------+------------+
+
+mysql> describe Student;
+(登入) 根據 account 取得 student_id
+(初次登入) 根據 account 設定 student_name
+(成績查詢) 根據 account 取得 student_name
++--------------+--------------+------+-----+---------+----------------+
+| Field        | Type         | Null | Key | Default | Extra          |
++--------------+--------------+------+-----+---------+----------------+
+| student_id   | int          | NO   | PRI | NULL    | auto_increment |
+| class_id     | int          | NO   |     | NULL    |                |
+| student_name | varchar(255) | NO   |     | NULL    |                |
+| account      | varchar(255) | NO   |     | NULL    |                |
++--------------+--------------+------+-----+---------+----------------+
++------------+----------+--------------+------------+
+| student_id | class_id | student_name | account    |
++------------+----------+--------------+------------+
+|          1 |        2 | test         | 30201      |
+|        ... |      ... | ...          | ...        |
+|         30 |        3 |              | 30306      |
++------------+----------+--------------+------------+
+
+mysql> DESCRIBE Teacher;
+(登入) 根據 account 取得 teacher_id
++--------------+--------------+------+-----+---------+----------------+
+| Field        | Type         | Null | Key | Default | Extra          |
++--------------+--------------+------+-----+---------+----------------+
+| teacher_id   | int          | NO   | PRI | NULL    | auto_increment |
+| teacher_name | varchar(255) | NO   |     | NULL    |                |
+| account      | varchar(255) | NO   |     | NULL    |                |
++--------------+--------------+------+-----+---------+----------------+
++------------+--------------+---------+
+| teacher_id | teacher_name | account |
++------------+--------------+---------+
+|          1 | ???          | 30100   |
+|          2 | ???          | 30200   |
+|          3 | ???          | 30300   |
++------------+--------------+---------+
+
+======================================== 課程 ========================================
+
+mysql> DESCRIBE Class;
+(STU取得遊戲) 根據 class_name 取得 game*
+(TA操作) 根據 class_name 設定 game*
++------------+--------------+------+-----+---------+----------------+
+| Field      | Type         | Null | Key | Default | Extra          |
++------------+--------------+------+-----+---------+----------------+
+| class_id   | int          | NO   | PRI | NULL    | auto_increment |
+| teacher_id | varchar(255) | NO   |     | NULL    |                |
+| class_name | int          | NO   |     | NULL    |                |
+| game1      | int          | YES  |     | -1      |                |
+| game2      | int          | YES  |     | -1      |                |
+| game3      | int          | YES  |     | -1      |                |
+| game4      | int          | YES  |     | -1      |                |
++------------+--------------+------+-----+---------+----------------+
++----------+------------+------------+-------+-------+-------+-------+
+| class_id | teacher_id | class_name | game1 | game2 | game3 | game4 |
++----------+------------+------------+-------+-------+-------+-------+
+|        1 | 1          |        301 |    10 |    17 |     6 |     9 |
+|        2 | 2          |        302 |    -1 |    -1 |    -1 |    -1 |
+|        3 | 3          |        303 |    11 |    37 |    10 |     7 |
++----------+------------+------------+-------+-------+-------+-------+
+
+mysql> DESCRIBE Course;
+(TA操作) 新增 course_name
+(TA操作) 根據 course_name 搜尋
+(TA操作) 根據 course_id 搭配 Word 取得 count
+(TA操作) 根據 course_id 更新 ts
+(TA操作) 根據 course_id 更新 course_name
+(TA操作) 根據 course_id 刪除
++-------------+--------------+------+-----+-------------------+-------------------+
+| Field       | Type         | Null | Key | Default           | Extra             |
++-------------+--------------+------+-----+-------------------+-------------------+
+| course_id   | int          | NO   | PRI | NULL              | auto_increment    |
+| course_name | varchar(255) | NO   |     | NULL              |                   |
+| ts          | timestamp    | YES  |     | CURRENT_TIMESTAMP | DEFAULT_GENERATED |
++-------------+--------------+------+-----+-------------------+-------------------+
++-----------+-------------+---------------------+
+| course_id | course_name | ts                  |
++-----------+-------------+---------------------+
+|         4 | ???         | 2022-06-27 22:41:43 |
+|       ... | ...         |                 ... |
+|        39 | ???         | 2022-06-27 22:24:32 |
++-----------+-------------+---------------------+
+
+mysql> describe Word;
+(玩遊戲) 根據 course_id 取得 ch_word, tw_word, tlpa
+(TA操作) 根據 ch_word 搜尋
+(TA操作) 根據 course_id 取得 ch_word, tw_word, tlpa
+(TA操作) 根據 word_id 更新 ts
+(TA操作) 根據 word_id 更新 ch_word, tw_word, tlpa
+(TA操作) 根據 word_id 刪除
++-----------+--------------+------+-----+-------------------+-------------------+
+| Field     | Type         | Null | Key | Default           | Extra             |
++-----------+--------------+------+-----+-------------------+-------------------+
+| word_id   | int          | NO   | PRI | NULL              | auto_increment    |
+| course_id | int          | NO   |     | NULL              |                   |
+| ch_word   | varchar(255) | NO   |     | NULL              |                   |
+| tw_word   | varchar(255) | NO   |     | NULL              |                   |
+| tlpa      | varchar(255) | NO   |     | NULL              |                   |
+| editor    | varchar(255) | YES  |     | NULL              |                   |
+| ts        | timestamp    | YES  |     | CURRENT_TIMESTAMP | DEFAULT_GENERATED |
++-----------+--------------+------+-----+-------------------+-------------------+
++---------+-----------+----------+-------------+-----------------+---------+---------------------+
+| word_id | course_id | ch_word  | tw_word     | tlpa            | editor  | ts                  |
++---------+-----------+----------+-------------+-----------------+---------+---------------------+
+|       1 |         6 | ??       | ??          | h▒-soo          | default | 2022-04-26 10:23:53 |
+|     ... |       ... | ...      | ...         | ...             | ...     | ...                 |
+|     207 |        52 |          | ko??-▒      | ko??-▒          | NULL    | 2022-08-04 12:38:06 |
++---------+-----------+----------+-------------+-----------------+---------+---------------------+
+
+======================================== 遊戲 ========================================
+describe Game;
+未使用
+describe Game_setting;
+未使用
+mysql> describe Stu_info;
+(遊戲結束) 根據 student_id 更新 level, acc_score, equip_*_gain
+(排行查詢) 根據 student_id 查詢 level, acc_score
+(裝備查詢) 根據 student_id 查詢 level, acc_score, equip_now, equip_*_gain
+(裝備更新) 根據 student_id 更新 equip_now
++--------------+------------+------+-----+---------+----------------+
+| Field        | Type       | Null | Key | Default | Extra          |
++--------------+------------+------+-----+---------+----------------+
+| id           | int        | NO   | PRI | NULL    | auto_increment |
+| student_id   | int        | NO   |     | NULL    |                |
+| level        | int        | NO   |     | NULL    |                |
+| acc_score    | int        | NO   |     | NULL    |                |
+| equip_now    | int        | NO   |     | NULL    |                |
+| equip_1_gain | tinyint(1) | YES  |     | NULL    |                |
+| equip_2_gain | tinyint(1) | YES  |     | NULL    |                |
+| equip_3_gain | tinyint(1) | YES  |     | NULL    |                |
+| equip_4_gain | tinyint(1) | YES  |     | NULL    |                |
+| equip_5_gain | tinyint(1) | YES  |     | NULL    |                |
+| equip_6_gain | tinyint(1) | YES  |     | NULL    |                |
+| equip_7_gain | tinyint(1) | YES  |     | NULL    |                |
++--------------+------------+------+-----+---------+----------------+
++----+------------+-------+-----------+-----------+--------------+--------------+--------------+--------------+--------------+--------------+--------------+
+| id | student_id | level | acc_score | equip_now | equip_1_gain | equip_2_gain | equip_3_gain | equip_4_gain | equip_5_gain | equip_6_gain | equip_7_gain |
++----+------------+-------+-----------+-----------+--------------+--------------+--------------+--------------+--------------+--------------+--------------+
+|  1 |          6 |     1 |         0 |         0 |            0 |            0 |            0 |            0 |            0 |            0 |            0 |
+| .. |        ... |   ... |       ... |       ... |          ... |          ... |          ... |          ... |          ... |          ... |          ... |
+| 25 |         30 |     0 |         0 |         0 |            0 |            0 |            0 |            0 |            0 |            0 |            0 |
++----+------------+-------+-----------+-----------+--------------+--------------+--------------+--------------+--------------+--------------+--------------+
+
+======================================== 新增帳號 ========================================
+(學生)
+insert into Student (account, class_id, student_name) values (<account>, <class_id>, "");
+select student_id from Student where account = <account>;
+insert into Stu_info(student_id, level, acc_score, equip_now, equip_1_gain, equip_2_gain, equip_3_gain, equip_4_gain, equip_5_gain, equip_6_gain, equip_7_gain) values (<student_id>, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+insert into Password (account, pwd) values (<account>, <pwd>);
+(示範)
+insert into Student (account, class_id, student_name) values (30305, 3, "");
+insert into Stu_info(student_id, level, acc_score, equip_now, equip_1_gain, equip_2_gain, equip_3_gain, equip_4_gain, equip_5_gain, equip_6_gain, equip_7_gain) values (1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+insert into Password (account, pwd) values (30305, 30305);
+
+(老師)
+insert into Teacher (account, teacher_name) values (<account>, <name>);
+insert into Password (account, pwd) values (<account>, <pwd>);
+
+(重製帳號)
+UPDATE Stu_info SET level=0, acc_score=0, equip_now=0, equip_1_gain=0, equip_2_gain=0, equip_3_gain=0, equip_4_gain=0, equip_5_gain=0, equip_6_gain=0, equip_7_gain=0 WHERE student_id=1;

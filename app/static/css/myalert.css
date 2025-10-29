@@ -1,0 +1,25 @@
+.alertbtn {
+    width: 45%;
+    font-size: 26px;
+    font-weight: bold;
+    border-radius: 12px;
+    cursor: pointer;
+    margin-bottom: 1rem;
+    text-align: center!important;
+    box-shadow: 7px 5px 8px rgb(0 0 0 / 40%);
+}
+
+.alertbtn-warn {
+    color: #FFFFFF;
+    background-color: #F86565;
+}
+
+.alertbtn-succ {
+    color: #FFFFFF;
+    background-color: #02B7B4;
+}
+
+.alertbtn-normal {
+    color: #4D4D4D;
+    background-color: #F4DA63;
+}

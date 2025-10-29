@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <link href="{{ url_for('static', filename='css/game_map.css')}}" rel="stylesheet", type="text/css">
+        <link rel="shortcut icon" href="#" />
+        <script type="text/javascript" src="{{ url_for('static', filename='js/jquery-3.6.0.min.js')}}"></script>
+    </head>
+
+    <script type="text/javascript">
+        
+    </script>
+
+    <body>
+        <div class="parent">
+            <img id="background_img" draggable="false" src="{{ url_for('static', filename='4GAME_ALL/MAP/1x/MAP_BG_WORD_TW.png')}}">
+            <img id="game_nav_bar" draggable="false" src="{{ url_for('static', filename = '4GAME_ALL/ALL/1x/ALL_NAVIGATION_BAR.png')}}">
+            <p id = "subject_adder">0/6</p>
+            <img id="game_time_icon" src="{{ url_for('static', filename = '4GAME_ALL/ALL/1x/ALL_TIME.png')}}">
+            <img id="game_time_bg" src="{{ url_for('static', filename = '4GAME_ALL/ALL/1x/ALL_TIME_WHITE_LINE.png')}}">
+            
+            <img class = "puzzle" draggable="false" id= "kaohsiung" subject = '' src = "{{url_for('static', filename = '4GAME_ALL/MAP/1x/MAP_Kaohsiung.png')}}">            
+            <p class = "subject" id = 'subject_1'></p>
+            <img class = "puzzle" draggable="false" id= "newtaipei" subject = '' src = "{{url_for('static', filename = '4GAME_ALL/MAP/1x/MAP_New_Taipei.png')}}">            
+            <p class = "subject" id = 'subject_2'></p>
+            <img class = "puzzle" draggable="false" id= "taichung" subject = '' src = "{{url_for('static', filename = '4GAME_ALL/MAP/1x/MAP_Taichung.png')}}">            
+            <p class = "subject" id = 'subject_3'></p>
+            <img class = "puzzle" draggable="false" id= "tainan" subject = '' src = "{{url_for('static', filename = '4GAME_ALL/MAP/1x/MAP_Tainan.png')}}">            
+            <p class = "subject" id = 'subject_4'></p>
+            <img class = "puzzle" draggable="false" id= "taipei" subject = '' src = "{{url_for('static', filename = '4GAME_ALL/MAP/1x/MAP_Taipei.png')}}">            
+            <p class = "subject" id = 'subject_5'></p>
+            <img class = "puzzle" draggable="false" id= "taoyuan" subject = '' src = "{{url_for('static', filename = '4GAME_ALL/MAP/1x/MAP_Taoyuan.png')}}">            
+            <p class = "subject" id = 'subject_6'></p>
+            <div id="p_bar">
+                <span id="game_time_bar"></span>
+            </div>
+
+            <img id="profile" onclick="leave_game()" src="{{ url_for('static', filename = '4GAME_ALL/ALL/1x/ALL_LEAVE_GAME.png')}}">
+            <img id = "record_btn" src="/static/4GAME_ALL/MAP/1x/ALL_MIC.png">
+            <div class="taiwan" style="height: 10vh; width: 38vw;"></div>
+        </div>
+       
+    </body>
+
+</html>
+<script type="text/javascript" src="{{ url_for('static', filename='js/record-live-audio.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/game_map.js')}}"></script>
+<script type="text/javascript">
+    window.onload = function () {
+        map_record_init();
+    }
+
+    var subjects = {{ course|tojson }};
+    var subjects_CH = subjects.gameneed;
+    
+    // alert(subjects_CH.length);
+</script>

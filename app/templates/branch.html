@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link href="{{ url_for('static', filename='css/branch.css')}}" rel="stylesheet", type="text/css">
+        <script type="text/javascript" src="{{ url_for('static', filename='js/branch.js')}}"></script>
+    </head>
+    <body>
+        <img id="background_img" src="{{ url_for('static', filename='Font/1x/ALL_BG_LOG_IN_BOTH.png')}}">
+        <div class="parent">
+            <img id="teacher" onclick="teacher_entrance()" src="{{ url_for('static', filename='Font/1x/ALL_BUTTON_TEACHER.png')}}">
+            <img id="student" onclick="student_entrance()" src="{{ url_for('static', filename='Font/1x/ALL_BUTTON_STUDENT.png')}}">
+        </div>
+    </body>
+
+</html>

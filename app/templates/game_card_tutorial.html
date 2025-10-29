@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <link href="{{ url_for('static', filename='css/game_card_tutorial.css')}}" rel="stylesheet" , type="text/css">
+    <script type="text/javascript" src="/static/js/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/game_card.js')}}"></script>
+</head>
+
+<body>
+    <div class="parent">
+        <img id="background_img"
+            src="{{ url_for('static', filename='4GAME_ALL/CARD_GAME4X4/1x/CARD_GAME_BG_WORD.png')}}">
+        <img id="game_nav_bar" src="{{ url_for('static', filename = '4GAME_ALL/ALL/1x/ALL_NAVIGATION_BAR.png')}}">
+        <p id="subject_adder">0/8</p>
+        <img id="game_time_icon" src="{{ url_for('static', filename = '4GAME_ALL/ALL/1x/ALL_TIME.png')}}">
+        <img id="game_time_bg" src="{{ url_for('static', filename = '4GAME_ALL/ALL/1x/ALL_TIME_WHITE_LINE.png')}}">
+
+        <img id="profile" onclick="leave_game()" src="{{ url_for('static', filename = '4GAME_ALL/ALL/1x/ALL_LEAVE_GAME.png')}}">
+        <img id="listen_btn" onclick="listen_again()"
+            src="{{ url_for('static', filename = '4GAME_ALL/ALL/1x/ALL_VOLUME_GAME_PAGE.png')}}">
+
+        <img id="gray_layer" src="{{ url_for('static', filename='4GAME_ALL/ALL/1x/ALL_GRAY_LAYER.png')}}">
+        <img id="game_tutorial"
+            src="{{ url_for('static', filename='4GAME_ALL/CARD_GAME4X4/1x/CARD_GAME_CAPTION.png')}}">
+        <img id="btn_enter_game" onclick="game_start({{course_id}})"
+            src="{{url_for('static', filename='4GAME_ALL/ALL/1x/ALL_ENTER GAME_B.png')}}" onclick="game_map_start()">
+        <img id="btn_not_enter_game" onclick="leave_game()"
+            src="{{url_for('static', filename='4GAME_ALL/ALL/1x/ALL_EXIT_GAME_C.png')}}">
+    </div>
+    <div id="p_bar">
+        <span id="game_time_bar"></span>
+    </div>
+
+    <div class="modal fade" id="TimeOutModal" data-bs-backdrop="static" 
+        data-bs-keyboard="false" tabindex="-1" 
+        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="d-flex flex-column align-items-center">
+                            <img src="/static/4GAME_ALL/ALL/1x/ALL_IF_TIMEOUT_B.png" style="width: 100%">
+                            <!-- <div>title</div> -->
+                            <div class="d-flex justify-content-center w-100">
+                                <div class="alertbtn alertbtn-warn" id="logout">
+                                    重新登入
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- my alert -->
+    <link rel="stylesheet" type="text/css" href="/static/css/myalert.css">
+    <!-- Core theme CSS (includes Bootstrap 5.0.2) -->
+    <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-5.0.2.min.css">
+    <!-- Bootstrap core JS 5.0.2 -->
+    <script src="/static/js/bootstrap-5.0.2.min.js"></script>
+    <script>
+        lastmovetime = new Date();
+        document.addEventListener('mousemove', function() {
+            lastmovetime = new Date();
+        });
+        setInterval(check, 1000 * 10);
+        function check() {
+            console.log(new Date() - lastmovetime);
+            if ((new Date() - lastmovetime) > 1000 * 60 * 5) {
+                var TimeOutModal = new bootstrap.Modal($('#TimeOutModal'));
+                if (! $('#TimeOutModal').hasClass('show')) {
+                    TimeOutModal.show();
+                    setTimeout(() => {
+                        document.location.href="/branch";
+                    }, 1000*10)
+                }
+            }
+        }
+        $("#logout").click(function() {
+            document.location.href="/branch";
+        });
+    </script>
+</body>
+
+</html>
