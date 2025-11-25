@@ -5,7 +5,6 @@
     <title>教師註冊</title>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <style>
-      /* 背景 */
       body {
         margin: 0; padding: 0; height: 100vh; width: 100vw;
         display: flex; align-items: center; justify-content: center;
@@ -14,7 +13,6 @@
         background-size: cover;
         font-family: system-ui, -apple-system, "Noto Sans TC", Arial;
       }
-      /* 卡片 */
       .card {
         background: rgba(255,255,255,0.9);
         border-radius: 16px; padding: 30px 40px;
@@ -24,6 +22,7 @@
       h2 { text-align: center; margin-bottom: 20px; color: #333; }
       form { display: grid; gap: 14px; }
       label { font-weight: 600; color: #222; }
+      small { color:#555; }
       select, input {
         padding: 8px; width: 100%; box-sizing: border-box;
         border: 1px solid #aaa; border-radius: 6px;
@@ -35,6 +34,24 @@
         color: #fff; border: none; border-radius: 8px; font-size: 16px; transition: .2s;
       }
       button:hover { background-color: #125ca1; }
+
+      /* 自動完成建議清單 */
+      .auto-wrap { position: relative; }
+      .auto-menu {
+        position: absolute; left: 0; right: 0; top: calc(100% + 4px);
+        border: 1px solid #ddd; background: #fff; border-radius: 8px;
+        box-shadow: 0 8px 24px rgba(0,0,0,.12);
+        max-height: 240px; overflow: auto; z-index: 20;
+      }
+      .auto-item {
+        padding: 10px 12px; cursor: pointer; line-height: 1.2;
+      }
+      .auto-item:hover, .auto-item.active {
+        background: #f1f6ff;
+      }
+      .auto-empty {
+        padding: 10px 12px; color: #666; font-size: 14px;
+      }
       @media (max-width: 500px) { .row { grid-template-columns: 1fr; } }
     </style>
   </head>
@@ -43,6 +60,16 @@
     <div class="card">
       <h2>教師註冊</h2>
       <form id="form">
+        <!-- 學校輸入框＋自動建議清單 -->
+        <div class="field">
+          <label>學校</label>
+          <div class="auto-wrap" id="school-auto">
+            <input id="school-input" placeholder="輸入學校名稱或關鍵字" autocomplete="off" required />
+            <div class="auto-menu" id="school-menu" hidden></div>
+          </div>
+          <small>可直接輸入新學校名稱，或從清單點選既有學校。</small>
+        </div>
+
         <div class="row">
           <div>
             <label>年級</label>
@@ -79,56 +106,88 @@
     </div>
 
     <script>
-      const grade = document.getElementById('grade');
-      const clazz = document.getElementById('clazz');
-      const preview = document.getElementById('account_preview');
-
-      function fillClazz(max=15) {
-        clazz.innerHTML = '<option value="">請選擇</option>';
-        for (let i=1;i<=max;i++){
-          const v = String(i).padStart(2,'0');
-          const opt = document.createElement('option');
-          opt.value = v;
-          opt.textContent = v + ' 班';
-          clazz.appendChild(opt);
-        }
+      // ====== 自動完成學校選單 ======
+      function debounce(fn, delay=150){ let t; return(...args)=>{clearTimeout(t); t=setTimeout(()=>fn(...args),delay);} }
+      let SCHOOL_LIST=[];
+      async function loadSchools(){
+        try{
+          const res=await fetch('/api/schools');
+          const j=await res.json();
+          if(j?.status==='success'&&Array.isArray(j.schools)) SCHOOL_LIST=j.schools;
+        }catch(e){console.warn('載入學校清單失敗：',e);}
       }
 
-      function updatePreview(){
-        const g = grade.value?.trim();
-        const c = clazz.value?.trim();
-        if (g && /^\d$/.test(g) && c && /^\d{2}$/.test(c)) {
-          // 老師帳號 = G + CC + "00"
-          preview.textContent = g + c + "00";
-        } else {
-          preview.textContent = '—';
+      function setupSchoolAutocomplete(){
+        const wrap=document.getElementById('school-auto');
+        const input=document.getElementById('school-input');
+        const menu=document.getElementById('school-menu');
+        let currentIndex=-1;
+
+        function renderMenu(items,kw){
+          menu.innerHTML=''; currentIndex=-1;
+          if(!items.length){
+            menu.innerHTML='<div class="auto-empty">沒有符合的學校，可直接使用你輸入的名稱</div>';
+            menu.hidden=false; return;
+          }
+          items.forEach((s,i)=>{
+            const div=document.createElement('div');
+            div.className='auto-item';
+            const safe=s.name.replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+            const re=new RegExp(kw.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'gi');
+            div.innerHTML=safe.replace(re,m=>`<mark>${m}</mark>`);
+            div.addEventListener('mousedown',ev=>{
+              ev.preventDefault(); input.value=s.name; menu.hidden=true;
+            });
+            menu.appendChild(div);
+          });
+          menu.hidden=false;
         }
-      }
 
-      grade.addEventListener('change', updatePreview);
-      clazz.addEventListener('change', updatePreview);
-      fillClazz(15);
-
-      document.getElementById('form').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const g = grade.value.trim();
-        const c = clazz.value.trim();
-        const name = document.getElementById('name').value.trim();
-        const pwd  = document.getElementById('pwd').value;
-
-        if (!g || !c) { alert('請選擇年級與班別'); return; }
-
-        const res = await fetch('/register/ta', {
-          method: 'POST',
-          headers: {'Content-Type':'application/json'},
-          body: JSON.stringify({ grade: g, clazz: c, name, pwd })
+        const filterAndShow=debounce(()=>{
+          const kw=input.value.trim();
+          if(!kw){renderMenu(SCHOOL_LIST.slice(0,20),kw);return;}
+          const kwLower=kw.toLowerCase();
+          const result=SCHOOL_LIST.filter(s=>s.name.toLowerCase().includes(kwLower)).slice(0,30);
+          renderMenu(result,kw);
         });
-        const j = await res.json();
-        if (j.status === 'success') {
-          location.href = j.url;
-        } else {
-          alert(j.message || '註冊失敗');
-        }
+
+        input.addEventListener('input',filterAndShow);
+        input.addEventListener('focus',()=>renderMenu(SCHOOL_LIST.slice(0,20),''));        
+        input.addEventListener('keydown',e=>{
+          const items=Array.from(menu.querySelectorAll('.auto-item'));
+          if(e.key==='ArrowDown'){
+            if(menu.hidden) menu.hidden=false;
+            if(items.length){currentIndex=(currentIndex+1)%items.length;items.forEach(el=>el.classList.remove('active'));items[currentIndex].classList.add('active');items[currentIndex].scrollIntoView({block:'nearest'});}
+            e.preventDefault();
+          }else if(e.key==='ArrowUp'){
+            if(!menu.hidden&&items.length){currentIndex=(currentIndex-1+items.length)%items.length;items.forEach(el=>el.classList.remove('active'));items[currentIndex].classList.add('active');items[currentIndex].scrollIntoView({block:'nearest'});}
+            e.preventDefault();
+          }else if(e.key==='Enter'){
+            if(!menu.hidden&&currentIndex>=0&&items[currentIndex]){input.value=items[currentIndex].textContent.trim();menu.hidden=true;e.preventDefault();}
+          }else if(e.key==='Escape'){menu.hidden=true;}
+        });
+        document.addEventListener('click',e=>{if(!wrap.contains(e.target)) menu.hidden=true;});
+      }
+
+      (async()=>{await loadSchools();setupSchoolAutocomplete();})();
+
+      // ====== 班級與帳號 ======
+      const grade=document.getElementById('grade');
+      const clazz=document.getElementById('clazz');
+      const preview=document.getElementById('account_preview');
+      function fillClazz(max=15){clazz.innerHTML='<option value="">請選擇</option>';for(let i=1;i<=max;i++){const v=String(i).padStart(2,'0');const opt=document.createElement('option');opt.value=v;opt.textContent=v+' 班';clazz.appendChild(opt);}}
+      function updatePreview(){const g=grade.value?.trim();const c=clazz.value?.trim();preview.textContent=(g&&/^\d$/.test(g)&&c&&/^\d{2}$/.test(c))?(g+c+'00'):'—';}
+      grade.addEventListener('change',updatePreview);clazz.addEventListener('change',updatePreview);fillClazz(15);
+
+      // ====== 提交 ======
+      document.getElementById('form').addEventListener('submit',async e=>{
+        e.preventDefault();
+        const g=grade.value.trim(),c=clazz.value.trim(),name=document.getElementById('name').value.trim(),pwd=document.getElementById('pwd').value.trim(),school=document.getElementById('school-input').value.trim();
+        if(!g||!c){alert('請選擇年級與班別');return;}
+        if(!school){alert('請輸入學校名稱');return;}
+        const res=await fetch('/register/ta',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({grade:g,clazz:c,name,pwd,school})});
+        const j=await res.json();
+        if(j.status==='success'){location.href=j.url;}else{alert(j.message||'註冊失敗');}
       });
     </script>
   </body>
