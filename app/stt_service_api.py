@@ -187,134 +187,34 @@
 #     wav_path = "temp/20250626_143914.wav"
 #     result = recognize_taiwanese_stt(wav_path)
 #     print("辨識結果:", result)
-from dotenv import load_dotenv
-load_dotenv()
-
-
-import sounddevice as sd
-from scipy.io.wavfile import write
-import base64
 import requests
-
-# 使用積木的轉換
-import os
-from keydnn.utilities import KeyResponse
-from mi2s_microservices import mi2s_microservice  # 根據實際路徑修改
-
-# 設定 token，可存在環境變數或直接指定
-MICROSERVICE_API_TOKEN = os.getenv("MICROSERVICES_TAIBUN_TBN2ZH", "3dc1168efeb36aae3c5ac18f02c6fbc661f0a89ece10cb5f3134fe5f1c27b61d")
-
-@mi2s_microservice(api_token=MICROSERVICE_API_TOKEN)
-def call_taibun_converter(json_response):
-    print("🧾 微服務回傳 JSON：", json_response)
-    try:
-        return json_response["message"]["answer"]
-    except Exception:
-        return "（無法取得轉換內容）"
-
-
-
-def record_audio(filename="audio.wav", duration=5, samplerate=16000):
-    print(f"開始錄音 {duration} 秒，請開始說話 ...")
-    audio = sd.rec(int(duration * samplerate), samplerate=samplerate, channels=1, dtype='int16')
-    sd.wait()
-    write(filename, samplerate, audio)
-    print(f"錄音完成，已存為 {filename}")
+import base64
 
 def taiwanese_recognize(file_path):
     url = 'http://140.116.245.149:5002/proxy'
-    token = '2025@asr@tai'
-    lang = 'TA and ZH Medical V1'
+    
+    # 讀取音檔並轉 Base64
+    with open(file_path, 'rb') as f:
+        audio_b64 = base64.b64encode(f.read()).decode('utf-8')
 
-    with open(file_path, 'rb') as file:
-        raw_audio = file.read()
-    audio_data = base64.b64encode(raw_audio).decode()
-
-    data = {
-        'lang': lang,
-        'token': token,
-        'audio': audio_data
+    payload = {
+        'token': '2025@asr@tai',         # 若需要可改為 '2025@asr@oops'
+        'lang': 'TA and ZH Medical V1',
+        'audio': audio_b64
     }
 
-    response = requests.post(url, data=data)
     try:
+        response = requests.post(url, data=payload)
+        response.raise_for_status()      # 檢查 HTTP 錯誤
+        
         result = response.json()
-    except Exception:
-        print("API 回應非 JSON 格式")
-        print(response.text)
-        return None
-
-    if response.status_code == 200:
-        sentence = result.get('sentence')
-        print(f"辨識結果: {sentence}")
-
-        # 呼叫第二階段：Microservice Taibun API
-        taibun_result = call_taibun_converter(sentence)
-        print(vars(taibun_result))
-        if taibun_result._KeyResponse__status:
-            print(f"台文轉換結果: {taibun_result._KeyResponse__message}")
-            return taibun_result._KeyResponse__message
-        else:
-            print(f"台文轉換失敗: {taibun_result._KeyResponse__message}")
-            return sentence
-
-
-    else:
-        print(result)
-        print(f"錯誤信息: {result.get('error')}")
-        return None
-
-# def taiwanese_recognize(file_path):
-#     url = 'http://140.116.245.149:5002/proxy'
-#     token = '2025@asr@oops'
-#     lang = 'TA and ZH Medical V1'
-
-#     with open(file_path, 'rb') as file:
-#         raw_audio = file.read()
-#     audio_data = base64.b64encode(raw_audio).decode()
-
-#     data = {
-#         'lang': lang,
-#         'token': token,
-#         'audio': audio_data
-#     }
-#     response = requests.post(url, data=data)
-#     try:
-#         result = response.json()
-#     except Exception:
-#         print("API 回應非 JSON 格式")
-#         print(response.text)
-#         return None  # 加明確回傳
-
-#     if response.status_code == 200:
-#         sentence = result.get('sentence')
-#         print(f"辨識結果: {sentence}")
-#         return sentence  # <--- **這行就是最重要的補上**
-#     else:
-#         print(result)
-#         print(f"錯誤信息: {result.get('error')}")
-#         return None  # 失敗時也要 return
-
+        return result.get('sentence', '辨識無內容')
+        
+    except Exception as e:
+        print(f"請求失敗: {e}")
+        return "ERROR"
 
 if __name__ == "__main__":
-    # # 1. 錄音（如已有音檔可註解掉）
-    # duration = 5
-    # filename = "audio.wav"
-    # record_audio(filename=filename, duration=duration, samplerate=16000)
-
-    # # 2. 語音辨識
-    # recognize_audio_proxy_api(filename)
-
-    # 你也可以直接寫現有檔名
-    # recognize_audio_proxy_api('你的檔名.wav')
     wav_path = "temp/20250725_132044.wav"
     result = taiwanese_recognize(wav_path)
     print("辨識結果:", result)
-
-# if __name__ == "__main__":
-#     print("✅ MICROSERVICES_HUB_URI:", os.getenv("MICROSERVICES_HUB_URI"))
-#     print("✅ MICROSERVICES_TAIBUN_TBN2ZH:", MICROSERVICE_API_TOKEN)
-
-#     sentence = "你好朋友"
-#     test_result = call_taibun_converter(sentence)
-#     print("轉換結果:", vars(test_result))

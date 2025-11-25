@@ -9,6 +9,7 @@ from ttp_service_api import process as tlpa_trans
 # from tts_service_api import tts
 from tts_service_api import tts
 import random
+import string
 
 app = Flask(__name__)
 
@@ -55,24 +56,28 @@ class SQL():
         with self.conn.cursor() as cursor:
             cursor.execute(str)
 
-    def validate_account(self, identity, account):
+    def validate_account(self, identity, account, school_id):
         with self.conn.cursor() as cursor:
-            cursor.execute("SELECT * FROM " + identity + " WHERE account = '{}';".format(account))
-            result = cursor.fetchall()
-            print(result)
-            if result != ():
-                return True
-            else:
-                return False
+            if identity == "Student":
+                cursor.execute(
+                    "SELECT 1 FROM Student WHERE account=%s AND school_id=%s LIMIT 1;",
+                    (account, school_id)
+                )
+            else:  # Teacher
+                cursor.execute(
+                    "SELECT 1 FROM Teacher  WHERE account=%s AND school_id=%s LIMIT 1;",
+                    (account, school_id)
+                )
+        return cursor.fetchone() is not None
 
-    def validate_password(self, account, pwd):
+    def validate_password(self, identity, account, pwd, school_id):
         with self.conn.cursor() as cursor:
-            cursor.execute("SELECT * FROM Password WHERE account = '{}' and pwd = '{}';".format(account, pwd))
-            result = cursor.fetchall()
-            if result != ():
-                return True
-            else:
-                return False
+            cursor.execute(
+                "SELECT 1 FROM Password WHERE identity=%s AND account=%s AND school_id=%s AND pwd=%s LIMIT 1;",
+                (identity, account, school_id, pwd)
+            )
+            return cursor.fetchone() is not None
+
 
     def get_name(self, identity, account):
         with self.conn.cursor() as cursor:
@@ -240,25 +245,31 @@ class SQL():
             except Exception as e:
                 return False
 
+
+    def get_teacher_school_id(self, account: str) -> int | None:
+        with self.conn.cursor() as cursor:
+            cursor.execute("SELECT school_id FROM Teacher WHERE account=%s LIMIT 1;", (account,))
+            row = cursor.fetchone()
+            return row[0] if row and row[0] is not None else None
     ##############################
     #        ta_template         #
     ##############################
 
-    def get_classgame(self, class_name, game_name):
+    # 取得某「學校+班級」在特定遊戲下綁定的 course_id
+    def get_classgame(self, school_id: int, class_id: int, game_name: str):
+        sql = f"SELECT `{game_name}` FROM Class WHERE school_id=%s AND class_id=%s LIMIT 1;"
         with self.conn.cursor() as cursor:
-            cursor.execute("SELECT {} FROM Class WHERE class_name = {};".format(game_name, class_name))
-            data = cursor.fetchall()
-            print(data[0][0])
+            cursor.execute(sql, (school_id, class_id))
+            row = cursor.fetchone()
+            return row[0] if row else None
 
-        return data[0][0]
-
-    def update_classgame(self, class_name, game_name, course_id):
+    # 更新某「學校+班級」在特定遊戲下綁定的 course_id
+    def update_classgame(self, school_id: int, class_id: int, game_name: str, course_id: int):
+        sql = f"UPDATE Class SET `{game_name}`=%s WHERE school_id=%s AND class_id=%s;"
         with self.conn.cursor() as cursor:
-            cursor.execute("UPDATE Class SET {}={} WHERE class_name={};".format(game_name, course_id, class_name))
-            data = cursor.fetchall()
-            print(data)
-
-        return data
+            cursor.execute(sql, (course_id, school_id, class_id))
+        # 這裡不 commit，仍由外層路由決定何時 commit（和你現有風格一致）
+        return True
 
     ##############################
     #         ta_course          #
@@ -366,7 +377,24 @@ class SQL():
         return self.get_course_vocab(course_id, "")
     
     # student register
-    def create_student(self, account: str, class_id: int, password: str, name: str = "") -> bool:
+
+    # 取得所有學校清單（給學生註冊下拉）
+    def list_schools(self):
+        with self.conn.cursor() as cursor:
+            cursor.execute("SELECT school_id, school_code, school_name FROM School ORDER BY school_name ASC;")
+            return cursor.fetchall()
+        
+    # 用 code 或 name 換 school_id（學生、老師皆會用）
+    def school_code_or_name_to_id(self, school: str):
+        with self.conn.cursor() as cursor:
+            cursor.execute("SELECT school_id FROM School WHERE school_code=%s LIMIT 1;", (school,))
+            row = cursor.fetchone()
+            if row: return row[0]
+            cursor.execute("SELECT school_id FROM School WHERE school_name=%s LIMIT 1;", (school,))
+            row = cursor.fetchone()
+            return row[0] if row else None
+
+    def create_student(self, account: str, class_id: int, password: str, name: str = "", school_id: int | None = None) -> bool:
         """
         建立新學生：
         - Student(account, class_id, student_name)
@@ -377,17 +405,17 @@ class SQL():
         try:
             with self.conn.cursor() as cursor:
                 # 確認帳號是否已存在（Student 或 Password 任一處有就視為存在）
-                cursor.execute("SELECT 1 FROM Student WHERE account=%s LIMIT 1;", (account,))
-                if cursor.fetchone():
-                    return False
-                cursor.execute("SELECT 1 FROM Password WHERE account=%s LIMIT 1;", (account,))
+                cursor.execute(
+                    "SELECT 1 FROM Student WHERE account=%s AND school_id=%s LIMIT 1;",
+                    (account, school_id)
+                )
                 if cursor.fetchone():
                     return False
 
                 # 建立 Student
                 cursor.execute(
-                    "INSERT INTO Student (account, class_id, student_name) VALUES (%s, %s, %s);",
-                    (account, class_id, name or "")
+                    "INSERT INTO Student (account, class_id, student_name, school_id) VALUES (%s, %s, %s, %s);",
+                    (account, class_id, name or "", school_id)
                 )
 
                 # 取得 student_id
@@ -409,7 +437,11 @@ class SQL():
                 """, (student_id,))
 
                 # 建立 Password（沿用你現有明文比對）
-                cursor.execute("INSERT INTO Password (account, pwd) VALUES (%s, %s);", (account, password))
+                # cursor.execute("INSERT INTO Password (account, pwd) VALUES (%s, %s);", (account, password))
+                cursor.execute(
+                    "INSERT INTO Password (account, identity, school_id, pwd) VALUES (%s, %s, %s, %s);",
+                    (account, "Student", school_id, password)
+                )
 
             self.conn.commit()
             return True
@@ -419,7 +451,49 @@ class SQL():
             return False
     
     # ta register
-    def create_teacher(self, account: str, password: str, name: str = "") -> bool:
+    def ensure_school_by_name(self, school_name: str) -> int | None:
+        """
+        以學校名稱取得/建立 school：
+        - 若已存在同名學校 → 回傳既有 school_id
+        - 若不存在 → 自動產生唯一 school_code（因你的 School.school_code NOT NULL UNIQUE），再插入
+        """
+        def _gen_school_code() -> str:
+            # 產生像 AUTO-7G3KQX 這樣的代碼，避免碰撞
+            suffix = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(6))
+            return f"AUTO-{suffix}"
+
+        try:
+            with self.conn.cursor() as cursor:
+                # 先用名稱找
+                cursor.execute("SELECT school_id FROM School WHERE school_name=%s LIMIT 1;", (school_name,))
+                row = cursor.fetchone()
+                if row:
+                    return row[0]
+
+                # 產生唯一 code（最多嘗試數次避免超低機率碰撞）
+                for _ in range(10):
+                    code = _gen_school_code()
+                    cursor.execute("SELECT 1 FROM School WHERE school_code=%s LIMIT 1;", (code,))
+                    if not cursor.fetchone():
+                        # 寫入
+                        cursor.execute(
+                            "INSERT INTO School (school_code, school_name) VALUES (%s, %s);",
+                            (code, school_name)
+                        )
+                        self.conn.commit()
+                        cursor.execute("SELECT LAST_INSERT_ID();")
+                        sid = cursor.fetchone()[0]
+                        return sid
+
+                # 非預期：多次碰撞
+                self.conn.rollback()
+                return None
+        except Exception as e:
+            print("ensure_school_by_name error:", e)
+            self.conn.rollback()
+            return None
+    
+    def create_teacher(self, account: str, password: str, name: str = "", school_id: int | None = None) -> bool:
         """
         建立新教師：
         - Teacher(account, teacher_name)
@@ -428,22 +502,22 @@ class SQL():
         """
         try:
             with self.conn.cursor() as cursor:
-                # 檢查 Teacher 或 Password 是否已存在相同帳號
-                cursor.execute("SELECT 1 FROM Teacher WHERE account=%s LIMIT 1;", (account,))
-                if cursor.fetchone():
-                    return False
-                cursor.execute("SELECT 1 FROM Password WHERE account=%s LIMIT 1;", (account,))
+                cursor.execute("SELECT 1 FROM Teacher WHERE account=%s AND school_id=%s LIMIT 1;", (account, school_id))
                 if cursor.fetchone():
                     return False
 
                 # 新增 Teacher
                 cursor.execute(
-                    "INSERT INTO Teacher (teacher_name, account) VALUES (%s, %s);",
-                    (name or "", account)
+                    "INSERT INTO Teacher (teacher_name, account, school_id) VALUES (%s, %s, %s);",
+                    (name or "", account, school_id)
                 )
 
                 # 新增 Password
-                cursor.execute("INSERT INTO Password (account, pwd) VALUES (%s, %s);", (account, password))
+                # cursor.execute("INSERT INTO Password (account, pwd) VALUES (%s, %s);", (account, password))
+                cursor.execute(
+                    "INSERT INTO Password (account, identity, school_id, pwd) VALUES (%s, %s, %s, %s);",
+                    (account, "Teacher", school_id, password)
+                )
 
             self.conn.commit()
             return True
@@ -456,6 +530,50 @@ class SQL():
             cursor.execute("SELECT teacher_id FROM Teacher WHERE account=%s;", (account,))
             result = cursor.fetchone()
             return result[0] if result else None
+        
+    def get_student_school_and_class(self, account: str):
+        """
+        由學生帳號查出 (school_id, class_id)
+        """
+        with self.conn.cursor() as cursor:
+            cursor.execute(
+                "SELECT school_id, class_id FROM Student WHERE account=%s LIMIT 1;",
+                (account,)
+            )
+            row = cursor.fetchone()
+            return (row[0], row[1]) if row else (None, None)
+        
+    def get_teacher_school_id_by_account(self, account: str) -> int | None:
+        with self.conn.cursor() as c:
+            c.execute("SELECT school_id FROM Teacher WHERE account=%s LIMIT 1;", (account,))
+            row = c.fetchone()
+            return row[0] if row else None
+
+    def get_student_school_and_class_by_account(self, account: str):
+        """回傳 (school_id, class_id)"""
+        with self.conn.cursor() as c:
+            c.execute("SELECT school_id, class_id FROM Student WHERE account=%s LIMIT 1;", (account,))
+            row = c.fetchone()
+            return (row[0], row[1]) if row else (None, None)
+
+    def class_name_to_class_id(self, school_id: int, class_name: str) -> int | None:
+        with self.conn.cursor() as c:
+            c.execute("""SELECT class_id FROM Class
+                         WHERE school_id=%s AND class_name=%s LIMIT 1;""",
+                      (school_id, class_name))
+            row = c.fetchone()
+            return row[0] if row else None
+        
+    def get_classgame_by_ids(self, school_id: int, class_id: int, game_name: str):
+        # game_name 例如 "game1" / "game2"...：請確保是白名單欄位避免 SQL 注入
+        if game_name not in {"game1","game2","game3","game4"}:
+            raise ValueError("invalid game_name")
+        with self.conn.cursor() as c:
+            c.execute(f"SELECT {game_name} FROM Class WHERE school_id=%s AND class_id=%s LIMIT 1;",
+                      (school_id, class_id))
+            row = c.fetchone()
+            return row[0] if row else None
+
 
 
 def class_code_to_class_id(db: SQL, class_code: str):
@@ -469,10 +587,93 @@ def class_code_to_class_id(db: SQL, class_code: str):
         return None
 
 
+def school_code_or_name_to_id(db: SQL, school: str):
+    """
+    允許前端送 'school_code' 或 'school_name'。
+    先用 code 找，找不到再用 name 找。找不到回傳 None。
+    """
+    try:
+        with db.conn.cursor() as cursor:
+            # 先當作 code
+            cursor.execute("SELECT school_id FROM School WHERE school_code=%s LIMIT 1;", (school,))
+            row = cursor.fetchone()
+            if row:
+                return row[0]
+            # 再當作 name
+            cursor.execute("SELECT school_id FROM School WHERE school_name=%s LIMIT 1;", (school,))
+            row = cursor.fetchone()
+            return row[0] if row else None
+    except Exception as e:
+        print("school_code_or_name_to_id error:", e)
+        return None
+
+
+def _game_column_from_name(name: str) -> str | None:
+    mapping = {
+        "flipping_card": "game1",
+        "catch_egg": "game2",
+        "fruit_cutter": "game3",
+        "map": "game4",
+    }
+    return mapping.get(name)
+
+
+
+def _resolve_course_id_for_student(game_key: str) -> int | None:
+    """
+    學生端用：若 URL 沒帶 course_id，就依 session['account'] → (school_id, class_id) →
+    Class[school_id, class_id].<game_key> 取得目前綁定的 course_id
+    """
+    db = SQL()
+
+    # 若 URL 已提供 course_id 仍優先使用（兼容舊連結/教師預覽）
+    course_id_arg = request.args.get('course_id')
+    if course_id_arg and str(course_id_arg).isdigit():
+        return int(course_id_arg)
+
+    # 必須登入且有學生帳號
+    stu_account = session.get('account')
+    if not stu_account:
+        return None
+
+    school_id, class_id = db.get_student_school_and_class(stu_account)
+    if not school_id or not class_id:
+        return None
+
+    return db.get_classgame(school_id, class_id, game_key)
+
+def ensure_class(db: SQL, school_id: int, grade: str, clazz: str, teacher_id: int | None = None) -> int | None:
+    class_name = f"{grade}{int(clazz):02d}"  # 例: "302"
+    try:
+        with db.conn.cursor() as c:
+            print(f"[ensure_class] check exists school_id={school_id} class_name={class_name}")
+            c.execute("""SELECT class_id FROM Class
+                         WHERE school_id=%s AND class_name=%s LIMIT 1;""",
+                      (school_id, class_name))
+            row = c.fetchone()
+            if row:
+                print(f"[ensure_class] exists -> class_id={row[0]}")
+                return row[0]
+
+            print(f"[ensure_class] INSERT Class(school_id, teacher_id, class_name)=({school_id},{teacher_id},{class_name})")
+            c.execute("""
+                INSERT INTO Class (school_id, teacher_id, class_name)
+                VALUES (%s, %s, %s);
+            """, (school_id, teacher_id, class_name))
+            db.conn.commit()
+
+            c.execute("SELECT LAST_INSERT_ID();")
+            new_id = c.fetchone()[0]
+            print(f"[ensure_class] OK new class_id={new_id}")
+            return new_id
+    except Exception as e:
+        print("ensure_class error:", repr(e))
+        db.conn.rollback()
+        return None
 
 @app.before_request
 def before_request():
-    if request.path not in ["/", "/branch", "/login/stu", "/login/ta", "/verifying", "/test_reset", "/update_password", "/register/stu", "/register/ta"] \
+    if request.path not in ["/", "/branch", "/login/stu", "/login/ta", "/verifying", "/test_reset", "/update_password", "/register/stu", "/register/ta", "/api/schools"] \
         and len(request.path.split('.')) == 1:
         if session.get('account') is None:
             return redirect("/branch")
@@ -569,51 +770,45 @@ def ta_login():
 
 @app.route('/verifying', methods=['POST'])
 def verifying():
-    db_cursor = SQL()
+    db = SQL()
     try:
-        obj = request.get_json()
+        obj = request.get_json(force=True)
         account = obj['account']
-        pwd = obj['pwd']
-        valid_account = db_cursor.validate_account(session['identity'], account)
-        if valid_account: 
-            valid_pwd = db_cursor.validate_password(account, pwd)
-        else:
-            valid_pwd = False
+        pwd     = obj['pwd']
+        school  = obj.get('school', '')  # 新增：校名或校碼
+
+        identity = session.get('identity')  # "Student" or "Teacher"
+        if not identity:
+            return json.dumps({"status": "error"}), 400
+
+        # 轉成 school_id
+        school_id = school_code_or_name_to_id(db, school)
+        if not school_id:
+            return json.dumps({"status":"error","message":"學校不存在或未選擇"}), 400
+
+        valid_account = db.validate_account(identity, account, school_id)
+        valid_pwd     = db.validate_password(identity, account, pwd, school_id) if valid_account else False
 
         if valid_account and valid_pwd:
-            session['loggin'] = True
-            session['account'] = account
+            session['loggin']    = True
+            session['account']   = account
+            session['school_id'] = school_id  # ★ 關鍵：後面都靠這個判斷
 
-            if session['identity'] == "Student":
-                student_id = db_cursor.get_student_id(account)
-                name = db_cursor.get_name(session['identity'], account)
+            if identity == "Student":
+                student_id = db.get_student_id(account)   # 你也可改成過濾 school_id 版本
+                name = db.get_name(identity, account)
                 session['stu_id'] = student_id
-                print(session['loggin'], session['account'], session['stu_id'], name)
-                if name == "":
-                    return json.dumps({
-                        "status": "success",
-                        "url": "/login/name"
-                    })
-                else:
-                    return json.dumps({
-                        "status": "success",
-                        "url": "/home/stu"
-                    })
-            if session['identity'] == "Teacher":
-                print(session['loggin'], session['account'])
-                return json.dumps({
-                    "status": "success",
-                    "url": "/home/ta"
-                })
+                url = "/login/name" if name == "" else "/home/stu"
+            else:
+                url = "/home/ta"
+
+            return json.dumps({"status":"success","url":url})
         else:
-            return json.dumps({
-                "status": "error"
-            })
+            return json.dumps({"status":"error"})
     except Exception as e:
         print(e)
-        return json.dumps({
-            "status": "error"
-        })
+        return json.dumps({"status":"error"})
+
 
 @app.route('/login/name')
 def login_name():
@@ -736,34 +931,101 @@ def leaderboard_ta_query():
 
 @app.route("/template/course/search", methods=['POST'])
 def template_course_search():
-    obj = request.get_json()
-    game_name = obj["game_name"]
-    class_name = session['account'][0:3]
-    print(class_name, game_name)
+    db = SQL()
+    obj = request.get_json(silent=True) or {}
 
-    db_cursor = SQL()
-    results = db_cursor.get_course("")
-    course_id = db_cursor.get_classgame(class_name, game_name)
-    return json.dumps({
-        "status": "success",
-        "results": results,
-        "course_id": course_id
-    })
+    game_name = obj.get("game_name", "game1")
+    school_id = obj.get("school_id")
+    class_id  = obj.get("class_id")
+
+    # 若前端沒帶，就從 session 自動推得
+    if not (school_id and class_id):
+        account  = session.get('account')
+        identity = session.get('identity')
+        if not account:
+            return jsonify({"status":"error","message":"未登入"}), 401
+
+        if identity == "Teacher":
+            sid = db.get_teacher_school_id_by_account(account)
+            if not sid:
+                return jsonify({"status":"error","message":"找不到老師的學校"}), 400
+            class_name = f"{account[0]}{account[1:3]}"  # G + CC
+            cid = db.class_name_to_class_id(sid, class_name)
+            if not cid:
+                return jsonify({"status":"error","message":f"找不到班級 {class_name}"}), 400
+            school_id = school_id or sid
+            class_id  = class_id  or cid
+
+        elif identity == "Student":
+            sid, cid = db.get_student_school_and_class_by_account(account)
+            if not sid or not cid:
+                return jsonify({"status":"error","message":"找不到學生的學校或班級"}), 400
+            school_id = school_id or sid
+            class_id  = class_id  or cid
+        else:
+            return jsonify({"status":"error","message":"未知身分"}), 400
+
+    # 課程清單（母表）
+    results = db.get_course("")
+
+    # 班級綁定的課程（依學校+班級+遊戲欄位）
+    try:
+        course_id = db.get_classgame_by_ids(int(school_id), int(class_id), game_name)
+    except ValueError:
+        return jsonify({"status":"error","message":"game_name 非法"}), 400
+
+    return jsonify({"status": "success", "results": results, "course_id": course_id})
+
 
 @app.route("/template/course/update", methods=['POST'])
 def template_course_update():
-    obj = request.get_json()
-    game_name = obj["game_name"]
-    course_id = obj["course_id"]
-    class_name = session['account'][0:3]
-    print(class_name, game_name, course_id)
+    db = SQL()
+    obj = request.get_json(silent=True) or {}
+    game_name = obj.get("game_name", "game1")
+    course_id = obj.get("course_id")
+    school_id = obj.get("school_id")
+    class_id  = obj.get("class_id")
 
-    db_cursor = SQL()
-    db_cursor.update_classgame(class_name, game_name, course_id)
-    db_cursor.conn.commit()
-    return json.dumps({
-        "status": "success"
-    })
+    if not course_id:
+        return jsonify({"status":"error","message":"缺少 course_id"}), 400
+
+    if not (school_id and class_id):
+        account  = session.get('account')
+        identity = session.get('identity')
+        if not account:
+            return jsonify({"status":"error","message":"未登入"}), 401
+
+        if identity == "Teacher":
+            sid = db.get_teacher_school_id_by_account(account)
+            if not sid:
+                return jsonify({"status":"error","message":"找不到老師的學校"}), 400
+            class_name = f"{account[0]}{account[1:3]}"
+            cid = db.class_name_to_class_id(sid, class_name)
+            if not cid:
+                return jsonify({"status":"error","message":f"找不到班級 {class_name}"}), 400
+            school_id = sid
+            class_id  = cid
+
+        elif identity == "Student":
+            sid, cid = db.get_student_school_and_class_by_account(account)
+            if not sid or not cid:
+                return jsonify({"status":"error","message":"找不到學生的學校或班級"}), 400
+            school_id = sid
+            class_id  = cid
+        else:
+            return jsonify({"status":"error","message":"未知身分"}), 400
+
+    # 寫入對應欄位
+    if game_name not in {"game1","game2","game3","game4"}:
+        return jsonify({"status":"error","message":"game_name 非法"}), 400
+
+    with db.conn.cursor() as c:
+        c.execute(f"""UPDATE Class SET {game_name}=%s
+                      WHERE school_id=%s AND class_id=%s""",
+                  (int(course_id), int(school_id), int(class_id)))
+    db.conn.commit()
+    return jsonify({"status":"success"})
+
 
 @app.route('/template/catch_egg')
 def ta_template_catch():
@@ -786,120 +1048,117 @@ def ta_template_card():
 @app.route('/game/flipping_card_tutorial')
 def card_game_tutorial():
     session['pre_page_equip'] = request.url
-    course_id = request.args.get('course_id')
-    print(course_id)
+    game_key = _game_column_from_name("flipping_card")
+    course_id = _resolve_course_id_for_student(game_key)
+    if not course_id:
+        return "尚未為本班級設定翻牌遊戲課程，請通知老師於模板頁綁定課程。", 400
     return render_template('game_card_tutorial.html', course_id=course_id)
 
 @app.route('/game/flipping_card')
 def card_game():
-    course_id = request.args.get('course_id')
-    print(course_id)
+    game_key = _game_column_from_name("flipping_card")
+    course_id = _resolve_course_id_for_student(game_key)
+    if not course_id:
+        return "尚未為本班級設定翻牌遊戲課程，請通知老師於模板頁綁定課程。", 400
+
     db_cursor = SQL()
     course_word = db_cursor.get_course_vocab(course_id, '')
-    
     while len(course_word) < 8:
         course_word.extend(course_word)
-
+    import random
     random.shuffle(course_word)
     course_word = course_word[:8]
-    print(course_word)
-    choose_course = {
-        "gameneed": list(), 
-    }
-    for word in course_word:
-        choose_course["gameneed"].append(word["TWword"]+"<br>"+word["TLPA"])
-    return render_template('game_card.html', course = choose_course)
+
+    choose_course = {"gameneed": [w["TWword"]+"<br>"+w["TLPA"] for w in course_word]}
+    return render_template('game_card.html', course=choose_course)
 
 # game2
 
 @app.route('/game/catch_egg_tutorial')
 def catch_egg_tutorial():
     session['pre_page_equip'] = request.url
-    course_id = request.args.get('course_id')
-    print(course_id)
+    game_key = _game_column_from_name("catch_egg")
+    course_id = _resolve_course_id_for_student(game_key)
+    if not course_id:
+        return "尚未為本班級設定接蛋遊戲課程，請通知老師於模板頁綁定課程。", 400
     return render_template('game_catch_egg_tutorial.html', course_id=course_id)
 
 @app.route('/game/catch_egg')
 def catch_egg():
-    course_id = request.args.get('course_id')
-    print(course_id)
+    game_key = _game_column_from_name("catch_egg")
+    course_id = _resolve_course_id_for_student(game_key)
+    if not course_id:
+        return "尚未為本班級設定接蛋遊戲課程，請通知老師於模板頁綁定課程。", 400
+
     db_cursor = SQL()
+    import random
     course_word = db_cursor.get_course_vocab(course_id, '')
-
-    # while len(course_word) < 8:
-    #     course_word.extend(course_word)
-
     random.shuffle(course_word)
     course_word = course_word[:8]
-    print(course_word)
-    choose_course = {
-        "gameneed": list(), 
-    }
-    for word in course_word:
-        choose_course["gameneed"].append(word["TWword"]+"<br>"+word["TLPA"])
-    return render_template('game_catch_egg.html', course = choose_course)
+
+    choose_course = {"gameneed": [w["TWword"]+"<br>"+w["TLPA"] for w in course_word]}
+    return render_template('game_catch_egg.html', course=choose_course)
+
 
 # game3
 
 @app.route('/game/fruit_cutter_tutorial')
 def fruit_game_tutorial():
     session['pre_page_equip'] = request.url
-    course_id = request.args.get('course_id')
-    print(course_id)
+    game_key = _game_column_from_name("fruit_cutter")
+    course_id = _resolve_course_id_for_student(game_key)
+    if not course_id:
+        return "尚未為本班級設定水果切切課程，請通知老師於模板頁綁定課程。", 400
     return render_template('game_fruit_cutter_tutorial.html', course_id=course_id)
 
 @app.route('/game/fruit_cutter')
 def fruit_game():
-    course_id = request.args.get('course_id')
-    print(course_id)
-    db_cursor = SQL()
-    course_word = db_cursor.get_course_vocab(course_id, '')
+    game_key = _game_column_from_name("fruit_cutter")
+    course_id = _resolve_course_id_for_student(game_key)
+    if not course_id:
+        return "尚未為本班級設定水果切切課程，請通知老師於模板頁綁定課程。", 400
 
+    db_cursor = SQL()
+    import random
+    course_word = db_cursor.get_course_vocab(course_id, '')
     while len(course_word) < 8:
         course_word.extend(course_word)
-
     random.shuffle(course_word)
     course_word = course_word[:8]
-    print(course_word)
 
-    choose_course = {
-        "gameneed": list(), 
-    }
-    for word in course_word:
-        choose_course["gameneed"].append(word["TWword"]+"<br>"+word["TLPA"])
-    
-    return render_template('game_fruit_cutter.html', course = choose_course)
+    choose_course = {"gameneed": [w["TWword"]+"<br>"+w["TLPA"] for w in course_word]}
+    return render_template('game_fruit_cutter.html', course=choose_course)
+
 
 # game4
 
 @app.route('/game/map_tutorial')
 def map_game_tutorial():
     session['pre_page_equip'] = request.url
-    course_id = request.args.get('course_id')
-    print(course_id)
+    game_key = _game_column_from_name("map")
+    course_id = _resolve_course_id_for_student(game_key)
+    if not course_id:
+        return "尚未為本班級設定地圖遊戲課程，請通知老師於模板頁綁定課程。", 400
     return render_template('game_map_tutorial.html', course_id=course_id)
 
 @app.route('/game/map')
 def map_game():
-    course_id = request.args.get('course_id')
-    print(course_id)
-    db_cursor = SQL()
-    course_word = db_cursor.get_course_vocab(course_id, '')
+    game_key = _game_column_from_name("map")
+    course_id = _resolve_course_id_for_student(game_key)
+    if not course_id:
+        return "尚未為本班級設定地圖遊戲課程，請通知老師於模板頁綁定課程。", 400
 
+    db_cursor = SQL()
+    import random
+    course_word = db_cursor.get_course_vocab(course_id, '')
     while len(course_word) < 6:
         course_word.extend(course_word)
-
     random.shuffle(course_word)
     course_word = course_word[:6]
-    print(course_word)
 
-    choose_course = {
-        "gameneed": list(), 
-    }
-    for word in course_word:
-        choose_course["gameneed"].append(word["TWword"]+"<br>"+word["TLPA"])
+    choose_course = {"gameneed": [w["TWword"]+"<br>"+w["TLPA"] for w in course_word]}
+    return render_template('game_map.html', course=choose_course)
 
-    return render_template('game_map.html', course = choose_course)
 
 @app.route('/game/fruit_cutter/game_result', methods = ['POST'])
 @app.route('/game/flipping_card/game_result', methods = ['POST'])
@@ -1320,6 +1579,16 @@ def stu_equipment_update():
 
         return json.dumps({'status':status})
 
+# school
+@app.get('/api/schools')
+def api_schools():
+    db = SQL()
+    rows = db.list_schools()
+    # rows: [(id, code, name), ...]
+    data = [{"id": r[0], "code": r[1], "name": r[2]} for r in rows]
+    return jsonify({"status": "success", "schools": data})
+
+
 # student register
 @app.get('/register/stu')
 def stu_register_page():
@@ -1333,11 +1602,16 @@ def stu_register_api():
     try:
         obj = request.get_json(force=True) if request.is_json else request.form
 
+        school  = str(obj.get('school', '')).strip()
         grade   = str(obj.get('grade', '')).strip()   # "1" | "2" | "3"..."6"
         clazz   = str(obj.get('clazz', '')).strip()   # "01".."15"
         seat_no = str(obj.get('seat_no', '')).strip() # "1".."40"
         pwd     = str(obj.get('pwd', '')).strip()
         name    = str(obj.get('name', '')).strip()
+
+        # === 新增：學校檢查 ===
+        if not school:
+            return jsonify({"status": "error", "message": "請選擇或輸入學校"}), 400
 
         # 檢查
         if grade not in {"1","2","3","4","5","6"}:
@@ -1349,17 +1623,23 @@ def stu_register_api():
         if not pwd:
             return jsonify({"status": "error", "message": "密碼不可為空"}), 400
 
+        # 找 school_id
+        school_id = school_code_or_name_to_id(db, school)
+        if school_id is None:
+            return jsonify({"status": "error", "message": f"查無學校：{school}"}), 400
+
         # 組帳號：G + CC + SS
         account = f"{grade}{int(clazz):02d}{int(seat_no):02d}"  # 30216 這種格式
         class_code = f"{grade}{int(clazz):02d}"                 # 302
 
         # 由 class_code 找 class_id（必要）
-        class_id = class_code_to_class_id(db, class_code)
+        class_id = db.class_name_to_class_id(school_id, class_code)  # ✅ 帶 school_id
+        
         if class_id is None:
             return jsonify({"status": "error", "message": f"找不到班級代碼 {class_code} 對應的 class_id"}), 400
 
-        # 建立學生（沿用你現有的 create_student）
-        ok = db.create_student(account=account, class_id=class_id, password=pwd, name=name)
+        # 建立學生：帶 school_id
+        ok = db.create_student(account=account, class_id=class_id, password=pwd, name=name, school_id=school_id)
         if not ok:
             return jsonify({"status": "error", "message": "帳號已存在或資料庫錯誤"}), 400
 
@@ -1388,13 +1668,23 @@ def teacher_register_page():
 def teacher_register_api():
     db = SQL()
     try:
-        obj  = request.get_json(force=True) if request.is_json else request.form
-        grade = str(obj.get('grade', '')).strip()   # "1"|"2"|"3"..."6"
+        obj   = request.get_json(force=True) if request.is_json else request.form
+        grade = str(obj.get('grade', '')).strip()   # "1"|"2"|...|"6"
         clazz = str(obj.get('clazz', '')).strip()   # "01".."99"
         name  = str(obj.get('name', '')).strip()
         pwd   = str(obj.get('pwd', '')).strip()
 
-        # 檢查
+        # 新版：只收 school（名稱），可從下拉選或手打
+        school = str(obj.get('school', '')).strip()  # ← 前端請送 'school' 欄位（學校名稱）
+        if not school:
+            return jsonify({"status":"error","message":"請輸入或選擇學校名稱"}), 400
+
+        # 先用名稱找，找不到就自動建立（產生唯一 school_code）
+        sid = db.ensure_school_by_name(school)
+        if not sid:
+            return jsonify({"status":"error","message":"建立或取得學校失敗"}), 500
+
+        # 檢查基本欄位
         if grade not in {"1","2","3","4","5","6"}:
             return jsonify({"status": "error", "message": "年級需為 1~6"}), 400
         if not (clazz.isdigit() and len(clazz) == 2 and 1 <= int(clazz) <= 99):
@@ -1407,21 +1697,30 @@ def teacher_register_api():
         # 帳號規則：G + CC + 00  （ex: 3年02班 → 30200）
         account = f"{grade}{int(clazz):02d}00"
 
-        # 若該班已經有老師帳號，回錯誤
+        # 在該 school 下確認唯一
         with db.conn.cursor() as cursor:
-            cursor.execute("SELECT 1 FROM Teacher WHERE account=%s LIMIT 1;", (account,))
+            cursor.execute(
+                "SELECT 1 FROM Teacher WHERE account=%s AND school_id=%s LIMIT 1;",
+                (account, sid)
+            )
             if cursor.fetchone():
-                return jsonify({"status": "error", "message": f"此班級 ({grade}{clazz}) 已建立老師帳號"}), 400
+                return jsonify({"status": "error", "message": f"此學校下，班級 ({grade}{clazz}) 已建立老師帳號"}), 400
 
-        # 建立老師
-        ok = db.create_teacher(account=account, password=pwd, name=name)
+        # 建立老師（這裡要帶上 school_id！）
+        ok = db.create_teacher(account=account, password=pwd, name=name, school_id=sid)
         if not ok:
             return jsonify({"status": "error", "message": "帳號已存在或資料庫錯誤"}), 400
 
+        teacher_id = db.get_teacher_id(account)  # 取回 teacher_id
+        cid = ensure_class(db, school_id=sid, grade=grade, clazz=clazz, teacher_id=teacher_id)
+        if not cid:
+            return jsonify({"status":"error","message":"建立班級失敗（請檢查 Class 欄位或權限）"}), 500
+        
+
         # 登入 session
-        session['identity'] = "Teacher"
-        session['loggin'] = True
-        session['account'] = account
+        session['identity']  = "Teacher"
+        session['loggin']    = True
+        session['account']   = account
         try:
             session['teacher_id'] = db.get_teacher_id(account)
         except Exception:
@@ -1431,8 +1730,6 @@ def teacher_register_api():
     except Exception as e:
         print("teacher_register_api error:", e)
         return jsonify({"status": "error", "message": "系統暫時無法註冊"}), 500
-
-
 
 
 

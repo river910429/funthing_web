@@ -75,14 +75,10 @@
         transition: 0.2s;
       }
 
-      button:hover {
-        background-color: #125ca1;
-      }
+      button:hover { background-color: #125ca1; }
 
       /* 響應式 */
-      @media (max-width: 500px) {
-        .row { grid-template-columns: 1fr; }
-      }
+      @media (max-width: 500px) { .row { grid-template-columns: 1fr; } }
     </style>
   </head>
 
@@ -90,6 +86,14 @@
     <div class="card">
       <h2>學生註冊</h2>
       <form id="form">
+        <!-- 新增：學校（只能選既有） -->
+        <div>
+          <label>學校</label>
+          <select id="school" required>
+            <option value="">載入中…</option>
+          </select>
+        </div>
+
         <div class="row">
           <div>
             <label>年級</label>
@@ -136,6 +140,29 @@
       const clazz   = document.getElementById('clazz');
       const seat    = document.getElementById('seat_no');
       const preview = document.getElementById('account_preview');
+      const school  = document.getElementById('school');
+
+      async function loadSchools() {
+        try {
+          const res = await fetch('/api/schools');
+          const j = await res.json();
+          school.innerHTML = '<option value="">請選擇</option>';
+          if (j.status === 'success') {
+            j.schools.forEach(s => {
+              const opt = document.createElement('option');
+              // 傳 id 最穩定：後端會直接用 school_id
+              // opt.value = String(s.id);
+              opt.value = s.name;
+              opt.textContent = `${s.name}`;
+              school.appendChild(opt);
+            });
+          } else {
+            school.innerHTML = '<option value="">（讀取失敗）</option>';
+          }
+        } catch (e) {
+          school.innerHTML = '<option value="">（讀取失敗）</option>';
+        }
+      }
 
       function fillClazz(max=15) {
         clazz.innerHTML = '<option value="">請選擇</option>';
@@ -176,21 +203,25 @@
 
       fillClazz(15);
       fillSeat(40);
+      loadSchools();
 
       document.getElementById('form').addEventListener('submit', async (e) => {
         e.preventDefault();
-        const g = grade.value.trim();
-        const c = clazz.value.trim();
-        const s = seat.value.trim();
-        const pwd = document.getElementById('pwd').value;
+        const g    = grade.value.trim();
+        const c    = clazz.value.trim();
+        const s    = seat.value.trim();
+        const sid  = school.value.trim(); // 既有學校（id）
+        const pwd  = document.getElementById('pwd').value;
         const name = document.getElementById('name').value.trim();
 
+        if (!sid) { alert('請選擇學校'); return; }
         if (!g || !c || !s) { alert('請選擇年級、班別與座號'); return; }
 
         const res = await fetch('/register/stu', {
           method: 'POST',
           headers: {'Content-Type':'application/json'},
           body: JSON.stringify({
+            school: sid,     // 後端會接受 id 或 code/name；這裡傳 id
             grade: g,
             clazz: c,
             seat_no: s,
