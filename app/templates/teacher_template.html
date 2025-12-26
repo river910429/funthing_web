@@ -2,21 +2,44 @@
 <html>
     <head>
         <link href="{{ url_for('static', filename='css/game_page.css')}}" rel="stylesheet", type="text/css">
+        
+        <!-- [新增] 引入 ta_home.css 以取得下拉選單樣式 -->
+        <link href="{{ url_for('static', filename='css/ta_home.css')}}" rel="stylesheet" type="text/css">
+        
+        <!-- [移動] 將 Bootstrap CSS 移至 head -->
+        <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-5.0.2.min.css">
+
+        <script type="text/javascript" src="/static/js/jquery-3.6.0.min.js"></script>
+        <!-- 引入原本的 JS，但下方的 script 會覆寫導向邏輯以配合 Blueprint -->
         <script type="text/javascript" src="{{ url_for('static', filename='js/ta_template.js')}}"></script>
     </head>
     <body>
         <img id="background_img" src="{{ url_for('static', filename='Font/1x/ALL_BG_GRID.png')}}">
         <div class="parent">
-            <img id="back_btn" onclick="window.open('/home/ta', '_self');" src="{{ url_for('static', filename='4GAME_ALL/ALL/1x/ALL_ARROW_BACK.png')}}">
+            <!-- [修改] Back 按鈕統一呼叫 home() -->
+            <img id="back_btn" onclick="home()" src="{{ url_for('static', filename='4GAME_ALL/ALL/1x/ALL_ARROW_BACK.png')}}">
             <img id="home_btn" onclick="home()" src="{{ url_for('static', filename='4GAME_ALL/ALL/1x/ALL_HOME.png')}}">
             
+            <!-- [修改] 下拉選單結構 -->
             <div class="btn-group" id="profile">
                 <button type="button" id="dropdownMenuReference"
                         data-bs-toggle="dropdown" aria-expanded="false" data-bs-reference="parent">
                     <img src="/static/4GAME_ALL/ALL/1x/ALL_ACCOUNT.png">
                 </button>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuReference">
-                    <li><button id="dropdown-leave" onclick="exit()"></li>
+                    
+                    <!-- 班級管理按鈕 -->
+                    <li>
+                        <button class="menu-btn-custom" onclick="class_entrance()">
+                            <span class="btn-icon"></span>
+                            <span>班級管理</span>
+                        </button>
+                    </li>
+                    
+                    <!-- 登出按鈕 -->
+                    <li>
+                        <button class="menu-btn-custom" id="dropdown-leave" onclick="exit()"></button>
+                    </li>
                 </ul>
             </div>
 
@@ -55,15 +78,11 @@
             </div>
         </div>
     </div>
-    </body>
-
-    <script type="text/javascript" src="/static/js/jquery-3.6.0.min.js"></script>
+    
     <!-- my alert -->
     <link rel="stylesheet" type="text/css" href="/static/css/myalert.css">
-    <!-- Core theme CSS (includes Bootstrap 5.0.2) -->
-    <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-5.0.2.min.css">
-    <!-- Bootstrap core JS 5.0.2 -->
     <script src="/static/js/bootstrap-5.0.2.min.js"></script>
+    
     <script>
         function exit() {
             var LogoutModal = new bootstrap.Modal($('#LogoutModal'));
@@ -72,5 +91,22 @@
         $("#mlogout").click(function() {
             document.location.href="/branch";
         });
+
+        // [新增] 跳轉到班級管理
+        function class_entrance() {
+            window.location.href = "{{ url_for('teacher.ta_class_management') }}";
+        }
+
+        // [新增] 回首頁
+        function home() {
+            window.location.href = "{{ url_for('teacher.ta_home') }}";
+        }
+
+        // [新增] 遊戲頁面跳轉 (覆蓋 js/ta_template.js 中的舊路徑)
+        function game_catch() { window.location.href = "{{ url_for('teacher.ta_template_catch') }}"; }
+        function game_map() { window.location.href = "{{ url_for('teacher.ta_template_map') }}"; }
+        function game_fruit() { window.location.href = "{{ url_for('teacher.ta_template_fruit') }}"; }
+        function game_card() { window.location.href = "{{ url_for('teacher.ta_template_card') }}"; }
     </script>
+    </body>
 </html>

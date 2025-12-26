@@ -108,11 +108,12 @@ body, html{
 
 }
 
-#school_box{
+#code_box{
     position: relative;
-    width: 58%;
+    /* width: 58%; */
     left: 23%;
-    height: 5vh;              /* 比原本高一點 */
+    height: 6vh;
+    /* height: 5vh;              比原本高一點 */
     font-size: 24px;          /* 字變大，視覺上比例協調 */
     padding: 0 12px;          /* 左右內邊距 */
     box-sizing: border-box;   /* 確保 padding 不會把框撐爆 */

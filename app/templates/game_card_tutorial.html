@@ -22,12 +22,33 @@
             src="{{ url_for('static', filename = '4GAME_ALL/ALL/1x/ALL_VOLUME_GAME_PAGE.png')}}">
 
         <img id="gray_layer" src="{{ url_for('static', filename='4GAME_ALL/ALL/1x/ALL_GRAY_LAYER.png')}}">
-        <img id="game_tutorial"
-            src="{{ url_for('static', filename='4GAME_ALL/CARD_GAME4X4/1x/CARD_GAME_CAPTION.png')}}">
-        <img id="btn_enter_game" onclick="game_start({{course_id}})"
+
+        <!-- 這邊是遊戲說明 -->
+        <!-- <img id="game_tutorial"
+            src="{{ url_for('static', filename='4GAME_ALL/CARD_GAME4X4/1x/CARD_GAME_CAPTION.png')}}"> -->
+        <div id="game_tutorial_box" class="tutorial-container">
+            <h2 class="tutorial-title">遊戲說明</h2>
+            <div class="tutorial-content">
+                <p>1. 請先在十秒內記住牌面上的單詞。</p>
+                <p>2. 依照聽到的題目，找出兩張對應的卡片進行配對。</p>
+                <p>3. 在時間結束前完成所有配對即可過關！</p>
+            </div>
+            <!-- 把按鈕放進來 -->
+            <div class="tutorial-buttons">
+                <img id="btn_not_enter_game" 
+                     src="{{url_for('static', filename='4GAME_ALL/ALL/1x/ALL_EXIT_GAME_C.png')}}" 
+                     onclick="leave_game()">
+                
+                <img id="btn_enter_game" 
+                     src="{{url_for('static', filename='4GAME_ALL/ALL/1x/ALL_ENTER GAME_B.png')}}" 
+                     onclick="game_start({{course_id}})">
+            </div>
+        </div>
+
+        <!-- <img id="btn_enter_game" onclick="game_start({{course_id}})"
             src="{{url_for('static', filename='4GAME_ALL/ALL/1x/ALL_ENTER GAME_B.png')}}" onclick="game_map_start()">
         <img id="btn_not_enter_game" onclick="leave_game()"
-            src="{{url_for('static', filename='4GAME_ALL/ALL/1x/ALL_EXIT_GAME_C.png')}}">
+            src="{{url_for('static', filename='4GAME_ALL/ALL/1x/ALL_EXIT_GAME_C.png')}}"> -->
     </div>
     <div id="p_bar">
         <span id="game_time_bar"></span>
@@ -68,7 +89,7 @@
         setInterval(check, 1000 * 10);
         function check() {
             console.log(new Date() - lastmovetime);
-            if ((new Date() - lastmovetime) > 1000 * 60 * 5) {
+            if ((new Date() - lastmovetime) > 1000 * 60 * 30) {
                 var TimeOutModal = new bootstrap.Modal($('#TimeOutModal'));
                 if (! $('#TimeOutModal').hasClass('show')) {
                     TimeOutModal.show();

@@ -172,7 +172,8 @@
             background-size: contain;
             background-repeat: no-repeat;
             background-position: center;
-            z-index: 10;
+            /* z-index: 10; */
+            z-index: 1001;
             visibility: hidden;
             overflow: visible;
         }
@@ -200,8 +201,8 @@
             background-size: contain;
             background-repeat: no-repeat;
             z-index: 1000;
-            transition-duration: 0.05s;
-            transition-timing-function: linear; 
+            /* transition-duration: 0.05s;
+            transition-timing-function: linear;  */
         }
 
         .pigeon-init {
@@ -244,6 +245,28 @@
             border-radius: 8px;
             word-wrap: break-word;
             pointer-events: none;
+        }
+        /* 飄浮回饋文字的樣式 */
+        .feedback-text {
+            position: absolute;
+            font-size: 6rem;       /* 字體大一點 */
+            font-weight: 900;
+            z-index: 2000;         /* 確保在最上層 */
+            pointer-events: none;  /* 讓滑鼠點擊穿透，不會擋到操作 */
+            text-shadow: 2px 2px 0px #FFF; /* 白邊框，讓字更明顯 */
+            opacity: 1;
+        }
+
+        /* 熊接到東西時的彈性動畫 class */
+        .pigeon-bounce {
+            animation: bounce-effect 0.3s ease-out;
+        }
+
+        @keyframes bounce-effect {
+            0% { transform: scale(1, 1); }
+            40% { transform: scale(1.2, 0.8); } /* 變扁變寬 (壓扁) */
+            80% { transform: scale(0.9, 1.1); } /* 變瘦變高 (回彈) */
+            100% { transform: scale(1, 1); }
         }
     </style>
 </head>

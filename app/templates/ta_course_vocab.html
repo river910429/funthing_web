@@ -8,6 +8,10 @@
     <title>ta_course_vocab</title>
     <!-- Core theme CSS (includes Bootstrap 5.0.2) -->
     <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-5.0.2.min.css">
+    
+    <!-- [新增] 引入 ta_home.css 以取得統一的下拉選單樣式 -->
+    <link href="{{ url_for('static', filename='css/ta_home.css')}}" rel="stylesheet" type="text/css">
+    
     <!-- my alert -->
     <link rel="stylesheet" type="text/css" href="/static/css/myalert.css">
     <!-- local style -->
@@ -29,13 +33,24 @@
                 </a>
                 <div class="fs-1">匯入語詞教材</div>
 
+                <!-- [修改] 統一風格下拉選單 -->
                 <div class="btn-group" id="profile">
                     <button type="button" id="dropdownMenuReference"
                             data-bs-toggle="dropdown" aria-expanded="false" data-bs-reference="parent">
                         <img src="/static/4GAME_ALL/ALL/1x/ALL_ACCOUNT.png">
                     </button>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuReference">
-                        <li><button id="dropdown-leave" onclick="exit()"></li>
+                        <!-- 班級管理按鈕 -->
+                        <li>
+                            <button class="menu-btn-custom" onclick="class_entrance()">
+                                <span class="btn-icon"></span>
+                                <span>班級管理</span>
+                            </button>
+                        </li>
+                        <!-- 登出按鈕 (使用 id="dropdown-leave" 配合 CSS 自動顯示文字與圖示) -->
+                        <li>
+                            <button class="menu-btn-custom" id="dropdown-leave" onclick="exit()"></button>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -297,11 +312,6 @@
                         <div class="d-flex flex-column align-items-center">
                             <img class="rotate my-3" src="/static/4GAME_ALL/ALL/1x/loading.png">
                             <div>建立中</div>
-                            <!-- <div class="d-flex justify-content-center w-100">
-                                <div class="alertbtn alertbtn-normal" data-bs-dismiss="modal">
-                                    完成
-                                </div>
-                            </div> -->
                         </div>
                     </div>
                 </div>
@@ -495,8 +505,11 @@
                         .finally();
                 },
                 async trylisten(i = -1) {
+                    // 根據 i 判斷是新單字 (-1) 還是現有列表單字
+                    // 從 Vue data 中取得對應的 TLPA 和 TWword
                     const tlpa = (i === -1 ? this.insert_TLPA : this.data_list[i]?.TLPA || "").trim();
                     const nameHint = (i === -1 ? this.insert_TWword : this.data_list[i]?.TWword || "").trim() || "audio";
+
                     if (!tlpa) return alert("沒有 TLPA 可合成");
 
                     try {
@@ -625,6 +638,9 @@
         $("#mlogout").click(function() {
             document.location.href="/branch";
         });
+        function class_entrance() {
+            window.location.href = "/ta/class_management";
+        }
     </script>
 
     {% endraw %}

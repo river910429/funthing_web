@@ -10,111 +10,141 @@
         display: flex; align-items: center; justify-content: center;
         background: url("{{ url_for('static', filename='Font/1x/ALL_BG_LOG_IN_STUDENT.png') }}")
                     no-repeat center center fixed;
+        background-color: #f0f2f5;
         background-size: cover;
         font-family: system-ui, -apple-system, "Noto Sans TC", Arial;
       }
       .card {
-        background: rgba(255,255,255,0.9);
+        background: rgba(255,255,255,0.95);
         border-radius: 16px; padding: 30px 40px;
-        box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+        box-shadow: 0 6px 20px rgba(0,0,0,0.15);
         max-width: 520px; width: 90%;
+        position: relative;
+        overflow: visible;
+        z-index: 10;
       }
       h2 { text-align: center; margin-bottom: 20px; color: #333; }
-      form { display: grid; gap: 14px; }
-      label { font-weight: 600; color: #222; }
-      small { color:#555; }
-      select, input {
-        padding: 8px; width: 100%; box-sizing: border-box;
-        border: 1px solid #aaa; border-radius: 6px;
+      form { display: grid; gap: 15px; }
+      label { font-weight: 600; color: #222; font-size: 0.95rem; margin-bottom: 4px; display: block; }
+      small { color:#666; font-size: 0.85rem; }
+      
+      input {
+        padding: 12px; width: 100%; box-sizing: border-box;
+        border: 1px solid #ccc; border-radius: 8px; font-size: 1rem;
+        transition: border 0.2s;
       }
-      .row { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
-      .preview { color: #444; font-size: 18px; text-align: center; margin: 10px 0; }
+      input:focus { border-color: #1976d2; outline: none; box-shadow: 0 0 0 2px rgba(25,118,210,0.1); }
+
+      input.error { border-color: #d32f2f; }
+      .error-msg { color: #d32f2f; font-size: 0.85rem; display: none; margin-top: -10px; margin-bottom: 5px; }
+
       button {
-        padding: 10px 14px; cursor: pointer; background-color: #1976d2;
-        color: #fff; border: none; border-radius: 8px; font-size: 16px; transition: .2s;
+        padding: 12px 14px; cursor: pointer; background-color: #1976d2; margin-top: 10px;
+        color: #fff; border: none; border-radius: 8px; font-size: 16px; transition: .2s; font-weight: bold;
       }
       button:hover { background-color: #125ca1; }
+      button:disabled { background-color: #aaa; cursor: not-allowed; }
 
-      /* 自動完成建議清單 */
       .auto-wrap { position: relative; }
       .auto-menu {
         position: absolute; left: 0; right: 0; top: calc(100% + 4px);
         border: 1px solid #ddd; background: #fff; border-radius: 8px;
-        box-shadow: 0 8px 24px rgba(0,0,0,.12);
-        max-height: 240px; overflow: auto; z-index: 20;
+        box-shadow: 0 8px 24px rgba(0,0,0,.15);
+        max-height: 200px; overflow: auto; z-index: 100;
       }
-      .auto-item {
-        padding: 10px 12px; cursor: pointer; line-height: 1.2;
+      .auto-item { padding: 10px 12px; cursor: pointer; font-size: 0.95rem; }
+      .auto-item:hover, .auto-item.active { background: #e3f2fd; }
+
+      #success-view { text-align: center; display: none; animation: fadeIn 0.5s; }
+      .success-icon { font-size: 4rem; margin-bottom: 10px; display: block; }
+      
+      @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+      /* [新增] 返回按鈕樣式 */
+      #back_img {
+        position: absolute;
+        height: 13%;
+        left: 0;
+        top: 0;
+        cursor: pointer;
+        z-index: 200;
       }
-      .auto-item:hover, .auto-item.active {
-        background: #f1f6ff;
-      }
-      .auto-empty {
-        padding: 10px 12px; color: #666; font-size: 14px;
-      }
-      @media (max-width: 500px) { .row { grid-template-columns: 1fr; } }
     </style>
   </head>
 
   <body>
+    <!-- [新增] 返回按鈕，連結到教師登入頁 -->
+    <img id="back_img" src="{{ url_for('static', filename='Font/1x/ALL_NAV_BAR_BACK.png') }}" onclick="window.location.href='/login/ta'">
+
     <div class="card">
-      <h2>教師註冊</h2>
-      <form id="form">
-        <!-- 學校輸入框＋自動建議清單 -->
-        <div class="field">
-          <label>學校</label>
-          <div class="auto-wrap" id="school-auto">
-            <input id="school-input" placeholder="輸入學校名稱或關鍵字" autocomplete="off" required />
-            <div class="auto-menu" id="school-menu" hidden></div>
+      
+      <div id="register-view">
+        <h2>教師註冊</h2>
+        <form id="form">
+          <div class="field">
+            <label>學校 (School)</label>
+            <div class="auto-wrap" id="school-auto">
+              <input id="school-input" placeholder="請輸入學校名稱或關鍵字" autocomplete="off" required />
+              <div class="auto-menu" id="school-menu" hidden></div>
+            </div>
+            <small style="margin-top:4px; display:block;">若清單中沒有您的學校，可直接輸入全名。</small>
           </div>
-          <small>可直接輸入新學校名稱，或從清單點選既有學校。</small>
-        </div>
 
-        <div class="row">
           <div>
-            <label>年級</label>
-            <select id="grade" required>
-              <option value="">請選擇</option>
-              <option value="1">一年</option>
-              <option value="2">二年</option>
-              <option value="3">三年</option>
-              <option value="4">四年</option>
-              <option value="5">五年</option>
-              <option value="6">六年</option>
-            </select>
+            <label>帳號 (學校信箱)</label>
+            <input id="account" type="email" placeholder="name@school.edu.tw" required />
           </div>
+
           <div>
-            <label>班別</label>
-            <select id="clazz" required></select>
+            <label>姓名</label>
+            <input id="name" placeholder="請輸入真實姓名" required />
           </div>
+
+          <div>
+            <label>密碼</label>
+            <input id="pwd" type="password" placeholder="設定登入密碼" required />
+          </div>
+
+          <div>
+            <label>確認密碼</label>
+            <input id="pwd_confirm" type="password" placeholder="請再次輸入密碼" required />
+            <div class="error-msg" id="pwd-error">兩次輸入的密碼不一致</div>
+          </div>
+
+          <button type="submit" id="submit-btn">註冊帳號</button>
+        </form>
+      </div>
+
+      <div id="success-view">
+        <span class="success-icon">🎉</span>
+        <h2 style="color: #2e7d32; margin-top: 0;">註冊成功</h2>
+        
+        <p style="color:#555; line-height:1.6; font-size: 1.1rem;">
+          歡迎加入！您的帳號已建立完成。
+        </p>
+        
+        <div style="background: #f1f8ff; padding: 15px; border-radius: 8px; color: #0d47a1; margin: 20px 0; text-align: left;">
+            <strong>下一步：</strong><br>
+            請登入系統，並在「班級管理」中建立您的第一個班級並取得代碼。
         </div>
+        
+        <button onclick="goToHome()">前往班級管理</button>
+      </div>
 
-        <div class="preview">老師帳號：<span id="account_preview">—</span></div>
-
-        <div>
-          <label>姓名</label>
-          <input id="name" required />
-        </div>
-
-        <div>
-          <label>密碼</label>
-          <input id="pwd" type="password" required />
-        </div>
-
-        <button type="submit">註冊</button>
-      </form>
     </div>
 
     <script>
-      // ====== 自動完成學校選單 ======
+      let targetUrl = "/ta/class_management";
+
       function debounce(fn, delay=150){ let t; return(...args)=>{clearTimeout(t); t=setTimeout(()=>fn(...args),delay);} }
       let SCHOOL_LIST=[];
+      
       async function loadSchools(){
         try{
           const res=await fetch('/api/schools');
           const j=await res.json();
           if(j?.status==='success'&&Array.isArray(j.schools)) SCHOOL_LIST=j.schools;
-        }catch(e){console.warn('載入學校清單失敗：',e);}
+        }catch(e){console.warn('學校清單載入失敗',e);}
       }
 
       function setupSchoolAutocomplete(){
@@ -123,18 +153,13 @@
         const menu=document.getElementById('school-menu');
         let currentIndex=-1;
 
-        function renderMenu(items,kw){
+        function renderMenu(items){
           menu.innerHTML=''; currentIndex=-1;
-          if(!items.length){
-            menu.innerHTML='<div class="auto-empty">沒有符合的學校，可直接使用你輸入的名稱</div>';
-            menu.hidden=false; return;
-          }
-          items.forEach((s,i)=>{
+          if(!items.length){ menu.hidden=true; return; }
+          items.forEach((s)=>{
             const div=document.createElement('div');
             div.className='auto-item';
-            const safe=s.name.replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-            const re=new RegExp(kw.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'gi');
-            div.innerHTML=safe.replace(re,m=>`<mark>${m}</mark>`);
+            div.textContent = s.name; 
             div.addEventListener('mousedown',ev=>{
               ev.preventDefault(); input.value=s.name; menu.hidden=true;
             });
@@ -145,50 +170,84 @@
 
         const filterAndShow=debounce(()=>{
           const kw=input.value.trim();
-          if(!kw){renderMenu(SCHOOL_LIST.slice(0,20),kw);return;}
-          const kwLower=kw.toLowerCase();
-          const result=SCHOOL_LIST.filter(s=>s.name.toLowerCase().includes(kwLower)).slice(0,30);
-          renderMenu(result,kw);
+          if(!kw){ menu.hidden=true; return; }
+          const result=SCHOOL_LIST.filter(s=>s.name.toLowerCase().includes(kw.toLowerCase())).slice(0,15);
+          renderMenu(result);
         });
 
         input.addEventListener('input',filterAndShow);
-        input.addEventListener('focus',()=>renderMenu(SCHOOL_LIST.slice(0,20),''));        
-        input.addEventListener('keydown',e=>{
-          const items=Array.from(menu.querySelectorAll('.auto-item'));
-          if(e.key==='ArrowDown'){
-            if(menu.hidden) menu.hidden=false;
-            if(items.length){currentIndex=(currentIndex+1)%items.length;items.forEach(el=>el.classList.remove('active'));items[currentIndex].classList.add('active');items[currentIndex].scrollIntoView({block:'nearest'});}
-            e.preventDefault();
-          }else if(e.key==='ArrowUp'){
-            if(!menu.hidden&&items.length){currentIndex=(currentIndex-1+items.length)%items.length;items.forEach(el=>el.classList.remove('active'));items[currentIndex].classList.add('active');items[currentIndex].scrollIntoView({block:'nearest'});}
-            e.preventDefault();
-          }else if(e.key==='Enter'){
-            if(!menu.hidden&&currentIndex>=0&&items[currentIndex]){input.value=items[currentIndex].textContent.trim();menu.hidden=true;e.preventDefault();}
-          }else if(e.key==='Escape'){menu.hidden=true;}
-        });
+        input.addEventListener('focus', filterAndShow);
         document.addEventListener('click',e=>{if(!wrap.contains(e.target)) menu.hidden=true;});
       }
-
       (async()=>{await loadSchools();setupSchoolAutocomplete();})();
 
-      // ====== 班級與帳號 ======
-      const grade=document.getElementById('grade');
-      const clazz=document.getElementById('clazz');
-      const preview=document.getElementById('account_preview');
-      function fillClazz(max=15){clazz.innerHTML='<option value="">請選擇</option>';for(let i=1;i<=max;i++){const v=String(i).padStart(2,'0');const opt=document.createElement('option');opt.value=v;opt.textContent=v+' 班';clazz.appendChild(opt);}}
-      function updatePreview(){const g=grade.value?.trim();const c=clazz.value?.trim();preview.textContent=(g&&/^\d$/.test(g)&&c&&/^\d{2}$/.test(c))?(g+c+'00'):'—';}
-      grade.addEventListener('change',updatePreview);clazz.addEventListener('change',updatePreview);fillClazz(15);
+      const pwd = document.getElementById('pwd');
+      const pwdConfirm = document.getElementById('pwd_confirm');
+      const pwdError = document.getElementById('pwd-error');
 
-      // ====== 提交 ======
-      document.getElementById('form').addEventListener('submit',async e=>{
-        e.preventDefault();
-        const g=grade.value.trim(),c=clazz.value.trim(),name=document.getElementById('name').value.trim(),pwd=document.getElementById('pwd').value.trim(),school=document.getElementById('school-input').value.trim();
-        if(!g||!c){alert('請選擇年級與班別');return;}
-        if(!school){alert('請輸入學校名稱');return;}
-        const res=await fetch('/register/ta',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({grade:g,clazz:c,name,pwd,school})});
-        const j=await res.json();
-        if(j.status==='success'){location.href=j.url;}else{alert(j.message||'註冊失敗');}
+      pwdConfirm.addEventListener('input', () => {
+        if(pwdConfirm.value && pwd.value !== pwdConfirm.value) {
+            pwdConfirm.classList.add('error');
+            pwdError.style.display = 'block';
+        } else {
+            pwdConfirm.classList.remove('error');
+            pwdError.style.display = 'none';
+        }
       });
+
+      document.getElementById('form').addEventListener('submit', async e => {
+        e.preventDefault();
+        
+        if(pwd.value !== pwdConfirm.value){
+            alert('兩次輸入的密碼不一致，請重新確認。');
+            pwdConfirm.focus();
+            return;
+        }
+
+        const school = document.getElementById('school-input').value.trim();
+        const account = document.getElementById('account').value.trim();
+        const name = document.getElementById('name').value.trim();
+
+        if(!school || !account || !name || !pwd.value){
+            alert('請完整填寫所有欄位');
+            return;
+        }
+
+        const btn = document.getElementById('submit-btn');
+        btn.disabled = true;
+        btn.textContent = '處理中...';
+
+        try {
+            const res = await fetch('/register/ta',{
+                method:'POST',
+                headers:{'Content-Type':'application/json'},
+                body:JSON.stringify({ 
+                    school,
+                    account, 
+                    name, 
+                    pwd: pwd.value 
+                })
+            });
+            const j = await res.json();
+            
+            if(j.status === 'success'){
+                document.getElementById('register-view').style.display = 'none';
+                document.getElementById('success-view').style.display = 'block';
+                // targetUrl = j.url; // 如果後端有回傳
+            } else {
+                alert(j.message || '註冊失敗');
+                btn.disabled = false;
+                btn.textContent = '註冊帳號';
+            }
+        } catch(err) {
+            console.error(err);
+            alert('系統連線錯誤');
+            btn.disabled = false;
+            btn.textContent = '註冊帳號';
+        }
+      });
+
+      function goToHome(){ location.href = targetUrl; }
     </script>
   </body>
 </html>

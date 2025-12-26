@@ -38,6 +38,23 @@
             <img id="profile" onclick="leave_game()" src="{{ url_for('static', filename = '4GAME_ALL/ALL/1x/ALL_LEAVE_GAME.png')}}">
             <img id = "record_btn" src="/static/4GAME_ALL/MAP/1x/ALL_MIC.png">
             <div class="taiwan" style="height: 10vh; width: 38vw;"></div>
+
+            <div id="recognition_status" style="display: none;">
+                <div class="status-box">
+                    <div id="mic_wave" class="mic-wave" style="display: none;">
+                        <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
+                    </div>
+                    
+                    <div id="loading_spinner" class="spinner"></div>
+                    
+                    <p id="status_text">辨識中...</p>
+            
+                    <button id="btn_stop_record" class="stop-btn" onclick="finishRecording()" style="display: none;">
+                        結束錄音
+                    </button>
+                </div>
+            </div>
+
         </div>
        
     </body>

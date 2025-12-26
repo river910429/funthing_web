@@ -1,4 +1,16 @@
-flask==2.1.*
+# flask==2.1.*
+# pymysql==1.0.2
+# pyopenssl==22.0.*
+# gunicorn==20.1.0
+# KeyDnn==0.16.3
+# python-dotenv==1.0.0
+# sounddevice==0.4.7
+# numpy>=2.0,<2.6
+# scipy>=1.14,<1.15
+# requests
+# pytest
+Flask==3.0.3
+Werkzeug==3.0.3
 pymysql==1.0.2
 pyopenssl==22.0.*
 gunicorn==20.1.0
@@ -7,3 +19,5 @@ python-dotenv==1.0.0
 sounddevice==0.4.7
 numpy>=2.0,<2.6
 scipy>=1.14,<1.15
+requests
+pytest

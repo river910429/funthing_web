@@ -10,6 +10,61 @@
     <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-5.0.2.min.css">
     <!-- local style -->
     <link rel="stylesheet" type="text/css" href="/static/css/stu_equip.css">
+    <style>
+        /* 下拉選單樣式 (學生版) */
+        .dropdown-menu {
+            position: absolute;
+            z-index: 1000;
+            min-width: 180px !important;
+            width: auto !important;
+            padding: 12px !important;
+            margin: 0 !important;
+            background-color: rgba(255, 255, 255, 0.95);
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            top: 100% !important;
+            margin-top: 10px !important;
+            right: 0 !important;
+            left: auto !important;
+            transform: none !important;
+            display: none; 
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+        .dropdown-menu.show { display: flex; }
+        .dropdown-menu li { list-style: none; width: 100%; margin: 0; padding: 0; display: flex; justify-content: center; }
+
+        /* 個人裝備按鈕 (黃色) */
+        .menu-btn-custom {
+            display: flex; flex-direction: row; align-items: center; justify-content: center;
+            width: 100%; height: 50px;
+            background: linear-gradient(to bottom, #ffffff 0%, #f4da63 100%);
+            border: 2px solid #d4b755; border-radius: 8px;
+            color: #333; font-size: 18px; font-weight: bold; letter-spacing: 1px;
+            cursor: pointer; text-decoration: none; white-space: nowrap;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: all 0.2s; padding: 0 10px;
+        }
+        .menu-btn-custom:hover { background: linear-gradient(to bottom, #fff 0%, #ffe066 100%); transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.15); }
+        .btn-icon { margin-right: 8px; font-size: 20px; }
+
+        /* 登出按鈕 (灰色) */
+        #dropdown-leave {
+            display: flex; align-items: center; justify-content: center;
+            width: 100%; height: 50px;
+            background: linear-gradient(180deg, #F5F5F5 0%, #E0E0E0 100%);
+            border: 2px solid #B0B0B0; border-radius: 8px;
+            color: #555; font-size: 18px; font-weight: bold; letter-spacing: 1px;
+            cursor: pointer; padding: 0 15px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: all 0.2s;
+            background-image: none;
+        }
+        /* #dropdown-leave::before { content: "↪"; margin-right: 8px; font-size: 20px; } */
+        #dropdown-leave::after { content: "登出遊戲"; }
+        #dropdown-leave:hover { background: linear-gradient(180deg, #FFFFFF 0%, #EEEEEE 100%); transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.15); color: #333; }
+        #dropdown-leave:active { transform: translateY(0); box-shadow: none; }
+    </style>
 </head>
 
 <body>
@@ -26,13 +81,16 @@
                     <img id="home_btn" onclick="home()" src="/static/4GAME_ALL/ALL/1x/ALL_HOME.png">
                 </a>
                 <div class="btn-group" id="profile">
-                    <button type="button" id="dropdownMenuReference"
-                            data-bs-toggle="dropdown" aria-expanded="false" data-bs-reference="parent">
+                    <button type="button" id="dropdownMenuReference" data-bs-toggle="dropdown" aria-expanded="false" data-bs-reference="parent">
                         <img src="/static/4GAME_ALL/ALL/1x/ALL_ACCOUNT.png">
                     </button>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuReference">
-                        <li><button id="dropdown-equ" onclick="document.location.href='/stu/equipment'"></li>
-                        <li><button id="dropdown-leave" onclick="exit()"></li>
+                        <li>
+                            <button class="menu-btn-custom" onclick="location.href='{{ url_for('student.stu_equipment') }}'">
+                                <span class="btn-icon"></span><span>個人裝備</span>
+                            </button>
+                        </li>
+                        <li><button id="dropdown-leave" onclick="exit()"></button></li>
                     </ul>
                 </div>
             </div>
@@ -187,7 +245,7 @@
         setInterval(check, 1000 * 10);
         function check() {
             console.log(new Date() - lastmovetime);
-            if ((new Date() - lastmovetime) > 1000 * 60 * 5) {
+            if ((new Date() - lastmovetime) > 1000 * 60 * 30) {
                 var TimeOutModal = new bootstrap.Modal($('#TimeOutModal'));
                 if (! $('#TimeOutModal').hasClass('show')) {
                     TimeOutModal.show();

@@ -355,3 +355,47 @@ function verify_answer(hypothesis)
     // }
     // 開啟校準：在地圖上點一下，Console 會印出 top%、left%（複製去 destination_pos）
 }
+
+// 顯示「錄音中」狀態
+function showRecognizing() {
+    $('#recognition_status').fadeIn(100);
+    $('#recognition_status').css("display", "flex");
+    
+    $('#mic_wave').show();          // 顯示聲波
+    $('#btn_stop_record').show();   // ★ 顯示結束按鈕 ★
+    
+    $('#loading_spinner').hide();   // 隱藏轉圈
+    $('#status_text').text("正在聆聽...");
+    $('#status_text').css("color", "#333");
+}
+
+// 顯示「分析中」狀態
+function showLoading() {
+    $('#mic_wave').hide();
+    $('#btn_stop_record').hide();   // ★ 隱藏結束按鈕 ★
+    
+    $('#loading_spinner').show();   // 顯示轉圈
+    $('#status_text').text("辨識中...");
+}
+
+// 顯示結果
+function showResult(resultText) {
+    $('#mic_wave').hide();
+    $('#loading_spinner').hide();
+    $('#btn_stop_record').hide();   // 確保按鈕隱藏
+    
+    $('#status_text').text(resultText);
+    $('#status_text').css("color", "#d63031");
+
+    setTimeout(function() {
+        $('#recognition_status').fadeOut(300);
+    }, 1500);
+}
+
+// ★ 新增：手動點擊「結束錄音」按鈕時呼叫的函式 ★
+function finishRecording() {
+    // 呼叫 record-live-audio.js 裡面的停止函式
+    if (typeof map_record_process_end === "function") {
+        map_record_process_end();
+    }
+}

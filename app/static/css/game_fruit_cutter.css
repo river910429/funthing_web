@@ -101,7 +101,7 @@ body {
 .fruit {
     position: absolute;
     height: 150px;
-    width: 150px;
+    width: 300px;
     visibility: hidden;
     z-index: 500;
     object-fit: contain;

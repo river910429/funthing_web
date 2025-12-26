@@ -1,7 +1,9 @@
-body, html{
+/* 全域設定 */
+body, html {
     width: 100%;
     height: 100%;
     margin: 0;
+    box-sizing: border-box; 
 }
 
 #parent {
@@ -9,7 +11,7 @@ body, html{
     margin: 0;
 }
 
-#background_img{
+#background_img {
     position: absolute;
     width: 100%;
     height: 100%;
@@ -17,7 +19,8 @@ body, html{
     background-size: contain;
 }
 
-#leaderboard{
+/* --- 首頁按鈕定位 --- */
+#leaderboard {
     position: absolute;
     height: 68%;
     top: 35%;
@@ -26,7 +29,7 @@ body, html{
     cursor: pointer;
 }
 
-#manage{
+#manage {
     position: absolute;
     height: 40%;
     top: 35%;
@@ -35,7 +38,7 @@ body, html{
     cursor: pointer;
 }
 
-#template{
+#template {
     position: absolute;
     height: 40%;
     top: 35%;
@@ -44,14 +47,14 @@ body, html{
     cursor: pointer;
 }
 
-#nav_bar{
+#nav_bar {
     position: absolute;
     height: 13%;
     width: 100%;
     z-index: 300;
 }
 
-#back_btn{
+#back_btn {
     position: absolute;
     height: 6%;
     left: 2%;
@@ -60,7 +63,7 @@ body, html{
     cursor: pointer;
 }
 
-#profile{
+#profile {
     position: absolute;
     height: 6%;
     right: 2%;
@@ -68,63 +71,151 @@ body, html{
     z-index: 400;
     cursor: pointer;
 }
-#profile button{
+
+#profile button {
     padding: 0px;
     border: 0px;
     background-color: #F4DA63;
+    cursor: pointer;
 }
-#profile button img{
+
+#profile button img {
     height: 100%;
     padding: 0px;
     object-fit: contain;
 }
 
+/* === 下拉選單樣式修正 === */
 .dropdown-menu {
     position: absolute;
     z-index: 1000;
-    min-width: 0px !important;
-    padding: 0px !important;
+    
+    min-width: 180px !important;
+    width: auto !important;
+    padding: 12px !important;
     margin: 0 !important;
-    font-size: 0rem !important;
-    border: 0px solidrgba(0,0,0,0) !important;
-    border-radius: 0px !important;
-    transform: translate(-10.3vw, 9vh) !important;
+    background-color: rgba(255, 255, 255, 0.95);
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    
+    top: 100% !important;
+    margin-top: 10px !important;
+    right: 0 !important;
+    left: auto !important;
+    transform: none !important;
+    
+    /* [關鍵修正] 預設隱藏，讓 Bootstrap 控制 */
+    display: none; 
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
 }
-#dropdown-equ{
-    height: 8.5vh;
-    width: 15vw;
+
+/* 當 Bootstrap 加入 .show 類別時才顯示 */
+.dropdown-menu.show {
+    display: flex;
 }
-#dropdown-equ{
+
+/* 列表項目 */
+.dropdown-menu li {
+    list-style: none;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+}
+
+/* === 班級管理/個人裝備按鈕 === */
+.menu-btn-custom {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 50px;
+    background: linear-gradient(to bottom, #ffffff 0%, #f4da63 100%);
+    border: 2px solid #d4b755;
+    border-radius: 8px;
+    color: #333;
+    font-size: 18px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    cursor: pointer;
+    text-decoration: none;
+    white-space: nowrap;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: all 0.2s;
+    padding: 0 10px;
+}
+
+.menu-btn-custom:hover {
+    background: linear-gradient(to bottom, #fff 0%, #ffe066 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.btn-icon {
+    margin-right: 8px;
+    font-size: 20px;
+}
+
+/* === 登出按鈕 === */
+#dropdown-leave {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 50px;
+    
+    background: linear-gradient(180deg, #F5F5F5 0%, #E0E0E0 100%);
+    border: 2px solid #B0B0B0;
+    border-radius: 8px;
+    color: #555;
+    font-size: 18px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    cursor: pointer;
+    padding: 0 15px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: all 0.2s;
+    
+    background-image: none;
+}
+
+#dropdown-leave::before {
+    /* content: "↪"; */
+    margin-right: 8px;
+    font-size: 20px;
+}
+
+#dropdown-leave::after {
+    content: "登出遊戲";
+}
+
+#dropdown-leave:hover {
+    background: linear-gradient(180deg, #FFFFFF 0%, #EEEEEE 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    color: #333;
+}
+
+#dropdown-leave:active {
+    transform: translateY(0);
+    box-shadow: none;
+}
+
+/* 舊的裝備按鈕樣式 (保留相容性) */
+#dropdown-equ {
+    display: block;
+    width: 100%;
+    height: 50px;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
     background-image: url(../4GAME_ALL/ALL/1x/ALL_PERSONAL_EQUIPMENT_NORMAL.png);
-    background-size: 100% 100%;
+    background-size: contain;
     background-repeat: no-repeat;
-}
-#dropdown-equ:hover{
-    background-image: url(../4GAME_ALL/ALL/1x/ALL_PERSONAL_EQUIPMENT_ACTIVE.png);
-    background-size: 100% 100%;
-    background-repeat: no-repeat;
-}
-#dropdown-equ:active{
-    background-image: url(../4GAME_ALL/ALL/1x/ALL_PERSONAL_EQUIPMENT_FOCUS.png);
-    background-size: 100% 100%;
-    background-repeat: no-repeat;
-}
-#dropdown-leave{
-    height: 8.5vh;
-    width: 15vw;
-}
-#dropdown-leave{
-    background-image: url(../4GAME_ALL/ALL/1x/ALL_LOG_OUT_GAME_NORMAL.png);
-    background-size: 100% 100%;
-    background-repeat: no-repeat;
-}
-#dropdown-leave:hover{
-    background-image: url(../4GAME_ALL/ALL/1x/ALL_LOG_OUT_GAME_ACTIVE.png);
-    background-size: 100% 100%;
-    background-repeat: no-repeat;
-}
-#dropdown-leave:active{
-    background-image: url(../4GAME_ALL/ALL/1x/ALL_LOG_OUT_FOCUS.png);
-    background-size: 100% 100%;
-    background-repeat: no-repeat;
+    background-position: center;
 }

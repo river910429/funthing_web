@@ -12,6 +12,9 @@
     <div class="parent">
         <img id="background_img"
             src="{{ url_for('static', filename='4GAME_ALL/ANIMAL_CATCH/1x/ANIMAL_CATCH_BG_WORD.png')}}">
+
+        
+
         <img id="game_nav_bar" src="{{ url_for('static', filename = '4GAME_ALL/ALL/1x/ALL_NAVIGATION_BAR.png')}}">
         <p id="subject_adder_t">0/10</p>
         <img id="game_time_icon" src="{{ url_for('static', filename = '4GAME_ALL/ALL/1x/ALL_TIME.png')}}">
@@ -22,12 +25,30 @@
         src="{{ url_for('static', filename = '4GAME_ALL/ALL/1x/ALL_VOLUME_GAME_PAGE.png')}}">
 
         <img id="gray_layer" src="{{ url_for('static', filename='4GAME_ALL/ALL/1x/ALL_GRAY_LAYER.png')}}">
-        <img id="game_tutorial"
-            src="{{ url_for('static', filename='4GAME_ALL/ANIMAL_CATCH/1x/ANIMAL_CATCH_CAPTION.png')}}">
-        <img id="btn_enter_game" onclick="game_catch_egg_start({{course_id}})"
+        <!-- <img id="game_tutorial"
+            src="{{ url_for('static', filename='4GAME_ALL/ANIMAL_CATCH/1x/ANIMAL_CATCH_CAPTION.png')}}"> -->
+        <div id="game_tutorial_box" class="tutorial-container">
+            <h2 class="tutorial-title">遊戲說明</h2>
+            <div class="tutorial-content">
+                <p>1. 每題都會播放一個台語詞彙音檔。(一共十題)</p>
+                <p>2. 掉下的蜂窩中有詞彙。</p>
+                <p>3. 請用左右方向鍵移動熊熊去接住掉下對應的蜂窩。</p>
+            </div>
+            <!-- 把按鈕放進來 -->
+            <div class="tutorial-buttons">
+                <img id="btn_not_enter_game" 
+                        src="{{url_for('static', filename='4GAME_ALL/ALL/1x/ALL_EXIT_GAME_C.png')}}" 
+                        onclick="leave_game()">
+                
+                <img id="btn_enter_game" 
+                        src="{{url_for('static', filename='4GAME_ALL/ALL/1x/ALL_ENTER GAME_B.png')}}" 
+                        onclick="game_catch_egg_start({{course_id}})">
+            </div>
+        </div>
+            <!-- <img id="btn_enter_game" onclick="game_catch_egg_start({{course_id}})"
         src="{{url_for('static', filename='4GAME_ALL/ALL/1x/ALL_ENTER GAME_B.png')}}">
         <img id="btn_not_enter_game" onclick="leave_game()" 
-        src="{{url_for('static', filename='4GAME_ALL/ALL/1x/ALL_EXIT_GAME_C.png')}}">
+        src="{{url_for('static', filename='4GAME_ALL/ALL/1x/ALL_EXIT_GAME_C.png')}}"> -->
     </div>
 
     <div class="modal fade" id="TimeOutModal" data-bs-backdrop="static" 
@@ -65,7 +86,7 @@
         setInterval(check, 1000 * 10);
         function check() {
             console.log(new Date() - lastmovetime);
-            if ((new Date() - lastmovetime) > 1000 * 60 * 5) {
+            if ((new Date() - lastmovetime) > 1000 * 60 * 30) {
                 var TimeOutModal = new bootstrap.Modal($('#TimeOutModal'));
                 if (! $('#TimeOutModal').hasClass('show')) {
                     TimeOutModal.show();

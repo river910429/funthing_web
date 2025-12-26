@@ -1,7 +1,10 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <link href="{{ url_for('static', filename='css/ta_leaderboard.css')}}" rel="stylesheet", type="text/css">
+        <link href="{{ url_for('static', filename='css/ta_leaderboard.css')}}" rel="stylesheet" type="text/css">
+        <link href="{{ url_for('static', filename='css/ta_home.css')}}" rel="stylesheet" type="text/css">
+        <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-5.0.2.min.css">
+        <script type="text/javascript" src="/static/js/jquery-3.6.0.min.js"></script>
         <script type="text/javascript" src="{{ url_for('static', filename='js/ta_leaderboard.js')}}"></script>
     </head>
     <body>
@@ -10,22 +13,60 @@
             <img id="back_btn" onclick="home()" src="{{ url_for('static', filename='4GAME_ALL/ALL/1x/ALL_ARROW_BACK.png')}}">
             <img id="home_btn" onclick="home()" src="{{ url_for('static', filename='4GAME_ALL/ALL/1x/ALL_HOME.png')}}">
             
-            <img id="profile" src="{{ url_for('static', filename='4GAME_ALL/ALL/1x/ALL_ACCOUNT_DISABLE.png')}}">
+            <!-- [修改] 統一風格下拉選單 -->
+            <div class="btn-group" id="profile">
+                <button type="button" id="dropdownMenuReference"
+                        data-bs-toggle="dropdown" aria-expanded="false" data-bs-reference="parent">
+                    <img src="/static/4GAME_ALL/ALL/1x/ALL_ACCOUNT.png">
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuReference">
+                    <li>
+                        <button class="menu-btn-custom" onclick="class_entrance()">
+                            <span class="btn-icon">🏫</span><span>班級管理</span>
+                        </button>
+                    </li>
+                    <li><button id="dropdown-leave" onclick="exit()"></button></li>
+                </ul>
+            </div>
 
             <img id="nav_bar" src="{{ url_for('static', filename='Font/1x/ALL_NAVIGATION_BAR_LEADERBOARD_INQUIRE.png')}}">
             <img id="field_background" src="{{ url_for('static', filename='Font/1x/ALL_FIELD_BOX.png')}}">
             <img id="field" src="{{ url_for('static', filename='Font/1x/ALL_FIELD_B.png')}}">
-            <form action="{{ url_for('leaderboard_ta_query') }}" method="POST" autocomplete="off">
+            <form action="{{ url_for('teacher.leaderboard_ta_query') }}" method="POST" autocomplete="off">
                 <input type="text" id="input_id" name="input_id" placeholder="例 : 302班 -> 302" style="font-size: 18px;"/><br><br>
                 <input type="image" id="submit_btn" src="{{ url_for('static', filename='Font/1x/ALL_INQUIRE.png')}}" alt="Submit Form" />
             </form>
             <img id="export_btn" src="{{ url_for('static', filename='4GAME_ALL/ALL/1x/ALL_EXPORT_RESULTS_B.png')}}" >
             <div id = "scroll_area">
-                <table id = "leaderboard_table">
-                    <tbody>
-                    </tbody>
-                </table>
+                <table id = "leaderboard_table"><tbody></tbody></table>
             </div>
         </div>
+
+        <div class="modal fade" id="LogoutModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <div class="container-fluid">
+                            <div class="d-flex flex-column align-items-center">
+                                <img src="/static/Font/1x/ALL_IF_LOGOUT_B.png" style="width: 100%">
+                                <div class="d-flex justify-content-between w-100">
+                                    <div class="alertbtn alertbtn-succ" data-bs-dismiss="modal">取消</div>
+                                    <div class="alertbtn alertbtn-warn" id="mlogout">登出</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <link rel="stylesheet" type="text/css" href="/static/css/myalert.css">
+        <script src="/static/js/bootstrap-5.0.2.min.js"></script>
+        <script>
+            function exit() { new bootstrap.Modal(document.getElementById('LogoutModal')).show(); }
+            $("#mlogout").click(function() { document.location.href="/branch"; });
+            function class_entrance() { window.location.href = "{{ url_for('teacher.ta_class_management') }}"; }
+            function home() { window.location.href = "{{ url_for('teacher.ta_home') }}"; }
+        </script>
     </body>
 </html>

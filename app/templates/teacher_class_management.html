@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>班級管理 | 教師後台</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { 
+            font-family: "Noto Sans TC", sans-serif;
+            
+            /* --- 背景設定開始 --- */
+            /* 1. 設定圖片路徑 */
+            background-image: url("{{ url_for('static', filename='Font/1x/ALL_BG_LOG_IN_STUDENT.png') }}");
+            
+            /* 2. 讓圖片填滿整個螢幕 (Cover) */
+            background-size: cover;
+            
+            /* 3. 置中對齊 */
+            background-position: center;
+            
+            /* 4. 不要重複圖片 */
+            background-repeat: no-repeat;
+            
+            /* 5. 固定背景 (讓內容捲動時，背景圖不會跟著跑) */
+            background-attachment: fixed;
+            
+            /* 6. 確保背景至少有視窗這麼高 */
+            min-height: 100vh;
+            /* --- 背景設定結束 --- */
+        }
+    </style>
+</head>
+<body>
+    <nav class="bg-yellow-400 text-gray-800 p-4 shadow-md opacity-95">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-xl font-bold flex items-center gap-2">
+                <span class="bg-white text-yellow-500 rounded px-2 text-sm">TA</span>
+                教師後台
+            </h1>
+            <div>
+                <a href="/home/ta" class="mr-4 hover:text-black font-medium hover:underline">回首頁</a>
+                <a href="/branch" class="bg-yellow-600 text-white px-3 py-1 rounded hover:bg-yellow-700 transition">登出</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mx-auto mt-8 p-4 max-w-4xl">
+        <div class="bg-white/95 backdrop-blur-sm rounded-lg shadow-md p-6 border-t-4 border-yellow-400">
+            <h2 class="text-2xl font-bold mb-6 text-gray-800 border-b pb-2">班級管理</h2>
+            
+            <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-5 mb-8">
+                <h3 class="text-lg font-semibold text-yellow-700 mb-3">建立新班級</h3>
+                <form id="create-class-form" class="flex flex-col sm:flex-row gap-3">
+                    <input type="text" id="new-class-name" placeholder="請輸入班級名稱 (例如: 三年二班、課後輔導A班)" 
+                           class="flex-grow p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent" required>
+                    <button type="submit" class="bg-yellow-400 text-gray-900 px-6 py-2 rounded hover:bg-yellow-500 font-bold transition shadow-sm">
+                        ＋ 建立並取得代碼
+                    </button>
+                </form>
+            </div>
+
+            <h3 class="text-lg font-semibold text-gray-700 mb-4">我的班級列表</h3>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-gray-100 text-gray-600 border-b border-gray-200">
+                            <th class="p-3 font-medium">班級名稱</th>
+                            <th class="p-3 font-medium">班級代碼 (提供給學生)</th>
+                            </tr>
+                    </thead>
+                    <tbody id="class-list-body">
+                        {% if classes %}
+                            {% for cls in classes %}
+                            <tr class="border-b border-gray-100 hover:bg-yellow-50 transition-colors">
+                                <td class="p-3 text-gray-800 font-medium">{{ cls.name }}</td>
+                                <td class="p-3">
+                                    <span class="bg-yellow-100 text-yellow-800 border border-yellow-200 px-3 py-1 rounded-full font-mono text-lg font-bold tracking-wider select-all cursor-pointer hover:bg-yellow-200 transition" onclick="copyCode('{{ cls.code }}')">
+                                        {{ cls.code }}
+                                    </span>
+                                </td>
+                                </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td colspan="3" class="p-8 text-center text-gray-400">
+                                    目前尚未建立任何班級，請使用上方功能建立。
+                                </td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="fixed bottom-5 right-5 bg-gray-800 text-yellow-400 px-6 py-3 rounded shadow-lg opacity-0 transition-opacity duration-300 pointer-events-none font-bold flex items-center gap-2">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+        </svg>
+        已複製代碼！
+    </div>
+
+    <script>
+        // 建立班級功能
+        document.getElementById('create-class-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const nameInput = document.getElementById('new-class-name');
+            const className = nameInput.value.trim();
+            const btn = e.target.querySelector('button');
+
+            if(!className) return;
+
+            btn.disabled = true;
+            btn.textContent = '處理中...';
+            btn.classList.add('opacity-50', 'cursor-not-allowed');
+
+            try {
+                const res = await fetch('/api/create_class', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ class_name: className })
+                });
+                const j = await res.json();
+
+                if (j.status === 'success') {
+                    window.location.reload();
+                } else {
+                    alert(j.message || '建立失敗');
+                    btn.disabled = false;
+                    btn.textContent = '＋ 建立並取得代碼';
+                    btn.classList.remove('opacity-50', 'cursor-not-allowed');
+                }
+            } catch (err) {
+                console.error(err);
+                alert('系統錯誤');
+                btn.disabled = false;
+                btn.textContent = '＋ 建立並取得代碼';
+                btn.classList.remove('opacity-50', 'cursor-not-allowed');
+            }
+        });
+
+        function copyCode(code) {
+            navigator.clipboard.writeText(code).then(() => {
+                const toast = document.getElementById('toast');
+                toast.classList.remove('opacity-0');
+                setTimeout(() => {
+                    toast.classList.add('opacity-0');
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+</html>

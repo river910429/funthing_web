@@ -1,32 +1,53 @@
 <!DOCTYPE html>
 <html>
 <head>
-        <link href="{{ url_for('static', filename='css/ta_home.css')}}" rel="stylesheet", type="text/css">
+        <!-- 引入樣式 -->
+        <link href="{{ url_for('static', filename='css/ta_home.css')}}" rel="stylesheet" type="text/css">
+        <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-5.0.2.min.css">
+        
         <script type="text/javascript" src="/static/js/jquery-3.6.0.min.js"></script>
         <script type="text/javascript" src="{{ url_for('static', filename='js/ta_home.js')}}"></script>
 </head>
 <body>
         <img id="background_img" src="{{ url_for('static', filename='Font/1x/ALL_BG_GRID.png')}}">
         <div class="parent">
+            <!-- 右上角個人選單 -->
             <div class="btn-group" id="profile">
                 <button type="button" id="dropdownMenuReference"
                         data-bs-toggle="dropdown" aria-expanded="false" data-bs-reference="parent">
                     <img src="/static/4GAME_ALL/ALL/1x/ALL_ACCOUNT.png">
                 </button>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuReference">
-                    <li><button id="dropdown-leave" onclick="exit()"></li>
+                    
+                    <!-- 班級管理按鈕 (黃色) -->
+                    <li>
+                        <button class="menu-btn-custom" onclick="class_entrance()">
+                            <span class="btn-icon"></span>
+                            <span>班級管理</span>
+                        </button>
+                    </li>
+                    
+                    <!-- 登出按鈕 (灰色，CSS 會自動填入文字與圖示) -->
+                    <li>
+                        <button id="dropdown-leave" onclick="exit()"></button>
+                    </li>
                 </ul>
             </div>
             
             <img id="nav_bar" src="{{ url_for('static', filename='Font/1x/ALL_NAVIGATION_BAR_NONE.png')}}">
-            <form id="leaderboard" action="{{ url_for('leaderboard_ta_query') }}" method="POST" autocomplete="off">
+            
+            <!-- 排行榜表單 -->
+            <form id="leaderboard" action="{{ url_for('teacher.leaderboard_ta_query') }}" method="POST" autocomplete="off">
                 <input type="text" class="d-none" name="input_id" placeholder="例 : 302班 -> 302" style="font-size: 18px;"/>
                 <input type="image" class="h-100" id="submit_btn" src="{{ url_for('static', filename='Font/1x/ALL_BUTTON_LEADERBOARD.png')}}" alt="Submit Form" />
             </form>
+
+            <!-- 既有按鈕 -->
             <img id="manage" onclick="manage_entrance()" src="{{ url_for('static', filename='Font/1x/ALL_BUTTON_TEXTBOOK_MANAGEMENT.png')}}">
             <img id="template" onclick="game_entrance()" src="{{ url_for('static', filename='Font/1x/ALL_BUTTON_GAME_TEMPLATE.png')}}">
         </div>
 
+    <!-- 登出確認視窗 -->
     <div class="modal fade" id="LogoutModal" data-bs-backdrop="static" 
         data-bs-keyboard="false" tabindex="-1" 
         aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -36,7 +57,6 @@
                     <div class="container-fluid">
                         <div class="d-flex flex-column align-items-center">
                             <img src="/static/Font/1x/ALL_IF_LOGOUT_B.png" style="width: 100%">
-                            <!-- <div>title</div> -->
                             <div class="d-flex justify-content-between w-100">
                                 <div class="alertbtn alertbtn-succ" data-bs-dismiss="modal">
                                     取消
@@ -51,11 +71,9 @@
             </div>
         </div>
     </div>
-    <!-- my alert -->
+
+    <!-- 樣式與腳本 -->
     <link rel="stylesheet" type="text/css" href="/static/css/myalert.css">
-    <!-- Core theme CSS (includes Bootstrap 5.0.2) -->
-    <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-5.0.2.min.css">
-    <!-- Bootstrap core JS 5.0.2 -->
     <script src="/static/js/bootstrap-5.0.2.min.js"></script>
     <script>
         function exit() {
@@ -65,6 +83,19 @@
         $("#mlogout").click(function() {
             document.location.href="/branch";
         });
+
+        // 跳轉到班級管理
+        function class_entrance() {
+            window.location.href = "{{ url_for('teacher.ta_class_management') }}";
+        }
+
+        function manage_entrance() {
+            window.location.href = "/ta/course";
+        }
+        
+        function game_entrance() {
+            window.location.href = "{{ url_for('teacher.ta_template') }}";
+        }
     </script>
 </body>
 </html>

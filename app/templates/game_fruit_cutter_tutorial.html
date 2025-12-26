@@ -27,11 +27,30 @@
         src="{{ url_for('static', filename = '4GAME_ALL/ALL/1x/ALL_VOLUME_GAME_PAGE.png')}}">
         
         <img id="gray_layer" src="{{ url_for('static', filename='4GAME_ALL/ALL/1x/ALL_GRAY_LAYER.png')}}">
-        <img id="game_tutorial" src="{{ url_for('static', filename='4GAME_ALL/CUT_FRUIT/1x/CUT_ FRUIT_CAPTION.png')}}">
-        <img id="btn_enter_game" onclick="game_start({{course_id}})"
+        <!-- <img id="game_tutorial" src="{{ url_for('static', filename='4GAME_ALL/CUT_FRUIT/1x/CUT_ FRUIT_CAPTION.png')}}"> -->
+        <div id="game_tutorial_box" class="tutorial-container">
+            <h2 class="tutorial-title">遊戲說明</h2>
+            <div class="tutorial-content">
+                <p>1. 每題一開始都會播放一個題目。</p>
+                <p>2. 請先移動滑鼠去切到移動的魚。</p>
+                <p>3. 切到後會開始錄音，請把前面聽到的詞說出來。</p>
+            </div>
+            <!-- 把按鈕放進來 -->
+            <div class="tutorial-buttons">
+                <img id="btn_not_enter_game" 
+                        src="{{url_for('static', filename='4GAME_ALL/ALL/1x/ALL_EXIT_GAME_C.png')}}" 
+                        onclick="leave_game()">
+                
+                <img id="btn_enter_game" 
+                        src="{{url_for('static', filename='4GAME_ALL/ALL/1x/ALL_ENTER GAME_B.png')}}" 
+                        onclick="game_start({{course_id}})">
+            </div>
+        </div>
+        
+        <!-- <img id="btn_enter_game" onclick="game_start({{course_id}})"
             src="{{url_for('static', filename='4GAME_ALL/ALL/1x/ALL_ENTER GAME_B.png')}}" onclick="game_map_start()">
         <img id="btn_not_enter_game" onclick="leave_game()"
-        src="{{url_for('static', filename='4GAME_ALL/ALL/1x/ALL_EXIT_GAME_C.png')}}">
+        src="{{url_for('static', filename='4GAME_ALL/ALL/1x/ALL_EXIT_GAME_C.png')}}"> -->
     </div>
 
     <div class="modal fade" id="TimeOutModal" data-bs-backdrop="static" 
@@ -69,7 +88,7 @@
         setInterval(check, 1000 * 10);
         function check() {
             console.log(new Date() - lastmovetime);
-            if ((new Date() - lastmovetime) > 1000 * 60 * 5) {
+            if ((new Date() - lastmovetime) > 1000 * 60 * 30) {
                 var TimeOutModal = new bootstrap.Modal($('#TimeOutModal'));
                 if (! $('#TimeOutModal').hasClass('show')) {
                     TimeOutModal.show();

@@ -1,0 +1,1 @@
+docker exec -it funthing_web pytest

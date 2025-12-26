@@ -1,9 +1,24 @@
-#background_ent_img{
+/* #background_ent_img{
     position: relative;
     width: 100%;
     height: 100%;
     cursor: pointer;
     background-size: contain;
+} */
+
+#background_ent_img {
+    /* 強制設定寬高為視窗大小 */
+    width: 100vw;  
+    height: 100vh;
+    
+    /* 關鍵指令：保持比例填滿，多餘的切掉 */
+    object-fit: cover; 
+    
+    /* 確保圖片在左上角定位 */
+    position: absolute; 
+    top: 0;
+    left: 0;
+    cursor: pointer; /* 讓滑鼠移上去變手指，提示可以點擊 */
 }
 
 #background_img{
@@ -24,6 +39,9 @@ body, html{
     width: 100%;
     height: 100%;
     margin: 0;
+
+    padding: 0;
+    overflow: hidden; /* 隱藏捲軸，避免出現兩條捲軸 */
 }
 
 #navigation_bar{

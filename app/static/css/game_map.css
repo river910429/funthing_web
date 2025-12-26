@@ -303,3 +303,103 @@ body {
     -webkit-user-select: none;
     -ms-user-select: none;
 }
+
+/* 狀態遮罩層 */
+#recognition_status {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.6);
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* 中間的白色盒子 */
+.status-box {
+    background-color: white;
+    padding: 30px 50px;
+    border-radius: 20px;
+    text-align: center;
+    min-width: 250px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    border: 5px solid #FF9100;
+}
+
+/* 文字樣式 */
+#status_text {
+    font-family: "Microsoft JhengHei", sans-serif;
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #333;
+    margin-top: 20px;
+    margin-bottom: 0;
+}
+
+/* Loading 轉圈圈動畫 */
+.spinner {
+    margin: 0 auto;
+    width: 60px;
+    height: 60px;
+    border: 8px solid #f3f3f3;
+    border-top: 8px solid #FF9100;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    display: none; /* 預設隱藏 */
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* 聲波動畫 (錄音中顯示) */
+.mic-wave {
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+}
+.bar {
+    width: 10px;
+    background-color: #FF5722;
+    animation: wave 0.5s infinite ease-in-out;
+}
+.bar:nth-child(1) { height: 30px; animation-delay: 0.1s; }
+.bar:nth-child(2) { height: 50px; animation-delay: 0.2s; }
+.bar:nth-child(3) { height: 40px; animation-delay: 0.3s; }
+.bar:nth-child(4) { height: 50px; animation-delay: 0.2s; }
+.bar:nth-child(5) { height: 30px; animation-delay: 0.1s; }
+
+@keyframes wave {
+    0%, 100% { transform: scaleY(1); }
+    50% { transform: scaleY(1.5); }
+}
+
+/* 結束錄音按鈕樣式 */
+.stop-btn {
+    margin-top: 20px;
+    padding: 10px 30px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: white;
+    background-color: #d63031; /* 紅色 */
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+    transition: transform 0.1s, background-color 0.2s;
+}
+
+.stop-btn:active {
+    transform: scale(0.95);
+    background-color: #b71c1c;
+}
+
+.stop-btn:hover {
+    background-color: #ff4d4d;
+}

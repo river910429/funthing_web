@@ -196,7 +196,7 @@ body {
     z-index: 500;
 }
 
-#btn_enter_game{
+/* #btn_enter_game{
     cursor: pointer;
     position: absolute;
     width: 17vw;
@@ -204,7 +204,6 @@ body {
     top:78vh;
     right:32%;
     z-index: 650;
-    /* border: none; */
 }
 
 #btn_not_enter_game{
@@ -215,4 +214,82 @@ body {
     top:78vh;
     left:32%;
     z-index: 650;
+} */
+
+/* 說明視窗容器 */
+.tutorial-container {
+    position: absolute;
+    /* 絕對定位，讓它浮在 gray_layer 上 */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -55%);
+    /* 稍微偏上一點，留空間給下面的按鈕 */
+    
+    width: 60%;
+    /* 寬度可依需求調整，例如 500px 或 80vw */
+    max-width: 600px;
+    background-color: #FFFBF0;
+    /* 米白色背景，比較像紙張/卡片 */
+    border: 5px solid #8B4513;
+    /* 咖啡色邊框，帶有遊戲感 */
+    border-radius: 20px;
+    /* 圓角 */
+    padding: 30px;
+    text-align: center;
+    /*  gray_layer 是 500 */
+    z-index: 600;
+    /* 確保在灰色遮罩層之上 */
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+    /* 立體陰影 */
+    
+    /* 字型設定 */
+    font-family: "Microsoft JhengHei", sans-serif;
+    color: #5A3E1B;
+}
+
+/* 標題樣式 */
+.tutorial-title {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #D95C5C;
+    /* 標題顏色，例如紅色 */
+    text-shadow: 1px 1px 0px #FFF;
+    border-bottom: 2px dashed #D4B48C;
+    padding-bottom: 10px;
+}
+
+/* 內文樣式 */
+.tutorial-content p {
+    font-size: 1.2rem;
+    line-height: 1.8;
+    margin: 10px 0;
+    font-weight: 600;
+}
+/* 設定按鈕區域的排版：彈性盒子、置中、有間距 */
+.tutorial-buttons {
+    display: flex;
+    justify-content: center; /* 水平置中 */
+    align-items: center;
+    gap: 30px; /* 兩個按鈕之間的距離 */
+    margin-top: 30px; /* 跟上方文字的距離 */
+}
+
+/* 重設按鈕圖片樣式 */
+#btn_enter_game, #btn_not_enter_game {
+    /* 取消原本的絕對定位，讓它乖乖待在框框裡 */
+    position: static !important; 
+    
+    /* 調整按鈕大小，依您的需求調整寬度 */
+    width: 140px; 
+    height: auto;
+    
+    cursor: pointer;
+    transition: transform 0.1s;
+    z-index: auto; /* 跟隨父容器 */
+}
+
+/* 增加一點按鈕互動感 (滑鼠按下去縮小) */
+#btn_enter_game:active, #btn_not_enter_game:active {
+    transform: scale(0.95);
 }

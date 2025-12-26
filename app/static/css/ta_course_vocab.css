@@ -3,128 +3,80 @@ body {
     background-image: url("../Font/1x/ALL_BG_GRID.png");
     background-size: contain;
 }
+
 .outline {
     outline: 2px dashed blue;
 }
+
 * {
     font-family: Microsoft JhengHei;
     font-weight: bold !important;
-    font-family: Microsoft JhengHei;
-}
-.bg-dgray {
-    background-color: #666666;
-}
-.bg-mgray {
-    background-color: #B3B3B3;
-}
-.bg-lgray {
-    background-color: #E6E6E6;
-}
-.bg-teal{
-    background-color: #02B7B4 !important;
-}
-.bg-orange{
-    background-color: #FBA501 !important;
-}
-.bg-red{
-    background-color: #FE6265 !important;
 }
 
-/* navbar */
+/* === 色塊定義 === */
+.bg-dgray { background-color: #666666; }
+.bg-mgray { background-color: #B3B3B3; }
+.bg-lgray { background-color: #E6E6E6; }
+.bg-teal  { background-color: #02B7B4 !important; }
+.bg-orange{ background-color: #FBA501 !important; }
+.bg-red   { background-color: #FE6265 !important; }
+
+/* === Navbar 佈局 === */
 #my-navbar {
     height: 13vh;
     background-color: #F4DA63;
+    position: relative;
 }
 #my-navbar img {
-    height: 6vh;
+    /* [修正] 讓圖片自適應容器高度 */
     object-fit: contain;
 }
+
 #back_btn{
     position: absolute;
-    height: 6%;
+    /* [修正] 改用 vh 固定高度 */
+    height: 6vh;
     left: 2%;
     top: 27%;
     z-index: 400;
     cursor: pointer;
 }
+
 #home_btn{
     position: absolute;
-    height: 6%;
+    /* [修正] 改用 vh 固定高度 */
+    height: 6vh;
     left: 7%;
     top: 27%;
     z-index: 400;
     cursor: pointer;
 }
+
 #profile{
     position: absolute;
-    height: 6%;
+    /* [修正] 改用 vh 固定高度 */
+    height: 6vh;
     right: 2%;
     top: 27%;
     z-index: 400;
     cursor: pointer;
 }
+
 #profile button{
     padding: 0px;
     border: 0px;
     background-color: #F4DA63;
+    height: 100%;
+    cursor: pointer;
 }
-/* #profile button img{
+
+#profile button img{
     height: 100%;
     padding: 0px;
     object-fit: contain;
-} */
-
-.dropdown-menu {
-    position: absolute;
-    z-index: 1000;
-    min-width: 0px !important;
-    padding: 0px !important;
-    margin: 0 !important;
-    font-size: 0rem !important;
-    border: 0px solidrgba(0,0,0,0) !important;
-    border-radius: 0px !important;
-    transform: translate(-10.3vw, 9vh) !important;
-}
-#dropdown-equ{
-    height: 8.5vh;
-    width: 15vw;
-}
-#dropdown-equ{
-    background-image: url(../4GAME_ALL/ALL/1x/ALL_PERSONAL_EQUIPMENT_NORMAL.png);
-    background-size: 100% 100%;
-    background-repeat: no-repeat;
-}
-#dropdown-equ:hover{
-    background-image: url(../4GAME_ALL/ALL/1x/ALL_PERSONAL_EQUIPMENT_ACTIVE.png);
-    background-size: 100% 100%;
-    background-repeat: no-repeat;
-}
-#dropdown-equ:active{
-    background-image: url(../4GAME_ALL/ALL/1x/ALL_PERSONAL_EQUIPMENT_FOCUS.png);
-    background-size: 100% 100%;
-    background-repeat: no-repeat;
-}
-#dropdown-leave{
-    height: 8.5vh;
-    width: 15vw;
-}
-#dropdown-leave{
-    background-image: url(../4GAME_ALL/ALL/1x/ALL_LOG_OUT_GAME_NORMAL.png);
-    background-size: 100% 100%;
-    background-repeat: no-repeat;
-}
-#dropdown-leave:hover{
-    background-image: url(../4GAME_ALL/ALL/1x/ALL_LOG_OUT_GAME_ACTIVE.png);
-    background-size: 100% 100%;
-    background-repeat: no-repeat;
-}
-#dropdown-leave:active{
-    background-image: url(../4GAME_ALL/ALL/1x/ALL_LOG_OUT_FOCUS.png);
-    background-size: 100% 100%;
-    background-repeat: no-repeat;
 }
 
-/* layout */
+/* === 主要內容佈局 === */
 .body {
     height: 87vh;
     width: 100vw;   
@@ -133,6 +85,7 @@ body {
     height: 70%;
     width: 90%;
 }
+
 #submit_btn {
     position: absolute;
     width: 20vw;
@@ -150,7 +103,7 @@ body {
     cursor: pointer;
 }
 
-/* main */
+/* === 搜尋列與表格 === */
 .search-bar {
     min-height: 13%;
     background-color: #F4DA63;
@@ -182,6 +135,7 @@ tr {
     height: 7.1vh;
 }
 
+/* 單字編輯欄位 */
 .mytdinput {
     padding: 0px !important;
 }
@@ -202,6 +156,7 @@ tr {
     outline: 1px solid #B3B3B3;
 }
 
+/* === 捲軸樣式 === */
 ::-webkit-scrollbar {
     height: 10px;
     width: 25px;
@@ -220,10 +175,10 @@ tr {
     border: 5px solid white;
 }
 
+/* === 載入中動畫 === */
 .rotate {
     width: 120px;
     height: 120px;
-    /* margin:-60px 0 0 -60px; */
     -webkit-animation:spin 4s linear infinite;
     -moz-animation:spin 4s linear infinite;
     animation:spin 4s linear infinite;

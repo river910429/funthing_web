@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html>
   <head>
@@ -23,7 +22,6 @@
         display: flex;
       }
 
-      /* �쥻�P�ɦ� #parent �P .parent�F��� HTML �Ϊ��O .parent */
       .parent {
         position: relative;
         width: 100vw;
@@ -56,9 +54,14 @@
         height: 10vh;
       }
 
-      /* �ץ��G�쥻�O .p_bar�A�� HTML �g id="p_bar" */
+      /* [修正 1] 為父容器加上寬度與定位，否則子元素的 % 寬度會無效 */
       #p_bar {
         position: absolute;
+        width: 100%;  /* 關鍵修正 */
+        height: 100%;
+        top: 0;
+        left: 0;
+        pointer-events: none; /* 避免遮擋點擊 */
       }
 
       #game_time_bar {
@@ -66,13 +69,18 @@
         top: 2.5%;
         left: 32.5vw;
         height: 8%;
-        width: 3%;
+        
+        /* 初始狀態：滿條 (37vw 配合背景圖) 或 0，視您的邏輯而定 */
+        /* 這裡設為 0，讓 JS 控制它長出來 */
+        width: 0vw; 
+        
         display: block;
         background: #ff9100;
         border-radius: 40px;
-        transition: width 90s ease;
+        
+        /* 動畫時間 */
+        transition: width 90s linear; 
         z-index: 300;
-        /* border: 2px solid rebeccapurple; */
       }
 
       .card_board {
@@ -265,6 +273,17 @@
     <script type="text/javascript">
       var subjects = {{ course|tojson }};
       var subjects_CH = subjects.gameneed;
+
+      // [修正 2] 確保動畫執行
+      // 如果您的 game_card.js 裡面沒有這段，這裡會補上
+      $(document).ready(function() {
+          // 稍微延遲以確保 CSS Transition 生效
+          setTimeout(function() {
+              // 設定目標寬度 (37vw 接近背景圖寬度)
+              // 由於 CSS 設了 transition 90s，它會花 90 秒慢慢變長
+              $('#game_time_bar').css('width', '37vw');
+          }, 500);
+      });
     </script>
   </body>
 </html>

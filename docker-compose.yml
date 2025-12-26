@@ -1,4 +1,4 @@
-version: "2.4"
+version: "2"
 
 services:
   web:
@@ -9,9 +9,10 @@ services:
     container_name: funthing_web
     restart: unless-stopped
     ports:
-      - "8000:5000"
+      - "8889:8889"
     volumes:
-      - ./app:/usr/src/app/app
+      # - ./app:/usr/src/app/app
+      - .:/usr/src/app
     environment:
       FLASK_ENV: production
       DB_HOST: db
@@ -19,20 +20,20 @@ services:
       DB_USER: user
       DB_PASSWORD: secret
       DB_NAME: funthing_db
-    depends_on:
-      - db
+    # depends_on:
+    #   - db
 
-  db:
-    image: mysql:8.0
-    container_name: funthing_db
-    restart: unless-stopped
-    environment:
-      MYSQL_DATABASE: funthing_db
-      MYSQL_USER: user
-      MYSQL_PASSWORD: secret
-      MYSQL_ROOT_PASSWORD: rootsecret
-    volumes:
-      - db_data:/var/lib/mysql
+  # db:
+  #   image: mysql:8.0
+  #   container_name: funthing_db
+  #   restart: unless-stopped
+  #   environment:
+  #     MYSQL_DATABASE: funthing_db
+  #     MYSQL_USER: user
+  #     MYSQL_PASSWORD: secret
+  #     MYSQL_ROOT_PASSWORD: rootsecret
+  #   volumes:
+  #     - db_data:/var/lib/mysql
 
 volumes:
   db_data:
