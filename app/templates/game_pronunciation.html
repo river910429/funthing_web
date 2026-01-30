@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>發音練習</title>
+    
+    <link href="{{ url_for('static', filename='css/bootstrap-5.0.2.min.css')}}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/myalert.css')}}" rel="stylesheet">
+    
+    <link href="{{ url_for('static', filename='css/game_pronunciation.css')}}" rel="stylesheet">
+    
+    <script src="{{ url_for('static', filename='js/jquery-3.6.0.min.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap-5.0.2.min.js')}}"></script>
+</head>
+
+<body>
+    
+    <div class="top-bar">
+        <div class="progress-container">
+            已答題數 <span id="current_q">1</span> / <span id="total_q">10</span>
+        </div>
+        <img class="close-btn" src="{{ url_for('static', filename='4GAME_ALL/ALL/1x/ALL_LEAVE_GAME.png')}}" onclick="leave_game()">
+    </div>
+
+    <div class="game-container">
+        
+        <div class="blackboard-group">
+            <img class="blackboard-img" src="{{ url_for('static', filename='4GAME_ALL/PRONUNCIATION/1x/黑板.png') }}">
+            <div class="blackboard-content">
+                <div class="text-area">
+                    <h2 id="word_tw">...</h2>
+                    <h4 id="word_tlpa">...</h4>
+                </div>
+                <img class="speaker-btn" onclick="play_audio()" 
+                     src="{{ url_for('static', filename='4GAME_ALL/PRONUNCIATION/1x/無圓型喇叭.png') }}">
+            </div>
+        </div>
+
+        <div class="bear-group">
+            <div class="speech-bubble" id="bear_msg">按下播放鍵一起學習台語發音吧！</div>
+            <img class="bear-img" src="{{ url_for('static', filename='4GAME_ALL/PRONUNCIATION/1x/台教_黑熊-04.png') }}">
+        </div>
+
+        <div class="radio-container">
+            <img class="control-btn" id="btn_record" 
+                 src="{{ url_for('static', filename='4GAME_ALL/ALL/1x/ALL_MIC.png')}}">
+            
+            <div class="visualizer">
+                <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+            </div>
+
+            <img class="control-btn" id="btn_play_my_voice" onclick="play_my_recording()"
+                 src="{{ url_for('static', filename='4GAME_ALL/ALL/1x/ICON_PLAY.png')}}" style="opacity: 0.5; pointer-events: none;">
+        </div>
+
+    </div>
+
+    <audio id="audio_player" style="display:none"></audio>
+
+    <script>
+        // 建立一個全域設定物件，讓外部 JS 讀取
+        var gameConfig = {
+            // 把 Jinja2 的資料轉為 JS 陣列
+            rawData: {{ course['gameneed'] | tojson }},
+            // 把 Jinja2 的路由轉為 JS 字串
+            homeUrl: "{{ url_for('student.stu_home') }}"
+        };
+    </script>
+
+    <script src="{{ url_for('static', filename='js/game_pronunciation.js')}}"></script>
+
+</body>
+</html>

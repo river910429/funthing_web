@@ -619,6 +619,7 @@ def _game_column_from_name(name):
     mapping = {
         "flipping_card": "game1", "catch_egg": "game2",
         "fruit_cutter": "game3", "map": "game4",
+        "pronunciation": "game5",
     }
     return mapping.get(name)
 
@@ -682,6 +683,11 @@ def fruit_tutorial(): return _tutorial_route("fruit_cutter", 'game_fruit_cutter_
 def map_game(): return _game_route("map", 'game_map.html', 6, True)
 @bp_student.route('/game/map_tutorial')
 def map_tutorial(): return _tutorial_route("map", 'game_map_tutorial.html')
+
+@bp_student.route('/game/pronunciation')
+def pronunciation_game(): return _game_route("pronunciation",'game_pronunciation.html', 8, True)
+@bp_student.route('/game/pronunciation_tutorial')
+def pronunciation_tutorial(): return _tutorial_route("pronunciation",'game_pronunciation_tutorial.html' )
 
 # === 語音功能 ===
 @bp_student.route("/save_audio", methods=['POST'])

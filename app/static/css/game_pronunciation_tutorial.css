@@ -1,0 +1,201 @@
+/* =========================================
+   1. 全域與容器設定
+   ========================================= */
+* {
+    font-family: "Microsoft JhengHei", sans-serif;
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+body {
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    overflow: hidden;
+    background-color: #000; /* 防止背景圖載入前的閃爍 */
+}
+
+.parent {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+/* =========================================
+   2. 背景與基礎 UI
+   ========================================= */
+#background_img {
+    position: absolute;
+    width: 100%;
+    height: 87vh;
+    top: 13vh;
+    z-index: 0;
+    object-fit: fill; 
+}
+
+#game_nav_bar {
+    position: absolute;
+    width: 100vw;
+    height: 13vh;
+    top: 0;
+    left: 0;
+    z-index: 200;
+}
+
+#profile {
+    position: absolute;
+    height: 6vh; /* 根據導覽列高度調整 */
+    right: 2%;
+    top: 3.5%;
+    z-index: 400;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+#profile:hover {
+    transform: scale(1.05);
+}
+
+#gray_layer {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 500;
+    object-fit: cover;
+}
+
+/* =========================================
+   3. 教學視窗核心樣式 (Tutorial Container)
+   ========================================= */
+.tutorial-container {
+    position: absolute;
+    /* 絕對定位，讓它浮在 gray_layer 上 */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -55%);
+    /* 稍微偏上一點，留空間給下面的按鈕 */
+    
+    width: 50%;
+    /* 寬度可依需求調整，例如 500px 或 80vw */
+    max-width: 700px;
+    background-color: #FFFBF0;
+    /* 米白色背景，比較像紙張/卡片 */
+    border: 5px solid #8B4513;
+    /* 咖啡色邊框，帶有遊戲感 */
+    border-radius: 20px;
+    /* 圓角 */
+    padding: 15px 30px;
+    text-align: center;
+    /*  gray_layer 是 500 */
+    z-index: 600;
+    /* 確保在灰色遮罩層之上 */
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+    /* 立體陰影 */
+    
+    /* 字型設定 */
+    font-family: "Microsoft JhengHei", sans-serif;
+    color: #5A3E1B;
+}
+
+.tutorial-title {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #D95C5C;
+    /* 標題顏色，例如紅色 */
+    text-shadow: 1px 1px 0px #FFF;
+    border-bottom: 2px dashed #D4B48C;
+    padding-bottom: 10px;
+}
+
+/* 內文區域 */
+.tutorial-content {
+    text-align: left; /* 說明文字左對齊較易閱讀 */
+    margin: 20px 0;
+    
+    padding-left: 40px;
+    padding-rigth: 40px;
+}
+
+.tutorial-content p {
+    font-size: 1.2rem;
+    line-height: 1.5;
+    margin: 10px 0;
+    font-weight: 600;
+}
+
+/* =========================================
+   4. 小提醒區塊樣式 (Hint Section)
+   ========================================= */
+.hint-section {
+    border-radius: 13px;
+    padding: 10px 0;
+    margin-top: 20px;
+}
+
+.hint-item {
+    font-size: 1.1rem;
+    margin: 10px 0;
+    color: #6D4C41;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap; /* 防止圖示擠壓 */
+    font-weight: bold; 
+}
+
+.hint-icon {
+    height: 2.5rem;
+    margin: 0 8px;
+    vertical-align: middle;
+}
+
+/* =========================================
+   5. 按鈕排版
+   ========================================= */
+.tutorial-buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+    margin-top: 30px;
+}
+
+#btn_enter_game, #btn_not_enter_game {
+    width: 180px; /* 根據圖片比例調整 */
+    height: auto;
+    transition: transform 0.1s ease;
+}
+
+#btn_enter_game:active, #btn_not_enter_game:active {
+    transform: scale(0.92);
+}
+
+/* =========================================
+   6. 超時彈窗補強 (Bootstrap Modal)
+   ========================================= */
+.modal-content {
+    border-radius: 20px;
+    border: none;
+    overflow: hidden;
+}
+
+.alertbtn {
+    padding: 10px 30px;
+    border-radius: 50px;
+    cursor: pointer;
+    font-weight: bold;
+    margin-top: 15px;
+    transition: background 0.3s;
+}
+
+.alertbtn-warn {
+    background-color: #d9534f;
+    color: white;
+}
+
+.alertbtn-warn:hover {
+    background-color: #c9302c;
+}

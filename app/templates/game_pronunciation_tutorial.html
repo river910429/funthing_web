@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" href="#" />
+    <link href="{{ url_for('static', filename='css/bootstrap-5.0.2.min.css')}}" rel="stylesheet" type="text/css">
+    <link href="{{ url_for('static', filename='css/myalert.css')}}" rel="stylesheet" type="text/css">
+    <link href="{{ url_for('static', filename='css/game_pronunciation_tutorial.css')}}" rel="stylesheet" type="text/css">
+    
+    <script type="text/javascript" src="{{ url_for('static', filename='js/jquery-3.6.0.min.js')}}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap-5.0.2.min.js')}}"></script>
+</head>
+
+<body>
+    <div class="parent">
+        <img id="background_img" src="{{ url_for('static', filename='4GAME_ALL/PRONUNCIATION/1x/錄音遊戲_背景.png')}}">
+        <img id="game_nav_bar" src="{{ url_for('static', filename ='4GAME_ALL/ALL/1x/ALL_NAVIGATION_BAR.png')}}">
+        <img id="profile" onclick="leave_game()" src="{{ url_for('static', filename = '4GAME_ALL/ALL/1x/ALL_LEAVE_GAME.png')}}">
+        <img id="gray_layer" src="{{ url_for('static', filename='4GAME_ALL/ALL/1x/ALL_GRAY_LAYER.png')}}">
+
+        <div id="game_tutorial_box" class="tutorial-container">
+            <h2 class="tutorial-title">遊戲說明</h2>
+            
+            <div class="tutorial-content">
+                <p>1. 每題會播放一個單詞的語音，並顯示台語漢字或台羅拼音。</p>
+                <p>2. 請仔細聆聽語音，開口練習發音，並且將發音成果錄製下來。</p>
+                
+                <div class="hint-section">
+                    <p style="font-weight: bold; color: #8a6d3b;">小提醒：</p>
+                    <div class="hint-item">
+                        按下 <img class="hint-icon" src="{{ url_for('static', filename='4GAME_ALL/ALL/1x/ALL_VOLUME_GAME_PAGE.png')}}"> 聆聽單詞語音。
+                        聽完語音後請長按 <img class="hint-icon" src="{{ url_for('static', filename='4GAME_ALL/ALL/1x/ALL_MIC.png')}}"> 錄下自己的發音。
+                    </div>
+                    <div class="hint-item">
+                        錄音完成後按下 <img class="hint-icon" src="{{ url_for('static', filename='4GAME_ALL/ALL/1x/ICON_PLAY.png')}}"> 可以聆聽自己的發音。
+                    </div>
+                    <div class="hint-item">
+                        若想重新錄製，再一次長按 <img class="hint-icon" src="{{ url_for('static', filename='4GAME_ALL/ALL/1x/ALL_MIC.png')}}"> 即可。
+                    </div>
+                </div>
+            </div>
+
+            <div class="tutorial-buttons">
+                <img id="btn_not_enter_game" 
+                     src="{{url_for('static', filename='4GAME_ALL/ALL/1x/ALL_EXIT_GAME_C.png')}}" 
+                     onclick="leave_game()" style="cursor:pointer;">
+                
+                <img id="btn_enter_game" 
+                     src="{{url_for('static', filename='4GAME_ALL/ALL/1x/ALL_ENTER GAME_B.png')}}" 
+                     onclick="game_start({{course_id}})" style="cursor:pointer;">
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="TimeOutModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="d-flex flex-column align-items-center">
+                        <img src="{{ url_for('static', filename='4GAME_ALL/ALL/1x/ALL_IF_TIMEOUT_B.png')}}" style="width: 100%">
+                        <div class="alertbtn alertbtn-warn" id="logout">重新登入</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 使用 jQuery 確保 DOM 載入後執行
+        $(document).ready(function() {
+            let lastmovetime = new Date();
+            
+            $(document).on('mousemove', function() { 
+                lastmovetime = new Date(); 
+            });
+
+            setInterval(check, 1000 * 10);
+
+            function check() {
+                if ((new Date() - lastmovetime) > 1000 * 60 * 30) {
+                    // 確保 bootstrap 實體化正確
+                    var timeoutEl = document.getElementById('TimeOutModal');
+                    var modalInstance = bootstrap.Modal.getOrCreateInstance(timeoutEl);
+                    
+                    if (! $('#TimeOutModal').hasClass('show')) {
+                        modalInstance.show();
+                        setTimeout(() => { document.location.href="/branch"; }, 1000 * 10);
+                    }
+                }
+            }
+
+            $("#logout").click(function() { 
+                document.location.href="/branch"; 
+            });
+        });
+
+        function leave_game() {
+            window.location.href = "{{ url_for('student.stu_home') }}";
+        }
+    </script>
+</body>
+</html>

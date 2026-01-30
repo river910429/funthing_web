@@ -291,10 +291,11 @@ class SQL():
             self.conn.rollback()
             return False
         
-    # [新增] 更新班級的遊戲課程設定 (Class 表格中的 game1, game2... 欄位)
+    # [修改] 更新班級的遊戲課程設定 (Class 表格中的 game1...game6 欄位)
     def update_classgame(self, class_id, game_name, course_id):
-        # 簡單防呆，避免 SQL Injection 風險
-        allowed_games = ['game1', 'game2', 'game3', 'game4']
+        # [修正] 加入 game5, game6
+        allowed_games = ['game1', 'game2', 'game3', 'game4', 'game5', 'game6']
+        
         if game_name not in allowed_games:
             return False
             
@@ -370,8 +371,12 @@ class SQL():
             return True
 
     def get_classgame(self, school_id, class_id, game_name):
-        if game_name not in ['game1', 'game2', 'game3', 'game4']: return None
+        # [修正] 加入 game5, game6 到檢查清單
+        if game_name not in ['game1', 'game2', 'game3', 'game4', 'game5', 'game6']: 
+            return None
+            
         with self.conn.cursor() as cursor:
+            # 因為上面已經做過白名單檢查，這裡用 f-string 帶入 game_name 是安全的
             cursor.execute(f"SELECT {game_name} FROM Class WHERE school_id=%s AND class_id=%s LIMIT 1;", (school_id, class_id))
             row = cursor.fetchone()
             return row[0] if row else None
